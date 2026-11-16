@@ -1,0 +1,30 @@
+:root {
+  /* Backgrounds */
+  --bg-0: #0a0e14;
+  --bg-1: #111823;
+  --bg-2: #1a2332;
+  --border: #22304a;
+
+  /* Text */
+  --text-0: #e6edf3;
+  --text-1: #8b98a8;
+
+  /* Accents */
+  --accent: #22d3ee;
+  --accent-dim: #0e7490;
+  --warn: #ef4444;
+  --ok: #22c55e;
+  --xp: #a855f7;
+
+  /* Layout */
+  --radius: 8px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 40px;
+
+  /* Type */
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
