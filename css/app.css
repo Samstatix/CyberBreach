@@ -43,3 +43,60 @@ button {
 
 button:hover { border-color: var(--accent); background: var(--bg-1); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* --- Track Selection --- */
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.track-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.track-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Segment Selection --- */
+.segment-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.segment-card:hover {
+  background: var(--bg-2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Challenge Interactive Regions --- */
+.clickable-region {
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.clickable-region:hover {
+  border-color: var(--text-1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.clickable-region.selected {
+  border-color: var(--warn) !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+}

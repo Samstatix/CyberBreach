@@ -1,15 +1,17 @@
-// js/app.js
 import { register, navigate } from './router.js';
 import { menuScreen } from './screens/menu.js';
 import { dashboardScreen } from './screens/dashboard.js';
+import { tracksScreen } from './screens/tracks.js'; // <-- Make sure this path is exact
+import { segmentsScreen } from './screens/segments.js';
+import { briefingScreen } from './screens/briefing.js';
+import { challengeScreen } from './screens/challenge.js';
 
-// 1. Register all screens
 register('menu', menuScreen);
 register('dashboard', dashboardScreen);
+register('tracks', tracksScreen); // <-- Make sure this is exactly the same name
+register('segments', segmentsScreen);
+register('briefing', briefingScreen);
+register('challenge', challengeScreen);
 
-// 2. Handle initial load
-// If the URL has #dashboard, go there. Otherwise, go to menu.
 const initialScreen = window.location.hash.replace('#', '') || 'menu';
 navigate(initialScreen);
-
-console.log('[cyber-breach] router initialized');
