@@ -1,12 +1,15 @@
-// Cyber Breach — entry point
-// Milestone 1: prove the module system works.
+// js/app.js
+import { register, navigate } from './router.js';
+import { menuScreen } from './screens/menu.js';
+import { dashboardScreen } from './screens/dashboard.js';
 
-const app = document.getElementById('app');
+// 1. Register all screens
+register('menu', menuScreen);
+register('dashboard', dashboardScreen);
 
-app.innerHTML = `
-  <h1>CYBER BREACH</h1>
-  <p class="muted">Milestone 1 — project skeleton online.</p>
-  <p class="muted">Next: router and main menu.</p>
-`;
+// 2. Handle initial load
+// If the URL has #dashboard, go there. Otherwise, go to menu.
+const initialScreen = window.location.hash.replace('#', '') || 'menu';
+navigate(initialScreen);
 
-console.log('[cyber-breach] boot ok');
+console.log('[cyber-breach] router initialized');
