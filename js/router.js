@@ -1,39 +1,30 @@
-// js/router.js
-const routes = {};
-let currentScreenCleanup = null;
 
-// Register a screen function
-export function register(name, renderFn) {
-  routes[name] = renderFn;
+export function navigate(path) {
+    const destination = `#/${path}`;
+
+    if (window.location.hash !== destination) {
+        window.location.hash = destination;
+    }
 }
 
-// Navigate to a screen
-export function navigate(name, params = {}) {
-  const app = document.getElementById('app');
-  
-  // If the previous screen had a cleanup function, run it (good for timers)
-  if (currentScreenCleanup && typeof currentScreenCleanup === 'function') {
-    currentScreenCleanup();
-  }
+function readRoute() {
+    const path = window.location.hash.replace(/^#\/?/, "");
+    const parts = path.split("/").filter(Boolean);
 
-  const screen = routes[name];
-  if (!screen) {
-    app.innerHTML = `<h1>404</h1><p>Screen "${name}" not found.</p>`;
-    return;
-  }
+    return {
+        page: parts[0] || "overview",
+        item: parts[1] || "",
+        mode: parts[2] || "academy"
+    };
+}
 
-  // Clear the app div and render the new screen
-  app.innerHTML = '';
-  const result = screen(params);
-  
-  // If the screen returns an element, append it. 
-  // If it returns a cleanup function, save it for later.
-  if (result instanceof HTMLElement) {
-    app.appendChild(result);
-  } else if (typeof result === 'function') {
-    currentScreenCleanup = result;
-  }
+export function startRouter(render) {
+    function updateScreen() {
+        const route = readRoute();
+        render(route);
+    }
 
-  // Update the URL hash so refresh works (e.g., #menu)
-  window.location.hash = name;
+    window.addEventListener("hashchange", updateScreen);
+
+    updateScreen();
 }

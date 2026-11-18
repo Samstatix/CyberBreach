@@ -1,3 +1,6 @@
+import { mountPhishingHunter } from "./challenges/phishingHunter.js";
+import { startRouter, navigate } from "./router.js";
+import { renderPage } from "./screens/pages.js";
 
 const app = document.querySelector("#app");
 
@@ -16,20 +19,17 @@ app.innerHTML = `
             <div class="nav-label">MAIN MENU</div>
 
             <nav class="navigation">
-                <button class="nav-item active" data-screen="Overview">
+                <button class="nav-item" data-route="overview">
                     <span>⌂</span> Overview
                 </button>
-                <button class="nav-item" data-screen="Academy">
+                <button class="nav-item" data-route="academy">
                     <span>▤</span> Academy
                 </button>
-                <button class="nav-item" data-screen="Operations">
+                <button class="nav-item" data-route="operations">
                     <span>◈</span> Operations
                 </button>
-                <button class="nav-item" data-screen="CTF Arena">
+                <button class="nav-item" data-route="ctf">
                     <span>⚑</span> CTF Arena
-                </button>
-                <button class="nav-item" data-screen="Leaderboard">
-                    <span>♜</span> Leaderboard
                 </button>
             </nav>
 
@@ -38,12 +38,11 @@ app.innerHTML = `
                     <span class="status-dot"></span>
                     SYSTEM ONLINE
                 </div>
-                <p>CYBER BREACH v0.1.0</p>
+                <p>CYBER BREACH v0.2.0</p>
             </div>
         </aside>
 
         <main class="main-content">
-
             <header class="topbar">
                 <div class="breadcrumb">
                     <span>COMMAND CENTER</span>
@@ -60,167 +59,7 @@ app.innerHTML = `
                 </div>
             </header>
 
-            <section class="page-content" id="page-content">
-
-                <div class="welcome-row">
-                    <div>
-                        <div class="eyebrow">
-                            <span class="status-dot"></span>
-                            OPERATIVE TERMINAL
-                        </div>
-                        <h1>Welcome back, <span>Operative.</span></h1>
-                        <p class="welcome-description">
-                            Your mission begins here. Learn, investigate,
-                            and prove your cybersecurity skills.
-                        </p>
-                    </div>
-
-                    <div class="date-card">
-                        <span>YOUR STATUS</span>
-                        <strong>READY</strong>
-                        <small>Awaiting deployment</small>
-                    </div>
-                </div>
-
-                <div class="section-heading">
-                    <div>
-                        <span class="eyebrow">YOUR TRAINING</span>
-                        <h2>Choose your operation</h2>
-                    </div>
-                    <span class="section-count">03 GAME MODES</span>
-                </div>
-
-                <div class="mode-grid">
-
-                    <article class="mode-card academy">
-                        <div class="mode-top">
-                            <span class="mode-icon">▤</span>
-                            <span class="mode-tag">LEARN</span>
-                        </div>
-                        <h3>Academy</h3>
-                        <p>
-                            Learn cybersecurity through guided lessons,
-                            examples, and beginner-friendly challenges.
-                        </p>
-                        <button class="mode-button" data-screen="Academy">
-                            ENTER ACADEMY <span>→</span>
-                        </button>
-                    </article>
-
-                    <article class="mode-card operations">
-                        <div class="mode-top">
-                            <span class="mode-icon">◈</span>
-                            <span class="mode-tag">PRACTICE</span>
-                        </div>
-                        <h3>Operations</h3>
-                        <p>
-                            Investigate simulated incidents and test
-                            your skills in practical scenarios.
-                        </p>
-                        <button class="mode-button" data-screen="Operations">
-                            START OPERATIONS <span>→</span>
-                        </button>
-                    </article>
-
-                    <article class="mode-card arena">
-                        <div class="mode-top">
-                            <span class="mode-icon">⚑</span>
-                            <span class="mode-tag">COMPETE</span>
-                        </div>
-                        <h3>CTF Arena</h3>
-                        <p>
-                            Take on multi-stage challenges, find flags,
-                            and prove your abilities.
-                        </p>
-                        <button class="mode-button" data-screen="CTF Arena">
-                            ENTER ARENA <span>→</span>
-                        </button>
-                    </article>
-
-                </div>
-
-                <div class="lower-grid">
-
-                    <section class="mission-panel">
-                        <div class="panel-heading">
-                            <div>
-                                <span class="eyebrow">FEATURED MISSION</span>
-                                <h2>Phishing Hunter</h2>
-                            </div>
-                            <span class="difficulty">BEGINNER</span>
-                        </div>
-
-                        <div class="mission-body">
-                            <div class="mission-symbol">✉</div>
-                            <div class="mission-description">
-                                <h3>Can you spot a malicious email?</h3>
-                                <p>
-                                    Investigate suspicious emails, identify
-                                    warning signs, and separate phishing
-                                    attempts from legitimate messages.
-                                </p>
-                                <div class="mission-meta">
-                                    <span>◈ Cyber Basics</span>
-                                    <span>◷ 5–10 MIN</span>
-                                    <span>✦ XP REWARD</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="primary-button" data-screen="Phishing Hunter">
-                            VIEW MISSION BRIEFING <span>→</span>
-                        </button>
-                    </section>
-
-                    <section class="progress-panel">
-                        <span class="eyebrow">OPERATIVE PROFILE</span>
-                        <h2>Your progress</h2>
-
-                        <div class="level-row">
-                            <div class="level-badge">01</div>
-                            <div>
-                                <strong>Rookie</strong>
-                                <p>Cybersecurity Trainee</p>
-                            </div>
-                        </div>
-
-                        <div class="xp-label">
-                            <span>EXPERIENCE POINTS</span>
-                            <strong>0 / 100 XP</strong>
-                        </div>
-
-                        <div class="xp-track">
-                            <div class="xp-fill"></div>
-                        </div>
-
-                        <p class="progress-note">
-                            Complete missions to earn XP and level up.
-                        </p>
-
-                        <div class="profile-stats">
-                            <div>
-                                <strong>0</strong>
-                                <span>MISSIONS</span>
-                            </div>
-                            <div>
-                                <strong>0</strong>
-                                <span>BADGES</span>
-                            </div>
-                            <div>
-                                <strong>0</strong>
-                                <span>STREAK</span>
-                            </div>
-                        </div>
-                    </section>
-
-                </div>
-
-                <footer class="footer">
-                    <span>CYBER BREACH © 2026</span>
-                    <span>LEARN. INVESTIGATE. PROVE YOURSELF.</span>
-                </footer>
-
-            </section>
+            <section class="page-content" id="page-content"></section>
         </main>
     </div>
 
@@ -230,45 +69,64 @@ app.innerHTML = `
 const pageContent = document.querySelector("#page-content");
 const currentSection = document.querySelector("#current-section");
 const toast = document.querySelector("#toast");
+let cleanupMission = null;
 
 function showToast(message) {
     toast.textContent = message;
     toast.classList.add("visible");
 
     clearTimeout(window.toastTimer);
+
     window.toastTimer = setTimeout(() => {
         toast.classList.remove("visible");
     }, 2500);
 }
 
-function navigate(screen) {
+function render(route) {
+    if (cleanupMission) {
+    cleanupMission();
+    cleanupMission = null;
+}
+    pageContent.innerHTML = renderPage(route);
+
+    const labels = {
+        overview: "OVERVIEW",
+        academy: "ACADEMY",
+        operations: "OPERATIONS",
+        ctf: "CTF ARENA",
+        tracks: "CYBER BASICS",
+        mission: "MISSION BRIEFING"
+    };
+
+    currentSection.textContent = labels[route.page] || "COMMAND CENTER";
+
     document.querySelectorAll(".nav-item").forEach(button => {
         button.classList.toggle(
             "active",
-            button.dataset.screen === screen
+            button.dataset.route === route.page
         );
     });
 
-    currentSection.textContent = screen.toUpperCase();
-
-    if (screen === "Overview") {
-        location.reload();
-        return;
-    }
-
-    if (screen === "Phishing Hunter") {
-        showToast("Phishing Hunter briefing is coming in our next mission milestone.");
-        return;
-    }
-
-    showToast(`${screen} module is planned for a future milestone.`);
+    window.scrollTo(0, 0);
 }
 
-document.querySelectorAll("[data-screen]").forEach(button => {
-    button.addEventListener("click", () => {
-        navigate(button.dataset.screen);
-    });
+app.addEventListener("click", event => {
+    const routeButton = event.target.closest("[data-route]");
+
+    if (routeButton) {
+        navigate(routeButton.dataset.route);
+        return;
+    }
+
+    const actionButton = event.target.closest("[data-action]");
+
+    if (actionButton?.dataset.action === "start-mission") {
+    const mode = actionButton.dataset.mode;
+    cleanupMission = mountPhishingHunter(pageContent, mode);
+}
 });
 
+startRouter(render);
+
 console.log("CYBER BREACH SYSTEM INITIALIZED");
-console.log("MAIN MENU LOADED");
+console.log("SCREEN ROUTER ONLINE");
