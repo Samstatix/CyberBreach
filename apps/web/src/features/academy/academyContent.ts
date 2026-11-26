@@ -8,7 +8,7 @@
 
 export type LessonBlock = {
   heading: string;
-  paragraphs: string[];
+  paragraphs?: string[];
   bullets?: string[];
   callout?: string;
 };
