@@ -351,8 +351,8 @@ export const challengeCatalog: Challenge[] = [
     "summary": "Trace a use-after-free caused by allocator reuse of a freed chunk.",
     "objective": "Identify which object occupies the reused chunk and what the stale pointer reads.",
     "scenario": "A fictional application stores references to heap objects. A debug allocator trace shows a freed chunk being reused by a later allocation of the same size class.",
-    "artifact": "Trace:\n  1. A = malloc(0x30) -> 0x55556000\n  2. A->label = \"PUBLIC\"\n  3. free(A)\n  4. B = malloc(0x30) -> 0x55556000\n  5. B->label = \"CB{stale_pointer_reuse}\"\n  6. legacy_view(A)->label -> \"CB{stale_pointer_reuse}\"\n\nThe legacy_view reference was not cleared after free(A).",
-    "task": "Explain the lifetime error and submit the string observed through the stale reference.",
+    "artifact": "Trace:\n  1. A = malloc(0x30) -> 0x55556000\n  2. A->label = \"PUBLIC\"\n  3. free(A)\n  4. B = malloc(0x30) -> 0x55556000\n  5. B->label = \"ARCHIVE-REVIEW-27\"\n  6. legacy_view(A)->label -> \"ARCHIVE-REVIEW-27\"\n\nThe legacy_view reference was not cleared after free(A).",
+    "task": "Explain the lifetime error and submit the flag that names the memory-safety bug pattern.",
     "prerequisites": [
       "Heap allocation and free",
       "Pointers and object lifetime",

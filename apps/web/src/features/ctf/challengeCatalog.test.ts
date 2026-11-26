@@ -22,6 +22,7 @@ describe("CyberBreach CTF catalogue", () => {
       expect(challenge.hints).toHaveLength(3);
       expect(challenge.safety.length).toBeGreaterThan(20);
       expect(challenge.points).toBeGreaterThan(0);
+      expect(challenge.artifact).not.toContain("CB{");
       expect(challenge).not.toHaveProperty("flag");
       expect(challenge).not.toHaveProperty("walkthrough");
       expect(challenge).not.toHaveProperty("flagHash");

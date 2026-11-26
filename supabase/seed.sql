@@ -614,13 +614,13 @@ Trace:
   2. A->label = "PUBLIC"
   3. free(A)
   4. B = malloc(0x30) -> 0x55556000
-  5. B->label = "CB{stale_pointer_reuse}"
-  6. legacy_view(A)->label -> "CB{stale_pointer_reuse}"
+  5. B->label = "ARCHIVE-REVIEW-27"
+  6. legacy_view(A)->label -> "ARCHIVE-REVIEW-27"
 
 The legacy_view reference was not cleared after free(A).
 
 Your task:
-Explain the lifetime error and submit the string observed through the stale reference.
+Explain the lifetime error and submit the flag that names the memory-safety bug pattern.
 
 Safety boundary:
 Static allocator trace only; no heap corruption or executable exploit is performed.', 'expert', 500, 90,
@@ -644,7 +644,7 @@ select id, 1, '0c8502d77050389721c1dd77d1e41ae36b1ed51c5439fbc23d5235f4cc97c59f'
 on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
 
 insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'A and B receive the same address because the allocator reuses the freed chunk. The legacy reference A was not invalidated, so reading through it after B is allocated observes B''s label. This is a use-after-free caused by an object-lifetime error. The observed label is the flag.', 'Use clear ownership and lifetime rules, invalidate references after free, prefer memory-safe abstractions, and test with sanitizers such as AddressSanitizer. Avoid retaining aliases to released objects.', 'What design change would prevent the old A reference from being used after the object is released?'
+select id, 'A and B receive the same address because the allocator reuses the freed chunk. The legacy reference A was not invalidated, so reading through it after B is allocated observes B''s label. This is a use-after-free caused by an object-lifetime error. The flag names the stale-pointer reuse pattern.', 'Use clear ownership and lifetime rules, invalidate references after free, prefer memory-safe abstractions, and test with sanitizers such as AddressSanitizer. Avoid retaining aliases to released objects.', 'What design change would prevent the old A reference from being used after the object is released?'
 from public.challenges where slug = 'pwn-heap-afterlife'
 on conflict (challenge_id) do update set
   walkthrough_md = excluded.walkthrough_md,

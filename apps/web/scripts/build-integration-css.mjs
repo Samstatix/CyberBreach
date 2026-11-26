@@ -14,7 +14,7 @@ const result=await postcss([prefixSelector({prefix:".cyberbreach-root",transform
  if(selector==="*")return `${prefix} *`;
  if(rule?.parent?.type==="atrule"&&rule.parent.name.toLowerCase().includes("keyframes"))return selector;
  return prefixedSelector;
-}})]).process(`${fontImport}\n${normalized}`,{from:undefined});
+}})]).process(`${fontImport}\n${normalized}`,{from:path.join(sourceDir,"integration-source.css")});
 await mkdir(outputDir,{recursive:true});
 await writeFile(path.join(outputDir,"cyberbreach.integration.css"),result.css,"utf8");
 console.log("Wrote dist/cyberbreach.integration.css");

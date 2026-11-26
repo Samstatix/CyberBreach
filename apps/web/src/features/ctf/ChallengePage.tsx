@@ -21,6 +21,10 @@ export default function ChallengePage() {
   const [solutionLoading, setSolutionLoading] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
 
+  useEffect(() => {
+    setFlag(""); setHintCount(0); setResult(null); setError(""); setSolution(null); setShowSolution(false);
+  }, [challenge?.id]);
+
   async function loadSolution() {
     if (!challenge || !user || !supabase) return;
     setSolutionLoading(true);

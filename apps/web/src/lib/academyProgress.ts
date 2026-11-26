@@ -22,6 +22,6 @@ export async function loadCompletedLessonIds(userId?:string):Promise<string[]>{
 export function markLessonComplete(lessonId:string,userId?:string):string[]{
  const completed=new Set(getCompletedLessonIds(userId));completed.add(lessonId);const next=[...completed];
  try{window.localStorage.setItem(storageKey(userId),JSON.stringify(next));}catch{/* current page still updates */}
- if(userId&&supabase){void supabase.from("academy_lesson_progress").upsert({user_id:userId,lesson_id:lessonId},{onConflict:"user_id,lesson_id"});}
+ if(userId&&supabase){void supabase.from("academy_lesson_progress").upsert({user_id:userId,lesson_id:lessonId},{onConflict:"user_id,lesson_id",ignoreDuplicates:true});}
  return next;
 }
