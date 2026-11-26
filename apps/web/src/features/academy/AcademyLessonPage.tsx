@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, CircleHelp, ExternalLink, Lightbulb } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Circle, CircleHelp, ExternalLink, Lightbulb } from "lucide-react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { findLesson } from "./academyContent";
 import { getCompletedLessonIds, markLessonComplete } from "../../lib/academyProgress";
@@ -48,7 +48,7 @@ export default function AcademyLessonPage() {
           <article className="lesson-block" key={block.heading}>
             <span className="lesson-block-index">PART {String(blockIndex + 1).padStart(2, "0")}</span>
             <h2>{block.heading}</h2>
-            {block.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            {(block.paragraphs ?? []).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             {block.bullets && <ul>{block.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>}
             {block.callout && <div className="lesson-callout"><Lightbulb size={17}/><p>{block.callout}</p></div>}
           </article>
