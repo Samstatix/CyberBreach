@@ -7,6 +7,7 @@ import "./styles/tokens.css";
 import "./styles/global.css";
 import "./styles/academy.css";
 import "./styles/labs.css";
+import "./styles/auth.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
