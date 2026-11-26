@@ -1,6 +1,6 @@
 -- Idempotent seed for the six agreed CTF disciplines.
--- These are category records only; no challenge is published until its lab,
--- solve path, hints, flag digest and safety review are complete.
+-- Challenge records are published only after their supplied evidence, solve path,
+-- progressive hints, flag digest and safety boundary have been reviewed.
 
 insert into public.challenge_categories (slug, name, description, sort_order)
 values
