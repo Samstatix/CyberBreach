@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, CheckCircle2, GraduationCap, Network, Shield, Terminal } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, Network, Shield, Terminal } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { academyCourses } from "./academyContent";
