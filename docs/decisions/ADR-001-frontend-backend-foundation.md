@@ -31,3 +31,15 @@ The existing CyberBreach prototype is a small vanilla JavaScript application wit
 - **Next.js:** capable, but server-side rendering is not currently a requirement; Vite keeps the frontend shell simpler.
 - **Custom backend immediately:** offers control but adds deployment and operations overhead before the first product workflows are validated.
 - **Supabase-only client writes:** unsuitable for secret-bearing challenge validation and authoritative score/XP operations.
+
+
+## Confirmed product constraints
+
+The product owner has confirmed that CyberBreach must serve complete beginners through experienced professionals, provide both browser simulations and real isolated labs, and remain free to access.
+
+Consequences:
+- Do not introduce premium-only learning paths, paid challenge categories or pay-to-win scoring.
+- Use fair-use capacity controls and lab leases to protect shared infrastructure; communicate these limits clearly.
+- Provide plain-language teaching, progressive hints and accessible UI while retaining medium-to-expert scored challenges.
+- Treat browser simulations as explicitly simulated; use isolated disposable infrastructure for tasks requiring real systems.
+- Do not launch public arbitrary-code execution until isolation, abuse controls, cleanup, capacity and incident response have been reviewed.
