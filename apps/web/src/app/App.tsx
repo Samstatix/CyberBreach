@@ -10,12 +10,13 @@ import AcademyCoursePage from "../features/academy/AcademyCoursePage";
 import AcademyLessonPage from "../features/academy/AcademyLessonPage";
 import PhishingHunterPage from "../features/academy/PhishingHunterPage";
 import TerminalSimulatorPage from "../features/labs/TerminalSimulatorPage";
+import AccountPage from "../features/auth/AccountPage";
 
 export default function App() {
   return (
     <Routes>
       <Route element={<AppShell />}>
-        <Route index element={<DashboardPage />} />
+        <Route index element={<DashboardPage />} />\n        <Route path="account" element={<AccountPage />} />
         <Route path="academy" element={<AcademyPage />} />
         <Route path="academy/courses/:courseId" element={<AcademyCoursePage />} />
         <Route path="academy/lessons/:lessonId" element={<AcademyLessonPage />} />
