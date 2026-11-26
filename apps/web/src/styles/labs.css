@@ -1,0 +1,46 @@
+/* Browser-based Linux simulator. All output is synthetic and allow-listed. */
+.lab-launch-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; color: var(--accent); font: 9px var(--font-mono); letter-spacing: .8px; }
+.lab-launch-link:hover { color: var(--accent-bright); }
+.terminal-safety-banner { display: flex; align-items: flex-start; gap: 10px; margin: 22px 0 15px; padding: 12px 14px; border: 1px solid rgba(57,201,138,.2); border-radius: 7px; background: rgba(57,201,138,.045); color: var(--success); }
+.terminal-safety-banner svg { flex: 0 0 auto; }
+.terminal-safety-banner p { margin: 0; color: var(--text-1); font-size: 10px; line-height: 1.7; }
+.terminal-safety-banner strong { color: var(--success); }
+.terminal-panel { overflow: hidden; border: 1px solid #253b4a; border-radius: 10px; background: #060b10; box-shadow: 0 20px 45px rgba(0,0,0,.22); }
+.terminal-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 14px; border-bottom: 1px solid #1b2b38; background: #101923; }
+.terminal-panel-header > div, .terminal-panel-header strong, .terminal-panel-header button { display: flex; align-items: center; gap: 8px; }
+.terminal-panel-header strong { color: #c5d4df; font: 10px var(--font-mono); }
+.terminal-panel-header button { padding: 6px 8px; border: 1px solid #2b3d4b; border-radius: 4px; background: transparent; color: #91a2b4; font: 9px var(--font-mono); cursor: pointer; }
+.terminal-lights { display: flex; gap: 5px; }
+.terminal-lights i { width: 7px; height: 7px; border-radius: 50%; background: #ef6b75; }
+.terminal-lights i:nth-child(2) { background: #e9b45c; }
+.terminal-lights i:nth-child(3) { background: #39c98a; }
+.terminal-output { height: min(440px, 55vh); min-height: 280px; overflow: auto; padding: 17px; color: #c1d0dc; font: 11px/1.8 var(--font-mono); }
+.terminal-line { display: flex; align-items: flex-start; gap: 5px; min-height: 20px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.terminal-line.command { margin-top: 5px; color: #6bcdf3; }
+.terminal-line.command svg { flex: 0 0 auto; margin-top: 3px; }
+.terminal-line.output { color: #c1d0dc; }
+.terminal-line.error { color: #f18a91; }
+.terminal-current-path { margin-top: 7px; color: #62d39b; }
+.terminal-input-row { display: flex; align-items: center; gap: 10px; padding: 12px 15px; border-top: 1px solid #1b2b38; background: #0b131c; }
+.terminal-input-row label { color: #62d39b; font: 10px var(--font-mono); white-space: nowrap; }
+.terminal-input-row input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: #e8f0f7; font: 11px var(--font-mono); }
+.terminal-input-row input::placeholder { color: #536779; }
+.terminal-input-row button { padding: 7px 10px; border: 1px solid #247da3; border-radius: 4px; background: rgba(54,185,237,.1); color: #6bcdf3; font: 9px var(--font-mono); cursor: pointer; }
+.terminal-input-row button:disabled { opacity: .35; cursor: not-allowed; }
+.terminal-suggestions { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-top: 15px; }
+.terminal-suggestions strong { margin-right: 5px; color: var(--text-1); font-size: 10px; }
+.terminal-suggestions button { padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-1); color: var(--accent); font: 9px var(--font-mono); cursor: pointer; }
+.terminal-suggestions button:hover { border-color: var(--accent-dim); }
+.terminal-task-card { margin-top: 18px; padding: 17px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-1); }
+.terminal-task-card > div { display: flex; align-items: center; gap: 9px; color: var(--accent); }
+.terminal-task-card strong { color: var(--text-0); font-size: 12px; }
+.terminal-task-card p { color: var(--text-1); font-size: 11px; line-height: 1.8; }
+.terminal-task-card small { color: var(--text-2); font: 9px var(--font-mono); }
+.terminal-task-card code { color: var(--accent-bright); }
+@media (max-width: 620px) {
+  .terminal-input-row { flex-wrap: wrap; }
+  .terminal-input-row label { width: 100%; }
+  .terminal-output { height: 380px; }
+  .practice-feature-card { align-items: flex-start; }
+  .practice-feature-card > svg { display: none; }
+}
