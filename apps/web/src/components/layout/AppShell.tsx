@@ -1,6 +1,8 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { Activity, BookOpen, BrainCircuit, Flag, FlaskConical, LayoutDashboard, Menu, Shield, Users } from "lucide-react";
-import { useState } from "react";\nimport { UserRound } from "lucide-react";\nimport { useAuth } from "../../features/auth/AuthProvider";
+import { useState } from "react";
+import { UserRound } from "lucide-react";
+import { useAuth } from "../../features/auth/AuthProvider";
 
 const links = [
   { to: "/", label: "Overview", icon: LayoutDashboard, end: true },
@@ -13,7 +15,8 @@ const links = [
 ];
 
 export default function AppShell() {
-  const [open, setOpen] = useState(false);\n  const { user, loading } = useAuth();
+  const [open, setOpen] = useState(false);
+  const { user, loading } = useAuth();
   return (
     <div className="app-shell">
       <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
