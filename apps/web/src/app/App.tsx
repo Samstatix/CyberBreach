@@ -16,7 +16,8 @@ export default function App() {
   return (
     <Routes>
       <Route element={<AppShell />}>
-        <Route index element={<DashboardPage />} />\n        <Route path="account" element={<AccountPage />} />
+        <Route index element={<DashboardPage />} />
+        <Route path="account" element={<AccountPage />} />
         <Route path="academy" element={<AcademyPage />} />
         <Route path="academy/courses/:courseId" element={<AcademyCoursePage />} />
         <Route path="academy/lessons/:lessonId" element={<AcademyLessonPage />} />
