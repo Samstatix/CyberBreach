@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, GraduationCap, Network, Shield, Terminal } from "lucide-react";
+import { ArrowRight, BookOpen, BrainCircuit, GraduationCap, Globe, KeyRound, Network, ScanSearch, Shield, Terminal } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { academyCourses } from "./academyContent";
 import { getCompletedLessonIds, loadCompletedLessonIds } from "../../lib/academyProgress";
 import { useAuth } from "../auth/AuthProvider";
 
-const courseIcons:Record<string,LucideIcon>={"cybersecurity-fundamentals":Shield,"networking-essentials":Network,"linux-foundations":Terminal};
+const courseIcons:Record<string,LucideIcon>={"cybersecurity-fundamentals":Shield,"networking-essentials":Network,"linux-foundations":Terminal,
+  "web-security-foundations":Globe,
+  "cryptography-foundations":KeyRound,
+  "digital-forensics-foundations":ScanSearch,
+  "ai-security-foundations":BrainCircuit};
 
 export default function AcademyPage(){
  const {user}=useAuth();

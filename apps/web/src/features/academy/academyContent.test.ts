@@ -2,6 +2,12 @@ import { describe, expect, it } from "vitest";
 import { academyCourses, findCourse, findLesson } from "./academyContent";
 
 describe("CyberBreach Academy curriculum", () => {
+  it("includes the extended web, cryptography, forensics and AI learning paths", () => {
+    expect(academyCourses.length).toBeGreaterThanOrEqual(7);
+    const totalLessons = academyCourses.reduce((total, course) => total + course.lessons.length, 0);
+    expect(totalLessons).toBeGreaterThanOrEqual(25);
+  });
+
   it("uses unique course and lesson identifiers", () => {
     const courseIds = academyCourses.map((course) => course.id);
     const lessonIds = academyCourses.flatMap((course) => course.lessons.map((lesson) => lesson.id));
