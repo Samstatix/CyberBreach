@@ -1,4 +1,4 @@
-import { MonitorPlay, Server, ShieldCheck, Clock3, TerminalSquare, ArrowRight } from "lucide-react";
+import { MonitorPlay, Server, ShieldCheck, Clock3, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function LabsPage() {
