@@ -1,4 +1,5 @@
-import { MonitorPlay, Server, ShieldCheck, Clock3 } from "lucide-react";
+import { MonitorPlay, Server, ShieldCheck, Clock3, TerminalSquare, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function LabsPage() {
   return (
@@ -14,6 +15,7 @@ export default function LabsPage() {
           <p>Practice concepts directly in the browser. These exercises are designed to be quick to start and safe for introductory learning.</p>
           <ul><li>Command-line learning simulator</li><li>Log and packet inspection exercises</li><li>Guided web request demonstrations</li><li>Incident-response scenarios</li></ul>
           <div className="lab-mode-status">SIMULATION · NO REAL HOST ACCESS</div>
+          <Link className="lab-launch-link" to="/labs/linux-terminal">OPEN LINUX SIMULATOR <ArrowRight size={14}/></Link>
         </article>
         <article className="lab-mode-card">
           <div className="lab-mode-icon"><Server size={24}/></div>
