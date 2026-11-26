@@ -7,7 +7,7 @@ const outputDir=path.resolve("dist");
 const files=["tokens.css","global.css","academy.css","labs.css","auth.css","platform.css"];
 const contents=await Promise.all(files.map(file=>readFile(path.join(sourceDir,file),"utf8")));
 const fontImport='@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap");';
-const normalized=contents.map(css=>css.replace(/^\s*@import\s+url\([^;]+;\s*/m,"")).join("\n");
+const normalized=contents.map(css=>css.replace(/^\s*@import\s+url\("[^"]+"\);\s*/gm,"")).join("\n");
 const prefix=".cyberbreach-root";
 
 function isInsideKeyframes(rule){
