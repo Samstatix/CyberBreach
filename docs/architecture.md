@@ -230,3 +230,65 @@ Use UUID primary keys, timestamps, foreign keys, explicit constraints and RLS po
 - Expected initial concurrency and geographic hosting constraints.
 
 These decisions do not block Milestone 1.
+
+
+## 12. Confirmed product decisions — audience, labs and access
+
+The product owner has confirmed:
+
+- **Audience:** everyone, from complete beginners to experienced practitioners.
+- **Lab model:** both browser-based simulations and real isolated environments.
+- **Access model:** free access; do not design premium-only learning or challenge gates.
+
+### Learning accessibility
+
+- Assume no prior knowledge in introductory learning paths; define technical vocabulary before relying on it.
+- Use a plain-language explanation first, then accurate professional terminology and deeper technical detail.
+- Support keyboard navigation, readable contrast, responsive layouts, captions/transcripts for instructional media and clear error messages.
+- Separate learning progress from competitive ranking.
+- Provide optional progressive hints and post-challenge explanations.
+- Avoid shaming language, including labels that imply a learner is unintelligent.
+- "Everyone" is an accessibility and skill-range goal, not a reason to ignore age-appropriate privacy, moderation or account safeguards.
+
+### Free access and sustainable operation
+
+- No premium-only content, paywalled challenge categories or paid XP advantages.
+- Prefer open standards, open-source components and self-authored learning material.
+- Use quotas, scheduled shutdown, idle timeouts and transparent fair-use limits for costly real labs. These are operational safety/capacity controls, not paid tiers.
+- Make it clear when a real lab has a time limit, resource quota or queue.
+- Do not promise unlimited concurrent virtual machines; capacity depends on infrastructure funding and measured demand.
+- Community competitions should not offer paid competitive advantages.
+
+### Two lab modes
+
+1. **Browser simulations:** lightweight, low-risk interactive exercises for packet inspection demonstrations, log analysis, command-line learning, protocol concepts and guided scenarios. Clearly label simulated behavior; never imply a simulation is a real shell or network.
+2. **Isolated real labs:** disposable containers or VMs for tasks that require real operating systems, vulnerable applications, tools or network services. Provision through a separate orchestrator and worker boundary.
+
+Real labs must use per-instance identities, short leases, strict CPU/memory/disk/time quotas, no privileged containers, no host socket mounts, default-deny egress, controlled ingress, secrets isolation, logging, cleanup verification and reset capability. Evaluate stronger isolation such as gVisor or microVMs before multi-user public execution. A browser simulation is the fallback when safe isolation or capacity is unavailable.
+
+### Revised lab lifecycle
+
+```text
+Learner requests a lab
+  -> policy and capacity check
+  -> provision isolated disposable instance
+  -> issue short-lived access credential
+  -> learner interacts through controlled gateway
+  -> monitor resource/time/network policy
+  -> stop, destroy and verify cleanup
+  -> record minimal completion metadata
+```
+
+Never expose host infrastructure credentials or unrestricted network access to the learner. The lab worker must not share trust boundaries with the main web/API service or production database.
+
+### Revised rollout
+
+- M1: frontend foundation and accessible navigation.
+- M2: Academy content model and first plain-language learning path.
+- M3: CTF category pages, challenge metadata and server-authoritative attempt contract.
+- M4: browser simulation framework.
+- M5: trusted API, identity, database and scoring.
+- M6: isolated real-lab proof of concept after threat-model review and operational budget/capacity assessment.
+- M7: community, competitions and research experiences.
+
+This sequence keeps both lab modes in the product vision while preventing unsafe execution infrastructure from being rushed into the first release.
