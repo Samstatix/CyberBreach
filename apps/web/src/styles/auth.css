@@ -1,0 +1,41 @@
+/* Account page and topbar session affordance */
+.topbar-actions { display: flex; align-items: center; gap: 18px; }
+.account-link { display: inline-flex; align-items: center; gap: 7px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px; color: var(--text-1); font: 9px var(--font-mono); letter-spacing: .8px; white-space: nowrap; }
+.account-link:hover { border-color: var(--accent-dim); color: var(--accent-bright); }
+.account-card { width: min(520px, 100%); margin: 28px auto 0; padding: 25px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: linear-gradient(145deg, rgba(20,31,45,.98), rgba(10,17,26,.98)); box-shadow: var(--shadow-panel); }
+.account-card-icon { display: grid; place-items: center; width: 47px; height: 47px; margin-bottom: 18px; border: 1px solid rgba(54,185,237,.22); border-radius: 11px; background: rgba(54,185,237,.07); color: var(--accent); }
+.account-card h2 { margin: 10px 0 8px; font-size: 21px; }
+.account-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 0 0 18px; padding: 4px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-0); }
+.account-tabs button { padding: 10px 8px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--text-2); font: 9px var(--font-mono); letter-spacing: .8px; cursor: pointer; }
+.account-tabs button.active { border-color: rgba(54,185,237,.2); background: rgba(54,185,237,.08); color: var(--accent-bright); }
+.account-config-notice { margin-bottom: 18px; padding: 13px; border: 1px solid rgba(233,180,92,.25); border-radius: 7px; background: rgba(233,180,92,.05); }
+.account-config-notice strong { color: var(--warning); font-size: 11px; }
+.account-config-notice p { margin: 6px 0 0; color: var(--text-1); font-size: 10px; line-height: 1.8; }
+.account-config-notice code { color: var(--accent-bright); }
+.account-form { display: grid; gap: 14px; }
+.account-form label { display: grid; gap: 7px; color: var(--text-1); font-size: 10px; }
+.account-form input { width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: var(--bg-0); color: var(--text-0); font: 11px var(--font-ui); }
+.account-form input:focus { border-color: var(--accent-dim); box-shadow: 0 0 0 3px rgba(54,185,237,.08); }
+.account-form input::placeholder { color: var(--text-2); }
+.account-form small { color: var(--text-2); font-size: 9px; line-height: 1.6; }
+.account-submit { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 7px; cursor: pointer; }
+.account-submit:disabled { opacity: .45; cursor: not-allowed; }
+.account-status { margin: 14px 0 0; padding: 11px; border: 1px solid var(--border); border-radius: 6px; font-size: 10px; line-height: 1.7; }
+.account-status.success { border-color: rgba(57,201,138,.25); color: var(--success); background: rgba(57,201,138,.05); }
+.account-status.error { border-color: rgba(239,107,117,.25); color: #f18a91; background: rgba(239,107,117,.05); }
+.account-status.info { color: var(--text-1); }
+.account-email { color: var(--accent-bright); font-size: 12px; overflow-wrap: anywhere; }
+.account-security-note { display: flex; align-items: flex-start; gap: 9px; margin: 18px 0; padding: 12px; border: 1px solid rgba(54,185,237,.17); border-radius: 6px; background: rgba(54,185,237,.045); color: var(--accent); }
+.account-security-note svg { flex: 0 0 auto; }
+.account-security-note span { color: var(--text-1); font-size: 10px; line-height: 1.7; }
+.account-free-note { display: flex; align-items: center; gap: 7px; margin: 16px 0 0; color: var(--text-2); font-size: 9px; line-height: 1.6; }
+.account-free-note svg { flex: 0 0 auto; color: var(--success); }
+.account-public-note { margin: 18px auto 0; color: var(--text-2); text-align: center; font-size: 10px; }
+.account-public-note a { color: var(--accent); }
+.account-public-note a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .topbar-actions { gap: 8px; }
+  .topbar-actions .topbar-status { display: none; }
+  .account-link { padding: 7px 8px; font-size: 8px; }
+  .account-card { margin-top: 22px; padding: 19px; }
+}
