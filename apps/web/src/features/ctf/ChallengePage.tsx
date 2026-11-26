@@ -49,6 +49,7 @@ export default function ChallengePage() {
   }, [challenge?.id, user?.id]);
 
   if (!challenge) return <Navigate to="/ctf" replace />;
+  const activeChallenge = challenge;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -58,7 +59,7 @@ export default function ChallengePage() {
     if (!flag.trim()) { setError("Enter a flag before submitting."); return; }
     setBusy(true);
     try {
-      const response = await submitChallengeFlag(challenge.id, flag);
+      const response = await submitChallengeFlag(activeChallenge.id, flag);
       setResult(response);
       if (response.correct) await loadSolution();
     } catch (submissionError) {
