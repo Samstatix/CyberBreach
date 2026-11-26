@@ -1,5 +1,6 @@
 import { ArrowLeft, BookOpen, Lightbulb, Target } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import { getChallengesForCategory } from "./challengeCatalog";
 
 const data: Record<string, { title: string; plain: string; examples: string[]; learn: string[]; safe: string }> = {
   "web-exploitation": { title: "Web Exploitation", plain: "Websites are programs. They receive requests, check who you are and decide what information you can see or change. Web exploitation studies what can go wrong when those checks or assumptions are weak.", examples: ["SQL injection", "Cross-site scripting (XSS)", "Broken access control and IDOR", "Server-side request forgery (SSRF)"], learn: ["How browsers and servers communicate", "HTTP requests, responses, cookies and sessions", "Input handling and output encoding", "Authentication versus authorization"], safe: "All practical exercises use intentionally vulnerable applications owned by the platform or explicitly authorized training targets." },
@@ -13,19 +14,7 @@ const data: Record<string, { title: string; plain: string; examples: string[]; l
 export default function CTFCategoryPage() {
   const { category = "" } = useParams();
   const item = data[category];
+  const challenges = getChallengesForCategory(category);
   if (!item) return <section className="section-page"><Link className="back-link" to="/ctf"><ArrowLeft size={14}/> BACK TO CTF ARENA</Link><h1>Category not found</h1></section>;
-  return (
-    <section className="section-page">
-      <Link className="back-link" to="/ctf"><ArrowLeft size={14}/> BACK TO CTF ARENA</Link>
-      <div className="eyebrow">CTF ARENA / CATEGORY GUIDE</div>
-      <h1>{item.title}</h1>
-      <p className="section-description">{item.plain}</p>
-      <div className="category-learning-grid">
-        <article className="category-learning-card"><BookOpen size={20}/><h2>Start with the basics</h2><p>These are the ideas we teach before expecting you to solve a scored challenge.</p><ul>{item.learn.map(x=><li key={x}>{x}</li>)}</ul></article>
-        <article className="category-learning-card"><Target size={20}/><h2>What you will encounter</h2><p>Examples of techniques and challenge themes in this category.</p><ul>{item.examples.map(x=><li key={x}>{x}</li>)}</ul></article>
-      </div>
-      <div className="learning-note"><div className="note-symbol"><Lightbulb size={14}/></div><div><strong>Practice safely</strong><p>{item.safe}</p></div></div>
-      <div className="coming-panel"><Target size={22}/><div><strong>Challenge library is being developed</strong><p>We will publish original medium, hard and expert challenges after each has a tested solve path, progressive hints, a complete explanation and a reviewed safety boundary. This category guide is an educational outline, not a live challenge listing.</p></div></div>
-    </section>
-  );
+  return <section className="section-page"><Link className="back-link" to="/ctf"><ArrowLeft size={14}/> BACK TO CTF ARENA</Link><div className="eyebrow">CTF ARENA / CATEGORY GUIDE</div><h1>{item.title}</h1><p className="section-description">{item.plain}</p><div className="category-learning-grid"><article className="category-learning-card"><BookOpen size={20}/><h2>Start with the basics</h2><p>These are the ideas we teach before expecting you to solve a scored challenge.</p><ul>{item.learn.map(x=><li key={x}>{x}</li>)}</ul></article><article className="category-learning-card"><Target size={20}/><h2>What you will encounter</h2><p>Examples of techniques and challenge themes in this category.</p><ul>{item.examples.map(x=><li key={x}>{x}</li>)}</ul></article></div><div className="learning-note"><div className="note-symbol"><Lightbulb size={14}/></div><div><strong>Practice safely</strong><p>{item.safe}</p></div></div><div className="section-heading"><div><span className="eyebrow">ORIGINAL CHALLENGES</span><h2>Choose your difficulty</h2></div><span className="section-note">{challenges.length} CHALLENGES</span></div><div className="challenge-list">{challenges.map((challenge)=> <Link className="challenge-card" to={`/ctf/challenge/${challenge.slug}`} key={challenge.id}><div className="challenge-card-main"><span className={`difficulty-label ${challenge.difficulty}`}>{challenge.difficulty.toUpperCase()}</span><h3>{challenge.title}</h3><p>{challenge.summary}</p><small>{challenge.estimatedMinutes} MIN · {challenge.tags.slice(0,3).join(" · ")}</small></div><div className="challenge-card-points"><strong>{challenge.points}</strong><span>PTS</span></div></Link>)}</div><p className="content-disclaimer">Every challenge uses original fictional evidence. Full walkthroughs are withheld until a successful solve, and scoring is verified by the database rather than the browser.</p></section>;
 }
