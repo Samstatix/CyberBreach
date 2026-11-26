@@ -2,68 +2,60 @@
 
 **A free cybersecurity learning, practice, research and competition platform by CollabCircle.**
 
-CyberBreach is designed for everyone: people starting from zero through experienced security practitioners. Lessons use plain language and step-by-step demonstrations; scored CTF challenges target medium, hard and expert reasoning.
+CyberBreach is a self-contained React feature module developed in this repository so it can later be mounted inside the main CollabCircle Next.js/Vercel website. This repository is the source of truth; the main website is not changed during CyberBreach development.
 
-## Product pillars
+## Product scope
+- **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress.
+- **CTF Arena:** 18 original challenges across Web Exploitation, Cryptography, Reverse Engineering, Binary Exploitation, Forensics and Network Forensics, and OSINT & Misc. Every category has medium, hard and expert work.
+- **Cyber Labs:** browser simulations plus links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
+- **Operations:** interactive fictional incident-response scenarios.
+- **Community:** opt-in public CTF leaderboard and safety principles.
+- **AI Security Research:** LLM/agent security topics and official research references.
 
-- **Cyber Academy** — structured learning paths and guided practice.
-- **CTF Arena** — Web Exploitation; Cryptography; Reverse Engineering; Binary Exploitation (Pwn); Forensics and Network Forensics; OSINT & Misc.
-- **Cyber Labs** — browser-based simulations and, after security review, disposable isolated real environments.
-- **Community & Competition** — teams, events, leaderboards and achievements.
-- **AI Security Research** — LLM and agent security, adversarial ML and related research exercises.
+## Product decisions
+- Audience: everyone, from complete beginners to experienced practitioners.
+- Access: CyberBreach learning and challenges are free; no paid challenge advantages or premium-only learning tiers.
+- Labs: both browser simulations and real isolated environments. Real hosted lab execution is not enabled by exposing a shell from the web app.
+- Frontend: React + Vite + TypeScript, packaged as a mountable React module.
+- Platform services: Supabase Auth, PostgreSQL, Row Level Security and trusted database functions for scoring/progression.
 
-## Current development status
-
-The active development branch is `milestone-1/react-foundation`. The React/Vite/TypeScript frontend foundation is being built alongside the original vanilla JavaScript prototype. The original root application remains in place while migration proceeds.
-
-The Academy paths, CTF category guides and two-mode Labs information page are initial product scaffolding. They are not a claim that all courses, challenge content, authentication, scoring or live labs are already operational.
-
-## Requirements
-
-- Node.js 20 or later
-- npm 10 or later
-
-## Run the web application
-
-From the repository root:
+## Run locally
+Requirements: Node.js 20+ and npm 10+.
 
 ```bash
 npm install
+cp .env.example .env
 npm run dev
 ```
 
-The Vite development server prints its local URL.
-
-Build and type-check:
+Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env` to enable accounts, synchronized progress, flag scoring and the public leaderboard. The application remains browseable without Supabase configuration.
 
 ```bash
 npm run typecheck
+npm test
 npm run build
 ```
 
-## Architecture
+The build also emits `apps/web/dist/cyberbreach.integration.css` for a later namespaced Next.js mount.
 
-See:
-- [Platform architecture](docs/architecture.md)
-- [Frontend/backend decision record](docs/decisions/ADR-001-frontend-backend-foundation.md)
-- [Learning and challenge standard](docs/learning-and-challenge-standard.md)
+## Database setup
+1. Create a Supabase project.
+2. Apply every SQL migration in `supabase/migrations` in filename order.
+3. Run `supabase/seed.sql` after migrations to add the six categories and 18 original challenges.
+4. Configure email confirmation and password policy in Supabase Auth.
+5. Keep the service-role key out of browser/Vercel public variables.
 
-## Learning quality
+The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 
-Each learning unit should explain why a concept matters, introduce it in plain language, teach the correct technical vocabulary, demonstrate it, provide guided practice and then offer independent assessment. Challenges are not simplified to beginner quizzes: medium, hard and expert tasks require real reasoning. Progressive hints and complete post-challenge explanations support learning.
+## Vercel integration later
+Follow [the Next.js integration guide](apps/web/src/integration/README.md). The integration is intentionally not deployed or copied into the main CollabCircle repository from this branch.
 
-## Safety
+## Security boundaries
+- All challenge artifacts and incident scenarios are fictional and self-authored.
+- No real third-party target is part of a CyberBreach challenge.
+- No arbitrary code execution or public shell is exposed by the browser app.
+- External lab providers run their own isolated environments and access rules.
+- A future hosted-lab provider must be separately reviewed, disposable, network-restricted and resource-limited.
+- Never commit secrets, API keys, private challenge data or real user evidence.
 
-- Only use systems owned by CollabCircle or explicitly authorized for training.
-- No public arbitrary-code execution is enabled by this frontend foundation.
-- Real labs must be isolated, disposable, resource-limited and network-restricted.
-- Never commit API keys, database secrets, challenge answers or private test data.
-- Do not use the platform to target real third-party systems.
-
-## Free access
-
-The product is intended to remain free to access. Infrastructure fair-use limits, queueing and temporary lab leases may be necessary to protect shared capacity; they are operational limits, not paid tiers. No paid challenge advantage or premium-only learning category is part of the product direction.
-
-## Brand
-
-Retain CollabCircle's black, white and electric-blue identity. The current frontend uses a dark navy/charcoal base and cyan accents as an evolving implementation of that direction.
+See [the external research policy](docs/external-research-policy.md).

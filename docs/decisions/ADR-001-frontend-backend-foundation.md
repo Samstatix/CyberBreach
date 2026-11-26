@@ -1,45 +1,29 @@
-# ADR-001: Frontend and backend foundation
+# ADR-001: React module, managed platform services and later Next.js integration
 
-- **Status:** Accepted for Milestone 1 planning
-- **Date:** 2026-11-27
-- **Branch:** `milestone-1/react-foundation`
+**Status:** Accepted  
+**Date:** 2026-11-26, updated 2026-11-27
 
 ## Context
+CyberBreach is a standalone cybersecurity learning and challenge product that will later be integrated into the main CollabCircle Next.js/Vercel website. Development must remain isolated in `Samstatix/CyberBreach` until the module is reviewed and ready to mount.
 
-The existing CyberBreach prototype is a small vanilla JavaScript application with a hash router, custom CSS, and a phishing email training challenge. The intended product spans Academy, CTF Arena, Cyber Labs, Community & Competition, and AI Security Research. The current prototype has no backend, authentication, database, or trusted challenge validation.
-
-## Decision
-
-1. Adopt **React + Vite + TypeScript** for the browser application.
-2. Keep the current dark operational visual identity and evolve its tokens/components.
-3. Use **Supabase (PostgreSQL, Auth, Storage, RLS)** as the initial managed identity/data foundation.
-4. Add a **Fastify TypeScript API** for trusted server-side workflows such as submissions, flag checks, scoring and XP ledger writes.
-5. Keep any execution of untrusted code in a separate isolated worker boundary. Do not use Supabase Edge Functions or the browser as an arbitrary code execution sandbox.
-6. Start as a modular monolith and defer Redis, queues, Kubernetes and service splitting until required.
+## Decisions
+- Build the UI with React, TypeScript and Vite for standalone development and tests.
+- Keep feature code mountable through `CyberBreachModule`, which accepts a React Router basename.
+- Generate a CSS bundle namespaced under `.cyberbreach-root` for later use inside the main Next.js site.
+- Use Supabase Auth and PostgreSQL with RLS for accounts and user-owned progress.
+- Keep CTF scoring, flag verification and private walkthrough access in trusted SQL functions.
+- Use external specialist lab providers for real isolated practice until a separate hosted-lab service passes a security review.
+- Keep all code, migrations, content and documentation in the CyberBreach repository.
 
 ## Consequences
+- CyberBreach can run and be tested independently without changing the main Vercel site.
+- The same React module can later be mounted under a Next.js catch-all route.
+- CSS is built as a namespaced integration artifact to reduce style collisions.
+- Public browser configuration contains only Supabase URL and publishable/anon key.
+- A portal URL is only a launch link; it does not provision a hosted lab.
 
-- The initial frontend migration can happen independently of backend provisioning.
-- PostgreSQL RLS and API authorization must both be designed and tested.
-- Client-visible challenge metadata must be separated from private validation material.
-- The project incurs a modest migration cost now in exchange for clearer feature boundaries and safer server-authoritative scoring.
-- The current vanilla app remains available during migration and is not deleted in the first milestone.
-
-## Alternatives considered
-
-- **Continue vanilla JavaScript:** lowest short-term migration cost, but increasingly difficult to maintain as independent product areas and complex state grow.
-- **Next.js:** capable, but server-side rendering is not currently a requirement; Vite keeps the frontend shell simpler.
-- **Custom backend immediately:** offers control but adds deployment and operations overhead before the first product workflows are validated.
-- **Supabase-only client writes:** unsuitable for secret-bearing challenge validation and authoritative score/XP operations.
-
-
-## Confirmed product constraints
-
-The product owner has confirmed that CyberBreach must serve complete beginners through experienced professionals, provide both browser simulations and real isolated labs, and remain free to access.
-
-Consequences:
-- Do not introduce premium-only learning paths, paid challenge categories or pay-to-win scoring.
-- Use fair-use capacity controls and lab leases to protect shared infrastructure; communicate these limits clearly.
-- Provide plain-language teaching, progressive hints and accessible UI while retaining medium-to-expert scored challenges.
-- Treat browser simulations as explicitly simulated; use isolated disposable infrastructure for tasks requiring real systems.
-- Do not launch public arbitrary-code execution until isolation, abuse controls, cleanup, capacity and incident response have been reviewed.
+## Rejected alternatives
+- Modifying the main CollabCircle repository during feature development: rejected to preserve isolation.
+- Putting trusted scoring or flag secrets in React: rejected because browser bundles are inspectable.
+- Running arbitrary code or Docker workloads inside Vercel: rejected because it crosses an unsafe execution boundary.
+- Copying proprietary TryHackMe or Hack The Box material: rejected for licensing and content-integrity reasons.
