@@ -227,7 +227,8 @@ grant select on public.challenge_categories, public.challenges to anon, authenti
 grant select on public.profiles to authenticated;
 grant update (username, display_name, bio, avatar_url) on public.profiles to authenticated;
 grant select on public.challenge_attempts, public.challenge_solves, public.xp_ledger to authenticated;
-grant select, insert, update on public.academy_lesson_progress to authenticated;
+grant select, insert on public.academy_lesson_progress to authenticated;
+grant update (completed_at) on public.academy_lesson_progress to authenticated;
 
 -- Atomic flag verification and first-solve scoring.
 -- The user identity comes from the verified Supabase JWT (auth.uid()), never
