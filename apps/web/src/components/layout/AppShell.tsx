@@ -1,6 +1,6 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { Activity, BookOpen, BrainCircuit, Flag, FlaskConical, LayoutDashboard, Menu, Shield, Users } from "lucide-react";
-import { useState } from "react";
+import { useState } from "react";\nimport { UserRound } from "lucide-react";\nimport { useAuth } from "../../features/auth/AuthProvider";
 
 const links = [
   { to: "/", label: "Overview", icon: LayoutDashboard, end: true },
@@ -13,7 +13,7 @@ const links = [
 ];
 
 export default function AppShell() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);\n  const { user, loading } = useAuth();
   return (
     <div className="app-shell">
       <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
@@ -29,13 +29,13 @@ export default function AppShell() {
             </NavLink>
           ))}
         </nav>
-        <div className="sidebar-foot"><span className="online-dot" /> SYSTEM ONLINE <small>FOUNDATION BUILD 0.1</small></div>
+        <div className="sidebar-foot"><span className="online-dot" /> SYSTEM ONLINE <small>FOUNDATION BUILD 0.2</small></div>
       </aside>
       <div className="main-column">
         <header className="topbar">
           <button className="mobile-menu" onClick={() => setOpen(!open)} aria-label="Toggle navigation"><Menu size={20} /></button>
           <div className="breadcrumb"><span>COLLABCIRCLE</span><b>/</b> CYBERSECURITY DEPARTMENT</div>
-          <div className="topbar-status"><span className="online-dot" /> DEVELOPMENT ENVIRONMENT</div>
+          <div className="topbar-actions"><div className="topbar-status"><span className="online-dot" /> DEVELOPMENT ENVIRONMENT</div><Link className="account-link" to="/account"><UserRound size={15}/><span>{loading ? "CHECKING…" : user ? "MY ACCOUNT" : "SIGN IN"}</span></Link></div>
         </header>
         <main className="page-content"><Outlet /></main>
         <footer className="site-footer">CYBERBREACH <span>·</span> LEARN WITH PURPOSE. PRACTICE WITH PERMISSION.</footer>
