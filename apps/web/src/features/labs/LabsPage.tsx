@@ -1,33 +1,26 @@
-import { MonitorPlay, Server, ShieldCheck, Clock3, ArrowRight } from "lucide-react";
+import { ArrowRight, Clock3, ExternalLink, MonitorPlay, Server, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import { runtimeConfig } from "../../lib/runtimeConfig";
 
-export default function LabsPage() {
-  return (
-    <section className="section-page">
-      <div className="eyebrow">PRACTICE / CYBER LABS</div>
-      <h1>Practice safely. Learn by doing.</h1>
-      <p className="section-description">CyberBreach will offer two kinds of practical environment. The page labels them clearly so learners always know whether they are using a simulation or a real isolated system.</p>
-      <div className="lab-mode-grid">
-        <article className="lab-mode-card">
-          <div className="lab-mode-icon"><MonitorPlay size={24}/></div>
-          <span className="area-tag">MODE 01 / BROWSER</span>
-          <h2>Interactive simulations</h2>
-          <p>Practice concepts directly in the browser. These exercises are designed to be quick to start and safe for introductory learning.</p>
-          <ul><li>Command-line learning simulator</li><li>Log and packet inspection exercises</li><li>Guided web request demonstrations</li><li>Incident-response scenarios</li></ul>
-          <div className="lab-mode-status">SIMULATION · NO REAL HOST ACCESS</div>
-          <Link className="lab-launch-link" to="/labs/linux-terminal">OPEN LINUX SIMULATOR <ArrowRight size={14}/></Link>
-        </article>
-        <article className="lab-mode-card">
-          <div className="lab-mode-icon"><Server size={24}/></div>
-          <span className="area-tag">MODE 02 / ISOLATED SYSTEM</span>
-          <h2>Real disposable labs</h2>
-          <p>For advanced exercises that need actual tools, operating systems or vulnerable services, a temporary isolated environment will be provisioned.</p>
-          <ul><li>Disposable Linux environments</li><li>Intentionally vulnerable web applications</li><li>Network and forensic tool exercises</li><li>Resettable, time-limited sessions</li></ul>
-          <div className="lab-mode-status planned"><Clock3 size={13}/> PLANNED · NOT YET AVAILABLE</div>
-        </article>
-      </div>
-      <div className="learning-note"><div className="note-symbol"><ShieldCheck size={14}/></div><div><strong>Safety comes first</strong><p>Real labs will be isolated from production systems, have resource and time limits, restrict network access and be destroyed after use. No real third-party targets are part of the training environment.</p></div></div>
-      <div className="coming-panel"><ShieldCheck size={22}/><div><strong>Lab infrastructure is not active yet</strong><p>This page describes the planned two-mode lab model. We will not enable public execution of untrusted code until isolation, monitoring, cleanup and abuse controls have been tested.</p></div></div>
-    </section>
-  );
+const externalLabs=[
+ {name:"TryHackMe · Pre Security",kind:"BEGINNER PATH",description:"Start with computer, networking and web fundamentals, then move into guided cybersecurity practice.",url:"https://tryhackme.com/path/outline/beginner"},
+ {name:"TryHackMe · Cyber Security 101",kind:"FOUNDATION PATH",description:"Build a broader base across Linux, Windows, networking, cryptography, offensive and defensive security.",url:"https://tryhackme.com/path/outline/cybersecurity101"},
+ {name:"Hack The Box Academy",kind:"TECHNICAL TRAINING",description:"Explore modular sections, skill paths and practical assessment environments. Availability and access rules are managed by HTB.",url:"https://academy.hackthebox.com/catalogue/paths"},
+ {name:"PortSwigger Web Security Academy",kind:"WEB SECURITY LABS",description:"Practice web vulnerabilities in dedicated interactive labs, including access control, APIs and newer web attack areas.",url:"https://portswigger.net/web-security/"},
+ {name:"OverTheWire · Bandit",kind:"LINUX PRACTICE",description:"Build command-line confidence through a progressive wargame hosted by OverTheWire.",url:"https://overthewire.org/wargames/bandit/"}
+];
+
+export default function LabsPage(){
+ return <section className="section-page labs-page">
+  <div className="eyebrow">PRACTICE / CYBER LABS</div><h1>Practice safely. Learn by doing.</h1>
+  <p className="section-description">Use browser simulations for quick practice, then move to real isolated training environments when a task needs an actual operating system or vulnerable service.</p>
+  <div className="lab-mode-grid">
+   <article className="lab-mode-card"><div className="lab-mode-icon"><MonitorPlay size={24}/></div><span className="area-tag">MODE 01 / BROWSER</span><h2>Interactive simulations</h2><p>Exercises run inside this page using synthetic data and an allow-listed command set.</p><ul><li>Linux command-line simulator</li><li>Authentication log investigation</li><li>Safe, guided evidence exercises</li></ul><div className="lab-mode-status">AVAILABLE · NO REAL HOST ACCESS</div><Link className="lab-launch-link" to="/labs/linux-terminal">OPEN LINUX SIMULATOR <ArrowRight size={14}/></Link></article>
+   <article className="lab-mode-card"><div className="lab-mode-icon"><Server size={24}/></div><span className="area-tag">MODE 02 / REAL ENVIRONMENTS</span><h2>Isolated training platforms</h2><p>Launch real practice environments hosted by specialist providers. Each provider controls its own accounts, lab scope and terms.</p><ul><li>Disposable target environments</li><li>Real tools and operating systems</li><li>Provider-managed reset and isolation</li></ul><div className="lab-mode-status"><ShieldCheck size={13}/> EXTERNAL PROVIDERS · OPEN IN NEW TAB</div></article>
+  </div>
+  <div className="section-heading"><div><span className="eyebrow">REAL LAB ENVIRONMENTS</span><h2>Choose a trusted provider</h2></div><span className="section-note">EXTERNAL TRAINING</span></div>
+  <div className="external-lab-grid">{externalLabs.map(lab=><article className="external-lab-card" key={lab.url}><span className="area-tag">{lab.kind}</span><h3>{lab.name}</h3><p>{lab.description}</p><a href={lab.url} target="_blank" rel="noreferrer">OPEN PROVIDER <ExternalLink size={13}/></a></article>)}</div>
+  <article className="hosted-lab-card"><div><span className="eyebrow">CYBERBREACH HOSTED LAB GATEWAY</span><h2>{runtimeConfig.labPortalUrl?"Hosted lab portal connected":"Hosted lab provider not configured"}</h2><p>{runtimeConfig.labPortalUrl?"Your deployment has supplied a dedicated isolated-lab portal URL. Launches are handled by that provider, not by this browser.":"The integration point is ready, but no lab orchestration endpoint has been supplied. Configure the public portal URL only after the isolated provider has passed security review."}</p></div>{runtimeConfig.labPortalUrl?<a className="primary-button" href={runtimeConfig.labPortalUrl} target="_blank" rel="noreferrer">OPEN HOSTED LABS <ExternalLink size={14}/></a>:<span className="lab-mode-status planned"><Clock3 size={13}/> NOT CONFIGURED</span>}</article>
+  <div className="learning-note"><div className="note-symbol"><ShieldCheck size={14}/></div><div><strong>Scope and safety</strong><p>External providers run their own environments and may have their own free or paid access rules. CyberBreach does not copy their proprietary room content or claim to log you into those services. Never test a real third-party target without explicit authorization.</p></div></div>
+ </section>;
 }

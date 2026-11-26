@@ -1,22 +1,11 @@
 /**
- * Browser Supabase client.
- *
- * Only the project URL and publishable/anon key belong here. The service-role
- * key bypasses row-level security and must never be exposed to Vite/browser code.
+ * Browser Supabase client. The service-role key must never be exposed to browser code.
+ * runtimeConfig supports standalone Vite and a later Next.js mount.
  */
 import { createClient } from "@supabase/supabase-js";
+import { runtimeConfig } from "./runtimeConfig";
 
-const projectUrl = import.meta.env.VITE_SUPABASE_URL?.trim() ?? "";
-const publishableKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() ?? "";
-
-export const isSupabaseConfigured = Boolean(projectUrl && publishableKey);
-
-export const supabase = isSupabaseConfigured
-  ? createClient(projectUrl, publishableKey, {
-      auth: {
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-        persistSession: true,
-      },
-    })
-  : null;
+export const isSupabaseConfigured = Boolean(runtimeConfig.supabaseUrl && runtimeConfig.supabaseAnonKey);
+export const supabase = isSupabaseConfigured ? createClient(runtimeConfig.supabaseUrl,runtimeConfig.supabaseAnonKey,{
+ auth:{autoRefreshToken:true,detectSessionInUrl:true,persistSession:true}
+}) : null;
