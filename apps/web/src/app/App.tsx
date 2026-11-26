@@ -1,22 +1,26 @@
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppShell from "../components/layout/AppShell";
-import DashboardPage from "../features/dashboard/DashboardPage";
-import CTFArenaPage from "../features/ctf/CTFArenaPage";
-import AcademyPage from "../features/academy/AcademyPage";
-import CTFCategoryPage from "../features/ctf/CTFCategoryPage";
-import ChallengePage from "../features/ctf/ChallengePage";
-import LabsPage from "../features/labs/LabsPage";
-import AcademyCoursePage from "../features/academy/AcademyCoursePage";
-import AcademyLessonPage from "../features/academy/AcademyLessonPage";
-import PhishingHunterPage from "../features/academy/PhishingHunterPage";
-import TerminalSimulatorPage from "../features/labs/TerminalSimulatorPage";
-import AccountPage from "../features/auth/AccountPage";
-import OperationsPage from "../features/operations/OperationsPage";
-import CommunityPage from "../features/community/CommunityPage";
-import ResearchPage from "../features/research/ResearchPage";
+
+const DashboardPage=lazy(()=>import("../features/dashboard/DashboardPage"));
+const CTFArenaPage=lazy(()=>import("../features/ctf/CTFArenaPage"));
+const AcademyPage=lazy(()=>import("../features/academy/AcademyPage"));
+const CTFCategoryPage=lazy(()=>import("../features/ctf/CTFCategoryPage"));
+const ChallengePage=lazy(()=>import("../features/ctf/ChallengePage"));
+const LabsPage=lazy(()=>import("../features/labs/LabsPage"));
+const AcademyCoursePage=lazy(()=>import("../features/academy/AcademyCoursePage"));
+const AcademyLessonPage=lazy(()=>import("../features/academy/AcademyLessonPage"));
+const PhishingHunterPage=lazy(()=>import("../features/academy/PhishingHunterPage"));
+const TerminalSimulatorPage=lazy(()=>import("../features/labs/TerminalSimulatorPage"));
+const AccountPage=lazy(()=>import("../features/auth/AccountPage"));
+const OperationsPage=lazy(()=>import("../features/operations/OperationsPage"));
+const CommunityPage=lazy(()=>import("../features/community/CommunityPage"));
+const ResearchPage=lazy(()=>import("../features/research/ResearchPage"));
+
+function PageLoading(){return <section className="section-page"><div className="eyebrow">CYBERBREACH</div><p>Loading this learning area…</p></section>;}
 
 export default function App(){
- return <Routes><Route element={<AppShell/>}>
+ return <Suspense fallback={<PageLoading/>}><Routes><Route element={<AppShell/>}>
   <Route index element={<DashboardPage/>}/>
   <Route path="account" element={<AccountPage/>}/>
   <Route path="academy" element={<AcademyPage/>}/>
@@ -32,5 +36,5 @@ export default function App(){
   <Route path="community" element={<CommunityPage/>}/>
   <Route path="research" element={<ResearchPage/>}/>
   <Route path="*" element={<Navigate to="/" replace/>}/>
- </Route></Routes>;
+ </Route></Routes></Suspense>;
 }
