@@ -1,0 +1,47 @@
+name: CyberBreach CI
+
+# Run the same checks for development pushes and pull requests into main.
+on:
+  push:
+    branches:
+      - main
+      - milestone-1/react-foundation
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cyberbreach-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web-quality:
+    name: Web typecheck, tests and production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The repository does not have a committed lockfile yet. Use npm install
+      # until the team generates and commits package-lock.json for reproducibility.
+      - name: Install workspace dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check the React application
+        run: npm run typecheck
+
+      - name: Run curriculum and application tests
+        run: npm test
+
+      - name: Build the production frontend
+        run: npm run build
