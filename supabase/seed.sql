@@ -562,7 +562,7 @@ Evidence:
 Sanitized output:
   %1$p -> 0x616d726f667b4243
   %2$p -> 0x676e697274735f74
-  %3$p -> 0x0000007d6b61656c
+  %3$p -> 0x00007d6b61656c5f
 
 Target architecture: little-endian, 64-bit.
 

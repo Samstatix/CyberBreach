@@ -34,7 +34,7 @@ export default function DashboardPage() {
         </Link>
       </section>
       <section className="learning-note">
-        <div className="note-symbol">i</div><div><strong>Our learning promise</strong><p>Simple explanations are the starting point, not the finish line. Challenges will progress from medium to expert, with optional hints, checkpoints and post-challenge explanations.</p></div>
+        <div className="note-symbol">i</div><div><strong>Our learning promise</strong><p>Simple explanations are the starting point, not the finish line. Our original challenges progress from medium to expert, with optional hints and post-solve explanations.</p></div>
       </section>
     </>
   );

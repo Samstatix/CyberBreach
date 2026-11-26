@@ -321,7 +321,7 @@ export const challengeCatalog: Challenge[] = [
     "summary": "Reconstruct a leaked byte string from positional pointer values in a safe, synthetic trace.",
     "objective": "Interpret little-endian 64-bit values and concatenate their byte representation.",
     "scenario": "A fictional diagnostic program incorrectly treats user input as a format string. A sanitized debugger trace shows three positional values; the task is offline analysis only.",
-    "artifact": "Sanitized output:\n  %1$p -> 0x616d726f667b4243\n  %2$p -> 0x676e697274735f74\n  %3$p -> 0x0000007d6b61656c\n\nTarget architecture: little-endian, 64-bit.",
+    "artifact": "Sanitized output:\n  %1$p -> 0x616d726f667b4243\n  %2$p -> 0x676e697274735f74\n  %3$p -> 0x00007d6b61656c5f\n\nTarget architecture: little-endian, 64-bit.",
     "task": "Convert each 64-bit value to eight little-endian bytes, remove only trailing null bytes, concatenate in order and read the ASCII string.",
     "prerequisites": [
       "Hexadecimal",

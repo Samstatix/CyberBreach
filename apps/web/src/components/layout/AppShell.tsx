@@ -32,7 +32,7 @@ export default function AppShell() {
             </NavLink>
           ))}
         </nav>
-        <div className="sidebar-foot"><span className="online-dot" /> SYSTEM ONLINE <small>FOUNDATION BUILD 0.2</small></div>
+        <div className="sidebar-foot"><span className="online-dot" /> SYSTEM ONLINE <small>PLATFORM BUILD 0.3</small></div>
       </aside>
       <div className="main-column">
         <header className="topbar">
