@@ -63,3 +63,19 @@ button { font: inherit; }
 @media (max-width: 1050px) { .area-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero-emblem { min-width: 160px; } }
 @media (max-width: 760px) { .sidebar { transform: translateX(-100%); transition: transform .2s; box-shadow: var(--shadow-panel); } .sidebar.sidebar-open { transform: translateX(0); } .main-column { margin-left: 0; } .mobile-menu { display: inline-flex; } .topbar { padding: 0 18px; } .breadcrumb { font-size: 8px; } .topbar-status { display: none; } .page-content { padding: 24px 17px 40px; } .hero { padding: 27px 23px; } .hero-emblem { display: none; } .research-card { grid-column: span 2; } .site-footer { padding: 15px 18px; } }
 @media (max-width: 520px) { .area-grid { grid-template-columns: 1fr; } .research-card { grid-column: auto; } .section-heading { align-items: start; flex-direction: column; gap: 9px; } .hero h1 { letter-spacing: -1.2px; } }
+
+
+/* CTF Arena taxonomy */
+.difficulty-strip { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 25px 0 17px; }
+.difficulty-strip span { padding: 7px 10px; border: 1px solid var(--border); border-radius: 5px; color: var(--accent-bright); background: rgba(54,185,237,.06); font: 9px var(--font-mono); letter-spacing: 1px; }
+.difficulty-strip small { margin-left: 5px; color: var(--text-2); font-size: 10px; }
+.category-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.category-card { min-height: 220px; padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-md); background: linear-gradient(145deg, rgba(20,31,45,.95), rgba(13,22,33,.95)); }
+.category-top { display: flex; justify-content: space-between; align-items: center; color: var(--accent); }
+.category-top span { color: var(--text-2); font: 10px var(--font-mono); letter-spacing: 1.5px; }
+.category-card h2 { margin: 20px 0 8px; font-size: 17px; }
+.category-card p { min-height: 42px; margin: 0; color: var(--text-1); font-size: 11px; line-height: 1.8; }
+.category-card small { display: block; margin-top: 12px; color: var(--text-2); font: 9px var(--font-mono); line-height: 1.7; }
+.category-card a { display: inline-flex; align-items: center; gap: 7px; margin-top: 17px; color: var(--accent); font: 9px var(--font-mono); letter-spacing: 1px; }
+.category-card:hover { border-color: var(--accent-dim); }
+@media (max-width: 620px) { .category-grid { grid-template-columns: 1fr; } .difficulty-strip small { flex-basis: 100%; margin: 3px 0 0; } }
