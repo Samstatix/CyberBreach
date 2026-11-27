@@ -23,6 +23,7 @@ on:
       - phase-15/cyro-learning-assistant
       - phase-16/cyro-accessibility-and-guardrails
       - phase-17/cyro-adaptive-teaching
+      - phase-18/cyro-contextual-hints
   pull_request:
     branches:
       - main
