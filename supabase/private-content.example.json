@@ -1,0 +1,180 @@
+{
+  "challenges": [
+    {
+      "slug": "web-broken-badge",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "web-redirect-boundary",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "web-claims-wrong-place",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "crypto-shifted-archive",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "crypto-reused-stream",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "crypto-small-modulus",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "reverse-strings-static",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "reverse-branch-table",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "reverse-opcode-breadcrumbs",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "pwn-stack-map",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "pwn-format-string-ledger",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "pwn-heap-afterlife",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "forensics-one-minute",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "forensics-dns-breadcrumbs",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "forensics-carved-header",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "osint-poster-pier-nine",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "osint-three-mirrors",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    },
+    {
+      "slug": "osint-signal-without-person",
+      "releaseVersion": 2,
+      "flag": "CB{REPLACE_WITH_A_NEW_RANDOM_FLAG_AT_LEAST_24_BYTES}",
+      "walkthroughMd": "REPLACE_ME_WITH_A_NEW_PRIVATE_WALKTHROUGH",
+      "defensiveNotesMd": "REPLACE_ME_WITH_PRIVATE_DEFENSIVE_NOTES",
+      "reflectionQuestion": "REPLACE_ME_WITH_A_REFLECTION_QUESTION"
+    }
+  ],
+  "operationsMissions": [
+    {
+      "missionId": "auth-burst",
+      "correctOptionId": "REPLACE_ME_WITH_THE_ROTATED_CORRECT_OPTION_ID"
+    },
+    {
+      "missionId": "dns-burst",
+      "correctOptionId": "REPLACE_ME_WITH_THE_ROTATED_CORRECT_OPTION_ID"
+    },
+    {
+      "missionId": "priv-change",
+      "correctOptionId": "REPLACE_ME_WITH_THE_ROTATED_CORRECT_OPTION_ID"
+    }
+  ],
+  "labTasks": [
+    {
+      "taskId": "linux-auth-source",
+      "answer": "REPLACE_ME_WITH_THE_ROTATED_TASK_ANSWER"
+    },
+    {
+      "taskId": "linux-listening-ports",
+      "answer": "REPLACE_ME_WITH_THE_ROTATED_TASK_ANSWER"
+    },
+    {
+      "taskId": "linux-default-gateway",
+      "answer": "REPLACE_ME_WITH_THE_ROTATED_TASK_ANSWER"
+    },
+    {
+      "taskId": "linux-current-user",
+      "answer": "REPLACE_ME_WITH_THE_ROTATED_TASK_ANSWER"
+    }
+  ]
+}
