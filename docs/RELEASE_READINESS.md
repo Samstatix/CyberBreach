@@ -67,3 +67,12 @@ Release is blocked if any of the following remain unknown: production Supabase m
 A successful GitHub Actions run validates the checks in that workflow only. It does not prove the external Supabase project, Vercel deployment, Ollama host, email provider or host-site integration is configured and working.
 
 **Release status: NOT YET CERTIFIED.** Complete this checklist against the actual production environment and record the release commit and deployment URLs before announcing launch.
+
+
+## Current release-candidate CI evidence
+
+The final code candidate has passed the repository workflow, including Deno checks for both Edge Functions, frontend type-checking, application tests, a dependency audit reporting zero vulnerabilities, and the production build. The lockfile generated and committed by the release workflow was installed with `npm ci`.
+
+Evidence: https://github.com/Samstatix/CyberBreach/actions/runs/46071999878
+
+This evidence covers repository checks only. It does not certify the deployed Supabase project, Vercel environment, Ollama host, email delivery or the main CollabCircle application.
