@@ -1,6 +1,5 @@
 -- Idempotent seed for the six agreed CTF disciplines.
--- Challenge records are published only after their supplied evidence, solve path,
--- progressive hints, flag digest and safety boundary have been reviewed.
+-- Public challenge metadata only. Flags and walkthroughs are loaded separately from an ignored private file.
 
 insert into public.challenge_categories (slug, name, description, sort_order)
 values
@@ -60,19 +59,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '4900ca35ae0284618395c8e60837b10109068e9b510bda82fb3f9cb350e74c73', true from public.challenges where slug = 'web-broken-badge'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The active session belongs to learner-17. Record 5101 belongs to that user, while record 5102 belongs to learner-44 but is still returned with HTTP 200. Record 5103 is correctly denied. The broken object-level authorization is therefore on record 5102. The accepted flag identifies that record.', 'Authorize every object access against the authenticated principal and the object''s tenant/owner on the server. Do not rely on unpredictable IDs or on the fact that a user has logged in. Add tests that attempt cross-user reads and writes.', 'Why is authentication alone insufficient to protect an API resource?'
-from public.challenges where slug = 'web-broken-badge'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- web-redirect-boundary
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -116,19 +102,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'a5f2c85c4272e9aa6e4d03ef7194f433d8f97d0eee55e1cbc4e85a51ec1b34a7', true from public.challenges where slug = 'web-redirect-boundary'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The prefix check sees the trusted text at the start and accepts the string. In URL syntax, however, the text before @ is user information. The parser identifies 127.0.0.1 as the hostname and 8443 as the port. The flag encodes those two parsed fields.', 'Parse the URL with a standards-compliant parser, reject user information, compare the normalized origin against an exact allow-list, and validate the resolved destination at connection time. Do not use startsWith or substring checks for URL trust decisions.', 'What should an allow-list compare: the raw URL string or the normalized origin?'
-from public.challenges where slug = 'web-redirect-boundary'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- web-claims-wrong-place
 insert into public.challenges (
@@ -177,19 +150,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'fd6ee019888cbccffe1f6108245ea2c1fd230460f6ea0f7df34ded9fdef0821f', true from public.challenges where slug = 'web-claims-wrong-place'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The signed token says the user is an analyst and belongs to org-17. The path also requests org-17, so the tenant check passes. The role check then prefers the X-Role request header, which the caller controls, over the verified role claim. The request therefore supplies its own administrative role. The vulnerability is trusting a role header.', 'Derive roles only from verified server-side identity and authorization data. Ignore client-supplied privilege headers, enforce tenant and object ownership checks independently, and add negative tests for forged role headers.', 'Why should tenant membership and privileged role checks be separate authorization decisions?'
-from public.challenges where slug = 'web-claims-wrong-place'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- crypto-shifted-archive
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -225,19 +185,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'da831f3e6f410b438312a45c2c1c80eb04cac4bae37221f8e1892603ed0d9478', true from public.challenges where slug = 'crypto-shifted-archive'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'A Caesar cipher moves each letter by a fixed number of alphabet positions. The note says the ciphertext was shifted forward by seven, so reverse it by moving each letter backward by seven. Keep punctuation and underscores unchanged. The decoded text is the flag.', 'A Caesar shift has only 26 possible keys and provides no meaningful confidentiality. Use modern, vetted authenticated encryption rather than substitution or encoding schemes.', 'What is the difference between encoding, obfuscation and encryption?'
-from public.challenges where slug = 'crypto-shifted-archive'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- crypto-reused-stream
 insert into public.challenges (
@@ -280,19 +227,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'ed9968c5d9eb412b3975d3ea63bc8b378d588d9613812d0f89c8a543d7872428', true from public.challenges where slug = 'crypto-reused-stream'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'XOR the known plaintext bytes with the first ciphertext bytes to recover the keystream. The service repeats a short key, so the recovered bytes reveal the repeating pattern. XOR the second ciphertext with that same pattern to recover the flag. The weakness is key-stream reuse.', 'Never reuse a stream-cipher key/nonce pair. Prefer a modern authenticated-encryption construction such as AES-GCM or ChaCha20-Poly1305 with unique nonces, and enforce nonce uniqueness in the application.', 'Why does reusing a stream keystream allow information from one plaintext to help recover another?'
-from public.challenges where slug = 'crypto-reused-stream'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- crypto-small-modulus
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -333,19 +267,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '9e9b23652394e407ca509561774644c6ff7f40d04fdfa5812b54013955a603b2', true from public.challenges where slug = 'crypto-small-modulus'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The modulus factors into p = 101 and q = 113. Therefore φ(n) = 100 × 112 = 11200. The modular inverse of 17 modulo 11200 is d = 3953. Raise each ciphertext block to d modulo n, convert the resulting integers to ASCII and concatenate the characters. The recovered string is the flag.', 'RSA requires appropriately large keys and secure padding. Textbook RSA on raw small integers is deterministic and vulnerable to factoring and structural attacks. Use vetted libraries, modern key sizes and OAEP padding.', 'Why is a large RSA modulus necessary, and why is padding still required when the modulus is large?'
-from public.challenges where slug = 'crypto-small-modulus'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- reverse-strings-static
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -381,19 +302,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '358cbbd4b1c30c3f3bf6a174bf1169d9e22b5d19e620c2402426ad37de8eb530', true from public.challenges where slug = 'reverse-strings-static'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The extracted constant is Base64. Decode it as a single value; the result is readable ASCII and begins with CB{. The program was not encrypting the message, only encoding it for storage.', 'Do not treat Base64 or other encodings as a security control. Avoid embedding secrets in client binaries or public executable resources.', 'Why can strings and encoded constants be useful during static analysis?'
-from public.challenges where slug = 'reverse-strings-static'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- reverse-branch-table
 insert into public.challenges (
@@ -431,19 +339,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '40e64495ae22d7e3e23364085d43c68fdec8dfd14bc7002419ec857de6f65b01', true from public.challenges where slug = 'reverse-branch-table'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The transformation first XORs each input byte with 0x31, then adds three times the byte index modulo 256. To reverse it, subtract 3*i modulo 256 from each output byte, then XOR with 0x31. Convert the recovered byte sequence to ASCII to obtain the flag.', 'Obfuscation is not a reliable protection for secrets. Keep signing keys, credentials and sensitive authorization data out of distributed binaries; validate security decisions on a trusted server.', 'Why must a reversible transformation be undone in the opposite order from which it was applied?'
-from public.challenges where slug = 'reverse-branch-table'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- reverse-opcode-breadcrumbs
 insert into public.challenges (
@@ -486,19 +381,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'c15ef6d6704733f41708fd4d66e3a9bec43a3e30c8f2ffe49575f0d1ecd44c44', true from public.challenges where slug = 'reverse-opcode-breadcrumbs'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The routine applies three operations in order: add 7*i, rotate left by three, then XOR with a repeating four-byte key. Reverse them in the opposite order: XOR with the key byte, rotate right by three, then subtract 7*i modulo 256. The recovered ASCII sequence is the flag.', 'Do not rely on custom obfuscation to protect secrets or enforce access. Use standard cryptographic primitives for confidentiality and keep trust decisions outside distributed clients.', 'What information would you need if the key bytes were not included in the decompiler note?'
-from public.challenges where slug = 'reverse-opcode-breadcrumbs'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- pwn-stack-map
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -536,19 +418,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'e0489b0619a4cb0b6c4824c61a518cd84c187749c4505eff59e5e4cb2e6de211', true from public.challenges where slug = 'pwn-stack-map'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The buffer occupies offsets 0 through 31, which is 32 bytes. The saved RBP occupies the next eight bytes, offsets 32 through 39. Saved RIP therefore begins at offset 40. The exercise is about reading a memory layout, not executing an overwrite.', 'Use bounds-checked input handling and memory-safe languages where practical. Compiler stack canaries, ASLR, PIE and non-executable memory add defense in depth but do not replace fixing the underlying memory error.', 'Why should a developer fix the out-of-bounds write instead of relying only on stack canaries?'
-from public.challenges where slug = 'pwn-stack-map'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- pwn-format-string-ledger
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -585,19 +454,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '2d69637591757bc42fc8d6b066d223e7c7e14b4742d81e0de78a431d82c87657', true from public.challenges where slug = 'pwn-format-string-ledger'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'Each pointer value represents eight bytes in little-endian order. Convert the first value to bytes, then the second, then the third. Remove trailing null bytes from the final chunk and concatenate the printable ASCII. The result is the flag.', 'Use constant format strings such as printf("%s", user_input) rather than passing untrusted input as the format argument. Treat compiler warnings and format-security checks as release blockers.', 'Why can a format-string bug disclose memory even when the program never writes outside a buffer?'
-from public.challenges where slug = 'pwn-format-string-ledger'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- pwn-heap-afterlife
 insert into public.challenges (
@@ -639,19 +495,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '0c8502d77050389721c1dd77d1e41ae36b1ed51c5439fbc23d5235f4cc97c59f', true from public.challenges where slug = 'pwn-heap-afterlife'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'A and B receive the same address because the allocator reuses the freed chunk. The legacy reference A was not invalidated, so reading through it after B is allocated observes B''s label. This is a use-after-free caused by an object-lifetime error. The flag names the stale-pointer reuse pattern.', 'Use clear ownership and lifetime rules, invalidate references after free, prefer memory-safe abstractions, and test with sanitizers such as AddressSanitizer. Avoid retaining aliases to released objects.', 'What design change would prevent the old A reference from being used after the object is released?'
-from public.challenges where slug = 'pwn-heap-afterlife'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- forensics-one-minute
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -686,19 +529,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '04585328d33de3925cec0d6b4f7270ca180ca261df4030395832da6b772cc27a', true from public.challenges where slug = 'forensics-one-minute'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The first three entries are failed SSH authentication attempts and all originate from 192.0.2.44. The final successful public-key login originates from 192.0.2.25 and is not part of the repeated failed sequence. Replace the dots in the repeated address with underscores to form the flag.', 'Centralize authentication logs, alert on repeated failures, use rate limiting and MFA, and investigate whether successful activity follows suspicious attempts. Preserve timestamps and time-zone context.', 'Why should investigators distinguish a failed login burst from a later successful login?'
-from public.challenges where slug = 'forensics-one-minute'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- forensics-dns-breadcrumbs
 insert into public.challenges (
@@ -739,19 +569,6 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '6a3bc9cce8567bfc032c418ab15b9b4381621c5d33cd68ca46a8dbedeff938f8', true from public.challenges where slug = 'forensics-dns-breadcrumbs'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'Sort the fragments 01 through 05. Remove the sequence prefixes and join the payloads in order to obtain the Base32 string. Restore padding only if required by the decoder, then decode it as UTF-8. The recovered text is the flag.', 'Monitor unusual DNS label length, entropy, query volume and newly observed domains. Apply egress controls, DNS logging and data-loss prevention appropriate to the environment.', 'Which DNS telemetry fields would help distinguish normal lookups from encoded data transfer?'
-from public.challenges where slug = 'forensics-dns-breadcrumbs'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
-
 -- forensics-carved-header
 insert into public.challenges (
   id, category_id, slug, title, summary, description_md, difficulty,
@@ -788,19 +605,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'f646275429116e9b222188a58bd1bfa1692815243eb43b207689876a5893eb67', true from public.challenges where slug = 'forensics-carved-header'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The correct order is extent-01, extent-02, extent-03. Concatenate the hex bytes in that order and decode them as ASCII. The result is the recovered deleted text and the flag.', 'Preserve the original evidence, work from verified forensic copies, document hashes and chain of custody, and avoid writing to the source media during acquisition.', 'Why should a forensic analyst hash evidence before and after analysis?'
-from public.challenges where slug = 'forensics-carved-header'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- osint-poster-pier-nine
 insert into public.challenges (
@@ -841,19 +645,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '1029d051d5ac3b6f77c01c691eb3c127dee1b366238e1d6668587552667475c5', true from public.challenges where slug = 'osint-poster-pier-nine'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The poster places the event beside the old ferry clock in Northport''s waterfront district. The archived municipal notice maps that landmark to Pier 9. Combining the fictional city and venue number produces the flag.', 'Verify claims with independent sources, record provenance and timestamps, minimize collection of personal information, and stop when a task would expose a private individual.', 'What makes a source independent enough to strengthen an OSINT conclusion?'
-from public.challenges where slug = 'osint-poster-pier-nine'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- osint-three-mirrors
 insert into public.challenges (
@@ -896,19 +687,6 @@ on conflict (slug) do update set
   prerequisites = excluded.prerequisites,
   status = excluded.status,
   hints = excluded.hints;
-
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, '8c60aec7386878d0d30ad14cc5dc0ba03423471c1a399729fd67a59f0c560b78', true from public.challenges where slug = 'osint-three-mirrors'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The archive snapshot, status page and release note all contain the same artifact reference: bld-7e91. The display version 2.4.0 is not the stable build identifier. The repeated build ID is the flag.', 'Use immutable artifact digests or signed provenance for software releases. Display versions are useful labels but should not replace cryptographic artifact identity.', 'Why is a build identifier more useful than a display version when correlating deployments?'
-from public.challenges where slug = 'osint-three-mirrors'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
-
 
 -- osint-signal-without-person
 insert into public.challenges (
@@ -954,14 +732,3 @@ on conflict (slug) do update set
   status = excluded.status,
   hints = excluded.hints;
 
-insert into public.challenge_secrets (challenge_id, release_version, flag_hash, is_active)
-select id, 1, 'a8de2445958d3d8f59ad826c13f49dae2a284ee16117dbea7c92b7a44962a7b0', true from public.challenges where slug = 'osint-signal-without-person'
-on conflict (challenge_id, release_version) do update set flag_hash = excluded.flag_hash, is_active = true;
-
-insert into public.challenge_solutions (challenge_id, walkthrough_md, defensive_notes_md, reflection_question)
-select id, 'The matching digest confirms that all three records describe the same package. The manifest and mirror index agree on east-archive, and the status event gives 04:17 UTC. Combining those two fields with underscores produces the flag. No personal attribution is necessary.', 'Limit build metadata exposure where it creates risk, sign release manifests, normalize timestamps and document the join keys used in an investigation. Keep infrastructure analysis separate from personal attribution.', 'How can an investigator answer an infrastructure question while minimizing collection of personal data?'
-from public.challenges where slug = 'osint-signal-without-person'
-on conflict (challenge_id) do update set
-  walkthrough_md = excluded.walkthrough_md,
-  defensive_notes_md = excluded.defensive_notes_md,
-  reflection_question = excluded.reflection_question;
