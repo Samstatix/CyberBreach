@@ -22,6 +22,12 @@
 - [ ] Users can leave a team, and owners can dissolve their team.
 - [ ] Public team leaderboard excludes all non-CTF XP.
 - [ ] Public team rankings count verified CTF points only and require owner opt-in.
+- [ ] Only moderator/admin roles can create, publish or cancel competition events.
+- [ ] Event registration closes at the scheduled start time.
+- [ ] Individual and team event registrations enforce the event format.
+- [ ] Team event rosters are snapshotted at registration.
+- [ ] Event scores count only verified solves for selected challenges inside the event window.
+- [ ] Event leaderboards never accept client-submitted points.
 - [ ] Browser simulations cannot reach the host operating system.
 - [ ] Six workbench modules use synthetic data only and make no external target requests.
 - [ ] Web authorization simulator distinguishes vulnerable and secure server-side object checks.
@@ -39,7 +45,7 @@
 - [ ] Complete the final handoff checklist in `docs/final-handoff-plan.md` before merging milestone work into `main`.
 
 ## Supabase setup
-- [ ] Apply migrations `202611270001` through `202611270008` in filename order and run the seed after migrations.
+- [ ] Apply migrations `202611270001` through `202611270009` in filename order and run the seed after migrations.
 - [ ] Verify RLS on every user-facing table.
 - [ ] Verify challenge secrets and solutions cannot be selected by anon/authenticated roles.
 - [ ] Verify a user cannot submit for another user or write their own score.
