@@ -4,6 +4,7 @@ import { ArrowLeft, CheckCircle2, KeyRound, LogIn, LogOut, ShieldCheck, Trash2, 
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 import { supabase } from "../../lib/supabase";
+import { isValidBio, isValidDisplayName, isValidUsername, normalizeUsername } from "./accountValidation";
 
 type AccountMode = "sign-in" | "sign-up" | "forgot-password";
 type StatusMessage = { kind: "success" | "error" | "info"; text: string };
@@ -88,12 +89,16 @@ export default function AccountPage() {
   async function saveProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!user || !supabase) return;
-    if (!/^[a-z0-9_]{3,24}$/.test(username)) {
+    if (!isValidUsername(username)) {
       setStatus({ kind: "error", text: "Username must be 3–24 lowercase letters, numbers or underscores." });
       return;
     }
-    if (displayName.trim().length < 2 || displayName.trim().length > 40) {
+    if (!isValidDisplayName(displayName)) {
       setStatus({ kind: "error", text: "Display name must be between 2 and 40 characters." });
+      return;
+    }
+    if (!isValidBio(bio)) {
+      setStatus({ kind: "error", text: "Bio must be 160 characters or fewer." });
       return;
     }
     setProfileBusy(true); setStatus(null);
@@ -158,7 +163,7 @@ export default function AccountPage() {
 
           <form className="account-form account-profile-form" onSubmit={saveProfile}>
             <span className="eyebrow">PUBLIC PROFILE</span>
-            <label>Username<input value={username} onChange={(event) => setUsername(event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))} minLength={3} maxLength={24} pattern="[a-z0-9_]{3,24}" required autoComplete="username"/></label>
+            <label>Username<input value={username} onChange={(event) => setUsername(normalizeUsername(event.target.value))} minLength={3} maxLength={24} pattern="[a-z0-9_]{3,24}" required autoComplete="username"/></label>
             <label>Display name<input value={displayName} onChange={(event) => setDisplayName(event.target.value)} minLength={2} maxLength={40} required/></label>
             <label>Short bio <small>Optional · 160 characters maximum</small><textarea value={bio} onChange={(event) => setBio(event.target.value)} maxLength={160} rows={3} placeholder="What are you learning or researching?"/></label>
             <button className="secondary-button" type="submit" disabled={profileLoading || profileBusy}>{profileBusy ? "SAVING…" : "SAVE PROFILE"}</button>
@@ -198,7 +203,7 @@ export default function AccountPage() {
             </>
           ) : (
             <form className="account-form" onSubmit={handleSubmit}>
-              {mode === "sign-up" && <label>Username<input value={username} onChange={(event) => setUsername(event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))} minLength={3} maxLength={24} pattern="[a-z0-9_]{3,24}" placeholder="your_handle" required autoComplete="username"/><small>3–24 characters. Lowercase letters, numbers and underscores.</small></label>}
+              {mode === "sign-up" && <label>Username<input value={username} onChange={(event) => setUsername(normalizeUsername(event.target.value))} minLength={3} maxLength={24} pattern="[a-z0-9_]{3,24}" placeholder="your_handle" required autoComplete="username"/><small>3–24 characters. Lowercase letters, numbers and underscores.</small></label>}
               <label>Email address<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required autoComplete="email"/></label>
               <label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} minLength={10} maxLength={128} placeholder="At least 10 characters" required autoComplete={mode === "sign-in" ? "current-password" : "new-password"}/>{mode === "sign-up" && <small>Use a unique password. Never reuse your email password.</small>}</label>
               <button className="primary-button account-submit" type="submit" disabled={!configured || busy}>{busy ? "PLEASE WAIT…" : mode === "sign-in" ? "SIGN IN" : "CREATE FREE ACCOUNT"}</button>
