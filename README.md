@@ -68,6 +68,10 @@ The Account page supports profile editing, password recovery and account deletio
 
 Authenticated learners can create or join one team at a time using a high-entropy invitation code. Only its SHA-256 digest is stored. Team owners can rotate invitations, dissolve the team and opt into public team rankings. Team members see display names and usernames, never member email addresses. Public team rankings include aggregate verified CTF points only.
 
+## Scheduled competitions
+
+CyberBreach moderators can create and publish individual or team CTF events from the Community Events page. Each event selects published challenges, has a fixed start/end window and closes registration when it begins. Team registration is performed by the team owner and snapshots the roster at registration time. Event scores are calculated from verified challenge solves for the selected challenges during the event window; no client-submitted scores are accepted. Moderator/admin roles are provisioned through trusted database administration, never through the browser.
+
 ## Database setup
 1. Create a Supabase project.
 2. Apply every SQL migration in `supabase/migrations` in filename order.
@@ -78,6 +82,7 @@ Authenticated learners can create or join one team at a time using a high-entrop
 7. Migration `202611270006_linux_lab_path.sql` expands the Linux task set and unlocks the Linux Investigator achievement.
 8. Migration `202611270007_learning_paths_and_lab_hardening.sql` registers the new Academy lessons, rate-limits browser-lab submissions and keeps non-CTF XP out of competitive rankings.
 9. Migration `202611270008_community_teams.sql` adds private teams, hashed invitation codes and opt-in CTF-only team rankings.
+9. Migration `202611270009_competition_events.sql` adds moderator-managed event scheduling, individual/team registration, roster snapshots and verified event leaderboards.
 10. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
 11. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
 
