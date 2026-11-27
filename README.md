@@ -49,13 +49,13 @@ The repository root is not a second frontend. The active HTML document is `apps/
 These steps are for developers working on CyberBreach. They are not required for ordinary learners.
 
 Requirements:
-- Node.js 20 or newer
+- Node.js 22.12 or newer
 - npm 10 or newer
 
 From the repository root:
 
 ```bash
-npm install
+npm ci
 cp .env.example .env
 npm run dev
 ```
