@@ -1,4 +1,5 @@
 import { ArrowUpRight, BookOpen, Flag, FlaskConical, ShieldCheck, Terminal, Users } from "lucide-react";
+import PlayerProgressPanel from "./PlayerProgressPanel";
 import { Link } from "react-router-dom";
 
 const areas = [
@@ -34,6 +35,7 @@ export default function DashboardPage() {
           <h3>AI Security Research</h3><p>Explore prompt injection, agent security, model abuse and adversarial machine learning.</p><span className="card-link">EXPLORE <ArrowUpRight size={14} /></span>
         </Link>
       </section>
+      <PlayerProgressPanel />
       <section className="learning-note">
         <div className="note-symbol">i</div><div><strong>Our learning promise</strong><p>Simple explanations are the starting point, not the finish line. Our original challenges progress from medium to expert, with optional hints and post-solve explanations.</p></div>
       </section>
