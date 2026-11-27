@@ -38,7 +38,6 @@ export default function CyroAssistant() {
   const [preferencesSaving, setPreferencesSaving] = useState(false);
   const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});
   const [diagnosticIndex, setDiagnosticIndex] = useState(0);
-  const [diagnosticComplete, setDiagnosticComplete] = useState(false);
   const [diagnosticActive, setDiagnosticActive] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey! I'm CYRO, your CyberBreach learning companion. No question is too basic. Tell me what you're learning, and I'll break it into small, clear steps." },
@@ -80,7 +79,7 @@ export default function CyroAssistant() {
     } finally { setPreferencesSaving(false); }
   }
 
-  function startDiagnostic() { setDiagnosticAnswers({}); setDiagnosticIndex(0); setDiagnosticComplete(false); setDiagnosticActive(true); }
+  function startDiagnostic() { setDiagnosticAnswers({}); setDiagnosticIndex(0); setDiagnosticActive(true); }
 
   function submitDiagnosticAnswer(optionId: string) {
     const question = diagnosticQuestions[diagnosticIndex];
@@ -88,7 +87,6 @@ export default function CyroAssistant() {
     setDiagnosticAnswers(answers);
     if (diagnosticIndex + 1 < diagnosticQuestions.length) { setDiagnosticIndex((value) => value + 1); return; }
     const result = scoreDiagnostic(answers);
-    setDiagnosticComplete(true);
     setDiagnosticActive(false);
     const summary = result.byCategory.map((item) => `${item.category}: ${item.correct ? "sample answer correct" : "sample answer missed"}`).join("; ");
     const revision = buildRemediationSuggestions(result.byCategory).map((item) => `${item.category}: ${item.courseTitle} → ${item.lessonTitle} (${item.reason})`).join("\\n");
