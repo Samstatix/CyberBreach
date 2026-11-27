@@ -180,6 +180,7 @@ export default function CommunityPage() {
         <article><Users size={20}/><h2>Make room for everyone</h2><p>Be constructive with newcomers. Challenge the idea, not the person.</p></article>
       </div>
 
+      <div className="community-events-link"><div><span className="eyebrow">COMPETITIONS / EVENTS</span><strong>Join the next individual or team CTF event.</strong><p>Scheduled events use verified challenge solves and fixed competition windows.</p></div><Link className="secondary-button" to="/community/events">VIEW EVENT SCHEDULE <ArrowUpRight size={14}/></Link></div>
       <div className="section-heading"><div><span className="eyebrow">TEAM WORKSPACE</span><h2>Find your people</h2></div><span className="section-note">ONE TEAM PER ACCOUNT</span></div>
       {!user ? (
         <div className="community-team-empty"><Users size={22}/><div><strong>Sign in to create or join a team.</strong><p>Accounts are free. You can still explore lessons and challenges without joining a team.</p><Link className="secondary-button" to="/account">SIGN IN OR CREATE ACCOUNT <ArrowUpRight size={14}/></Link></div></div>
