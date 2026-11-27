@@ -60,6 +60,10 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 
 Cyber Academy now includes 10 courses and 25 lessons, including dedicated beginner-first paths for Reverse Engineering, Binary Exploitation and OSINT. These explain unfamiliar terms, use worked examples and finish with short knowledge checks. The three new paths are also connected to their matching specialization skill trees.
 
+## Community teams
+
+Authenticated learners can create or join one team at a time using a high-entropy invitation code. Only its SHA-256 digest is stored. Team owners can rotate invitations, dissolve the team and opt into public team rankings. Team members see display names and usernames, never member email addresses. Public team rankings include aggregate verified CTF points only.
+
 ## Database setup
 1. Create a Supabase project.
 2. Apply every SQL migration in `supabase/migrations` in filename order.
