@@ -23,7 +23,7 @@ This checklist defines the evidence required before declaring CyberBreach produc
 ## 3. CYRO / Ollama
 
 - [ ] Deploy `cyro-assistant` after migrations.
-- [ ] Set `CYRO_ALLOWED_ORIGIN` to the exact production origin.
+- [ ] Set `CYBERBREACH_ALLOWED_ORIGIN` to the exact production origin.
 - [ ] Set `CYRO_OLLAMA_URL` to a reachable HTTPS Ollama-compatible endpoint.
 - [ ] Set `CYRO_OLLAMA_MODEL` to a model that is actually pulled and tested on the server.
 - [ ] Set optional `CYRO_OLLAMA_API_KEY`, `CYRO_TIMEOUT_MS` and `CYRO_MAX_TOKENS` as appropriate.
