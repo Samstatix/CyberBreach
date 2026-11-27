@@ -40,3 +40,10 @@ The floating assistant offers four explicit teaching modes: `explain`, `hint`, `
 The Edge Function derives module context from an allow-listed route prefix; it does not trust a client-supplied module label. Current contexts cover Academy, CTF Arena, Cyber Labs, Security Operations, Progression, AI Security Research and Community.
 
 Hint mode accepts a numeric level from 1 to 3 and clamps it server-side. The prompt directs the model to move from concept identification (level 1), to narrower evidence/reasoning (level 2), to the next operation (level 3), without returning flags or complete solutions. This is model guidance, not a formal guarantee; keep challenge flags and solutions server-side and validate any scored submission independently.
+
+
+## CYRO learner preferences
+
+Migration `202611280011_cyro_learning_preferences.sql` creates a private, per-user preferences table with row-level security. Learners can select Beginner, Intermediate or Advanced teaching level and Auto, English or Bengali response language in the CYRO panel. The Edge Function reads only the authenticated user's row and uses these values as style preferences, not as verified evidence of competence.
+
+The table stores settings only, not chat transcripts or inferred personal traits. Users can clear their row from the database/account settings workflow; a dedicated in-product reset control can be added in a later UI increment.
