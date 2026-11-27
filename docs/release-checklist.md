@@ -23,6 +23,11 @@
 - [ ] Public team leaderboard excludes all non-CTF XP.
 - [ ] Public team rankings count verified CTF points only and require owner opt-in.
 - [ ] Browser simulations cannot reach the host operating system.
+- [ ] Six workbench modules use synthetic data only and make no external target requests.
+- [ ] Web authorization simulator distinguishes vulnerable and secure server-side object checks.
+- [ ] Crypto workbench labels Base64 as encoding, not encryption.
+- [ ] Memory visualizer does not execute or write to real process memory.
+- [ ] Forensics and OSINT exercises use fictional records and documentation-only IP ranges.
 - [ ] External lab links use official provider pages.
 - [ ] Operations and AI research content has been reviewed.
 
