@@ -42,10 +42,15 @@ begin
   end if;
 
   v_definition := pg_get_functiondef('public.get_competition_event_leaderboard(uuid,integer)'::regprocedure);
-  if position('challenge_solves' in v_definition) = 0
-     or position('solved_at >= event.starts_at' in v_definition) = 0
-     or position('competition_event_challenges' in v_definition) = 0 then
-    raise exception 'Event leaderboard must use verified solves, selected challenges and event timestamps';
+  if position('challenge_attempts' in v_definition) = 0
+     or position('is_correct = true' in v_definition) = 0
+     or position('submitted_at >= event.starts_at' in v_definition) = 0
+     or position('competition_event_challenges' in v_definition) = 0
+     or position('competition_event_team_members' in v_definition) = 0 then
+    raise exception 'Event leaderboard must use correct attempts, roster snapshots, selected challenges and event timestamps';
+  end if;
+  if position('group by registration.id, attempt.challenge_id' in v_definition) = 0 then
+    raise exception 'Event leaderboard must deduplicate a challenge within each participant/team registration';
   end if;
 
   v_definition := pg_get_functiondef('public.create_competition_event(text,text,text,text,timestamptz,timestamptz,integer,text[])'::regprocedure);

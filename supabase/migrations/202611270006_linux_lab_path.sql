@@ -1,13 +1,12 @@
 -- Expand the Linux Foundations browser lab into a four-task progression path.
 -- All answers remain private in the lab-task catalog and are checked by complete_lab_task.
 
-insert into public.lab_task_catalog (task_id, title, answer_hash, xp_reward) values
-  ('linux-listening-ports', 'Identify listening network services', '5b61966f6f3e41c72a0cdd1c826a6aedf11156614b6d31d701321557f31c15b0', 50),
-  ('linux-default-gateway', 'Find the default network gateway', '37fcff24bf62035b2b08020afc08b4fecd4fcffce57ab23518e3561ff0fe76b9', 50),
-  ('linux-current-user', 'Identify the current Linux user', 'f44ceb062e35dfeea6ed7f8524d53bb0bff19f553e25cae7ef4850e4185ccbba', 50)
+insert into public.lab_task_catalog (task_id, title, xp_reward) values
+  ('linux-listening-ports', 'Identify listening network services', 50),
+  ('linux-default-gateway', 'Find the default network gateway', 50),
+  ('linux-current-user', 'Identify the current Linux user', 50)
 on conflict (task_id) do update set
   title = excluded.title,
-  answer_hash = excluded.answer_hash,
   xp_reward = excluded.xp_reward,
   is_active = true;
 

@@ -34,3 +34,21 @@ where id = 'REPLACE_WITH_AUTH_USER_UUID';
 - The database checks the profile role inside every create, publish, cancel and moderator-list RPC.
 - The profile update grants intentionally do not include the `role` column.
 - Keep the Supabase service-role key in trusted server-side secret storage only.
+
+
+## Provision rotated private challenge content
+
+Migration \`202611270010_security_competition_hardening.sql\` removes answer columns from public catalogs, disables all previously active CTF flags and deletes the old walkthrough rows. This is deliberate: the previous answer material was committed to public Git history and must not remain usable for competitive play.
+
+1. Apply migrations \`202611270001\` through \`202611270010\` in order.
+2. Run \`supabase/seed.sql\` to create public challenge/category metadata.
+3. Copy \`supabase/private-content.example.json\` to \`supabase/private-content.json\`. The latter path is ignored by Git.
+4. Replace every placeholder with newly rotated content. Include every published challenge, all active Operations missions and all active browser-lab tasks. Use CTF release versions 2 or higher and flags of at least 24 bytes. Operations and lab answers are bcrypt-hashed by the database and must fit within 72 UTF-8 bytes. For each Operations mission, set `correctOptionId` to the opaque option ID attached to the evidence-based response in `apps/web/src/features/operations/OperationsPage.tsx`; do not add correctness flags or answer maps to frontend code.
+5. From a trusted local administrator shell, set \`SUPABASE_URL\` and \`SUPABASE_SERVICE_ROLE_KEY\`, then run \`npm run private:load\`.
+6. Confirm the loader reports the expected counts. It validates that the private file exactly covers the published challenge, active mission and active task catalogs.
+
+The loader writes CTF flag digests and walkthroughs to private tables. It calls service-role-only database functions to bcrypt-hash Operations and lab answers. It never prints answer values. Guest users can explore the Operations scenarios and Linux simulator, but answer submission and XP require authentication so the browser never needs a local answer key.
+
+**Never** put the service-role key in a \`VITE_\` variable, browser build, Vercel public environment variable, source file, or committed private-content file. Keep \`supabase/private-content.json\` and any alternate private-content file outside Git. The service-role key is deployment administration material, not an application setting.
+
+Until the private loader has been run successfully, CTF submissions, Operations mission checks, Linux lab checks and walkthrough retrieval will fail closed because no active answer material is provisioned.

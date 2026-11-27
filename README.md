@@ -1,44 +1,58 @@
 # CyberBreach
 
-**A free cybersecurity learning, practice, research and competition platform by CollabCircle.**
+**A browser-based cybersecurity learning, practice, and competition platform by CollabCircle.**
 
-CyberBreach is a self-contained React feature module developed in this repository so it can later be mounted inside the main CollabCircle Next.js/Vercel website. This repository is the source of truth; the main website is not changed during CyberBreach development.
+CyberBreach helps people move from cybersecurity fundamentals to practical, hands-on skills through guided learning paths, interactive browser labs, original Capture the Flag (CTF) challenges, incident-response scenarios, team activities, and scheduled competitions.
 
-## Current development baseline
+The project is developed in this repository as an independent React application and a reusable module for a future integration with the main CollabCircle website. This repository remains the source of truth; work here does not modify the main CollabCircle website.
 
-The active implementation baseline is `milestone-11-competitions`. Completed development phases include platform hardening, expanded Academy learning paths, community teams, account security and six interactive practice rooms. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
+> **For learners:** CyberBreach is designed to be used in a modern web browser. Learners do not need to install Node.js, npm, Python, Docker, a terminal, or any development tools. Open the deployed website, create an account or sign in, and start learning. Development tools described below are only for contributors, maintainers, and deployment builds.
 
-## Product scope
-- **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
-- **Player progression:** eleven skill trees, XP levels, operator ranks and unlockable achievements. Personal XP is separate from the competitive CTF leaderboard.
-- **CTF Arena:** 18 original challenges across Web Exploitation, Cryptography, Reverse Engineering, Binary Exploitation, Forensics and Network Forensics, and OSINT & Misc. Every category has medium, hard and expert work.
-- **Cyber Labs:** six safe interactive practice rooms, the Linux evidence simulator, incident-response missions and links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
-- **Community:** team creation, invitation-based membership, private-by-default team workspaces, opt-in individual/team CTF leaderboards and moderator-managed scheduled competitions.
-- **AI Security Research:** LLM/agent security topics and official research references.
+## What learners can do
 
-CyberBreach is organized around five primary areas: Cyber Academy, CTF Arena, Cyber Labs (including Operations missions), Community and AI Security Research. Player progression connects activity across all five areas.
+- **Cyber Academy** — follow beginner-friendly and advanced courses with explanations, worked examples, glossaries, knowledge checks, and progress tracking.
+- **CTF Arena** — solve original challenges across Web Exploitation, Cryptography, Reverse Engineering, Binary Exploitation, Forensics and Network Forensics, and OSINT & Misc.
+- **Cyber Labs** — practise in safe, interactive browser simulations, a simulated Linux evidence terminal, and guided technical exercises.
+- **Incident Response Operations** — investigate fictional security incidents, interpret evidence, and choose proportionate defensive actions.
+- **Progression** — earn personal XP, advance through levels and operator ranks, unlock achievements, and develop skills across eleven skill trees.
+- **Community and Teams** — create or join a team, collaborate in private team spaces, and opt into team rankings.
+- **Competitions** — register for scheduled individual or team CTF events and compete using verified challenge solves.
+- **AI Security Research** — explore security topics involving AI systems, LLMs, and agents through curated learning and research references.
 
-## Product decisions
-- Audience: everyone, from complete beginners to experienced practitioners.
-- Access: CyberBreach learning and challenges are free; no paid challenge advantages or premium-only learning tiers.
-- Labs: both browser simulations and real isolated environments. Real hosted lab execution is not enabled by exposing a shell from the web app.
-- Frontend: React + Vite + TypeScript, packaged as a mountable React module.
-- Platform services: Supabase Auth, PostgreSQL, Row Level Security and trusted database functions for scoring/progression.
+CyberBreach is intended for a broad audience, from people with no prior cybersecurity experience to experienced learners. Learning content and challenges are designed to be free, without paid challenge advantages or premium-only learning tiers.
 
-## Player progression
+## Browser-only learner experience
 
-- Completing a catalogued Academy lesson awards 25 personal XP.
-- A first-time verified CTF solve awards the challenge's published points as XP.
-- A correctly completed incident-response mission awards 100 personal XP once per mission.
-- A verified browser-lab investigation awards 50 personal XP once per task.
-- Levels use cumulative thresholds: 250 XP for Level 2, 750 total XP for Level 3, and progressively larger thresholds after that.
-- Ranks progress from Recruit through Trainee, Analyst, Specialist, Operator, Senior Operator and Elite.
-- Achievements are unlocked by trusted database functions after the relevant learning, mission or solve milestones.
-- Guest progress is stored locally; signed-in progress is synchronized through Supabase.
-- The public leaderboard counts verified CTF solve points only. Academy, mission and browser-lab XP do not change competitive rankings.
+The deployed product is a web application:
 
-## Run locally
-Requirements: Node.js 20+ and npm 10+.
+1. Visit the CyberBreach website in Chrome, Firefox, Edge, Safari, or another modern browser.
+2. Register or sign in.
+3. Learn, practise, solve challenges, track progress, join teams, and participate in competitions through the website.
+
+There is no learner-side installation process. React and TypeScript are used to build the website; Vite and Node.js are build/development tools and are not required on a learner's device.
+
+Some exercises are intentionally simulated in the browser. Real operating-system access, arbitrary command execution, and hosted penetration-testing environments are not exposed by the frontend. Any future real hosted-lab capability must run in separately reviewed, isolated, disposable infrastructure with strict network and resource controls.
+
+## Product and technical architecture
+
+- **Frontend:** React 18, TypeScript, Vite, React Router, and namespaced CSS.
+- **Application entry point:** `apps/web/index.html`, which loads `apps/web/src/main.tsx`.
+- **Reusable integration module:** `apps/web/src/integration/CyberBreachModule.tsx`.
+- **Backend services:** Supabase Auth, PostgreSQL, Row Level Security (RLS), and trusted database functions.
+- **Deployment target:** static web hosting such as Vercel, with Supabase providing authentication and data services.
+- **Repository structure:** the active application lives in `apps/web`; SQL migrations, seed data, security checks, private-content tooling, and project documentation live at the repository root.
+
+The repository root is not a second frontend. The active HTML document is `apps/web/index.html`. The former standalone HTML/CSS/JavaScript prototype has been removed to avoid two competing application entry points.
+
+## Run and build the application (contributors only)
+
+These steps are for developers working on CyberBreach. They are not required for ordinary learners.
+
+Requirements:
+- Node.js 20 or newer
+- npm 10 or newer
+
+From the repository root:
 
 ```bash
 npm install
@@ -46,82 +60,137 @@ cp .env.example .env
 npm run dev
 ```
 
-Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env` to enable accounts, synchronized progress, flag scoring and the public leaderboard. The application remains browseable without Supabase configuration.
+The Vite development server prints a local URL. Open that URL in a browser.
+
+Set the following public frontend variables in `.env` to enable Supabase-backed accounts and data:
+
+```dotenv
+VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY
+```
+
+The app can render in browse/demo mode without Supabase configuration, but authentication, synchronized progress, server-verified submissions, and competition features require a correctly configured Supabase project.
+
+Quality checks:
 
 ```bash
+npm run security:scan
 npm run typecheck
 npm test
 npm run build
 ```
 
-The build also emits `apps/web/dist/cyberbreach.integration.css` for a later namespaced Next.js mount.
+The production build is generated in `apps/web/dist`. The build also emits `apps/web/dist/cyberbreach.integration.css` for the future CollabCircle Next.js integration.
 
-## Expanded Academy learning paths
+## Deploy as a browser website on Vercel
 
-Cyber Academy now includes 10 courses and 25 lessons, including dedicated beginner-first paths for Reverse Engineering, Binary Exploitation and OSINT. These explain unfamiliar terms, use worked examples and finish with short knowledge checks. The three new paths are also connected to their matching specialization skill trees.
+The repository includes a `vercel.json` configuration for deploying the active Vite application from the repository root.
 
-## Account security and privacy
+1. Import `Samstatix/CyberBreach` into Vercel.
+2. Keep the project root at the repository root (do not set it to the legacy prototype or a separate app).
+3. Use the repository's Vercel configuration. It runs the workspace build and publishes `apps/web/dist`.
+4. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Vercel environment variables for the required deployment environments.
+5. Deploy the site and configure the deployed URL in Supabase Auth's allowed redirect URLs, including the account recovery route.
+6. Apply the database migrations and deploy the required Edge Function as described below before enabling authenticated production use.
 
-The Account page supports profile editing, password recovery and account deletion. Password recovery redirects to the current CyberBreach route; add the deployed `/account` URL (including the `/cybersecurity` prefix when mounted in CollabCircle) to Supabase Auth's allowed redirect URLs. Deploy the `delete-account` Edge Function from `supabase/functions/delete-account`; it verifies the caller JWT and deletes only that authenticated user. Supabase foreign-key cascades remove profile, CTF, XP, learning and team records.
+The Vercel build uses Node.js as a build environment. Visitors only receive and use the built website in their browser. **Never add the Supabase service-role key or other server secrets to Vercel variables prefixed with `VITE_`.**
 
-## Community teams
+## Supabase setup
 
-Authenticated learners can create or join one team at a time using a high-entropy invitation code. Only its SHA-256 digest is stored. Team owners can rotate invitations, dissolve the team and opt into public team rankings. Team members see display names and usernames, never member email addresses. Public team rankings include aggregate verified CTF points only.
-
-## Moderator setup
-
-Competition management is restricted to moderator/admin roles. After creating the director account, promote its Supabase Auth UUID through trusted SQL as described in [the moderator setup guide](docs/admin-setup.md). The browser cannot change account roles.
-
-## Scheduled competitions
-
-CyberBreach moderators can create and publish individual or team CTF events from the Community Events page. Each event selects published challenges, has a fixed start/end window and closes registration when it begins. Team registration is performed by the team owner and snapshots the roster at registration time. Event scores are calculated from verified challenge solves for the selected challenges during the event window; no client-submitted scores are accepted. Moderator/admin roles are provisioned through trusted database administration, never through the browser.
-
-## Database setup
 1. Create a Supabase project.
-2. Apply every SQL migration in `supabase/migrations` in filename order.
-3. Run `supabase/seed.sql` after migrations to add the six categories and 18 original challenges.
-4. Migration `202611270003_progression_system.sql` adds the lesson allow-list, server-awarded Academy XP, achievements and the player progression RPC.
-5. Migration `202611270004_operations_missions.sql` adds answer-verified incident-response missions, mission XP and completion tracking.
-6. Migration `202611270005_lab_practice_tasks.sql` adds private answer verification and XP for browser-lab tasks.
-7. Migration `202611270006_linux_lab_path.sql` expands the Linux task set and unlocks the Linux Investigator achievement.
-8. Migration `202611270007_learning_paths_and_lab_hardening.sql` registers the new Academy lessons, rate-limits browser-lab submissions and keeps non-CTF XP out of competitive rankings.
-9. Migration `202611270008_community_teams.sql` adds private teams, hashed invitation codes and opt-in CTF-only team rankings.
-10. Migration `202611270009_competition_events.sql` adds moderator-managed event scheduling, individual/team registration, roster snapshots and verified event leaderboards.
-11. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
-12. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
+2. Apply every SQL migration in `supabase/migrations` in filename order, including migration `202611270010_security_competition_hardening.sql`.
+3. Run `supabase/seed.sql` after migrations to create the public categories and challenge metadata. The public seed intentionally contains no challenge flags or walkthroughs.
+4. Configure Supabase Auth email confirmation, password recovery redirect URLs, and password policy.
+5. Deploy the `delete-account` Edge Function from `supabase/functions/delete-account`.
+6. Keep `SUPABASE_SERVICE_ROLE_KEY` exclusively in trusted administrator tooling or Supabase Edge Function secrets. It must never be exposed to browser code or public frontend environment variables.
+7. Load fresh private answer content using the administrator-only process below.
 
-The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
+### Private challenge and lab content
 
-## Multi-discipline browser workbench
+Previously committed answer material must be treated as compromised. The Phase 12 security migration disables old CTF flags and removes old walkthroughs. Fresh private content must be provisioned before CTF scoring and solution unlocks can operate as intended.
 
-Cyber Labs includes six synthetic practice rooms: Web authorization (IDOR/BOLA), cryptography encoding and Caesar shifts, reverse-engineering static inspection, a memory-boundary visualizer, authentication-log forensics and OSINT source verification. These are interactive teaching simulations only; they do not run code, contact real targets or award competitive CTF points. The Linux simulator remains a separate terminal-style practice environment.
+- Start from `supabase/private-content.example.json` and create your own `supabase/private-content.json`.
+- The real private file is ignored by Git. Never commit it or share its contents.
+- Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in a trusted administrator shell (not in a `VITE_` variable).
+- Run `npm run private:load` from the repository root.
+- The loader validates catalog IDs and content, requires replacement challenge flags, hashes CTF flags, and provisions bcrypt-protected Operations and lab answers through service-role-only database functions.
+- Do not reuse any old flag, answer, hash, or walkthrough from public Git history.
 
-## Browser lab task
+The public-source security guard can be run with:
 
-The Linux Foundations simulator includes four evidence tasks. Open Cyber Labs and launch the Linux practice terminal. Inspect each evidence source using the cat, ss, ip route and whoami commands, then submit the corresponding finding. The four tasks cover authentication evidence, listening services, the default gateway and the current user. Each correct finding awards 50 personal XP once. The terminal and its evidence are synthetic; no host shell or network connection is used.
+```bash
+npm run security:scan
+```
 
-## Incident-response missions within Cyber Labs
+This guard is a useful CI control, not a substitute for reviewing database permissions, scanning Git history, rotating exposed credentials, and testing the deployed application.
 
-Cyber Labs includes three original fictional incident-response missions:
-- Unusual account activity
-- Unexpected outbound DNS
-- Unexpected privileged change
+## Security and competition integrity
 
-Each mission asks the learner to select a proportionate response based on the supplied evidence. A correct response earns 100 personal XP once per mission. Signed-in completions are verified and recorded by the `complete_operations_mission` database function; guest completions remain local to the browser. Mission XP contributes to operator ranks and achievements but is excluded from the competitive CTF leaderboard.
+CyberBreach uses a browser frontend backed by trusted server-side checks. The intended security boundaries are:
 
-## Vercel integration later
-Follow [the Next.js integration guide](apps/web/src/integration/README.md). The integration is intentionally not deployed or copied into the main CollabCircle repository from this branch.
+- Challenge flags, private walkthroughs, Operations answers, and lab answers are not delivered in public frontend catalogs.
+- Challenge submissions are verified by trusted database functions; first-solve scoring is atomic and duplicate points are prevented.
+- Operations and lab answers are stored as bcrypt hashes in private tables, with authenticated submissions, per-user attempt limits, and transaction-level concurrency protection.
+- Team membership and competition roster snapshots are synchronized using database locks.
+- Competition scoring is based on verified challenge solves within the event window and deduplicates team credit for the same challenge.
+- Roles and privileged content loading are controlled outside the browser.
+- RLS and explicit grants restrict access to private tables and trusted functions.
 
-## Final repository handoff
+See [the security review](docs/security-review.md), [administrator setup](docs/admin-setup.md), and [the release checklist](docs/release-checklist.md). Run the SQL structural checks in `supabase/verification` against the configured Supabase database as part of deployment verification.
 
-Development proceeds on milestone branches. After all product features, integrations, migrations, documentation and release checks are complete, the finished work will be consolidated into `main`. The owner can then download the complete repository and change its visibility to private. See [the final handoff plan](docs/final-handoff-plan.md).
+## Progression rules
 
-## Security boundaries
-- All challenge artifacts and incident scenarios are fictional and self-authored.
-- No real third-party target is part of a CyberBreach challenge.
-- No arbitrary code execution or public shell is exposed by the browser app.
-- External lab providers run their own isolated environments and access rules.
-- A future hosted-lab provider must be separately reviewed, disposable, network-restricted and resource-limited.
-- Never commit secrets, API keys, private challenge data or real user evidence.
+- Completing an approved Academy lesson awards 25 personal XP.
+- A first-time verified CTF solve awards the challenge's published points as XP.
+- A correctly completed incident-response mission awards its configured personal XP once per mission.
+- A verified browser-lab task awards its configured personal XP once per task.
+- Personal learning XP contributes to progression, ranks, and achievements.
+- Competitive leaderboards count verified CTF points only; Academy, Operations, and browser-lab XP do not change competitive rankings.
+- Guest progress may be stored locally; signed-in progress is synchronized through Supabase.
+
+## Repository layout
+
+```text
+.
+├── .github/workflows/       # CI checks
+├── apps/web/
+│   ├── index.html           # Active Vite HTML entry point
+│   └── src/
+│       ├── app/             # Application composition and routing
+│       ├── components/      # Shared interface components
+│       ├── features/        # Academy, CTF, labs, teams, etc.
+│       ├── integration/     # Reusable CollabCircle mount
+│       └── main.tsx         # React bootstrap
+├── docs/                    # Security, operations, release, handoff guides
+├── scripts/                 # Security scan and private-content loader
+├── supabase/
+│   ├── functions/           # Edge Functions
+│   ├── migrations/          # Ordered database migrations
+│   ├── verification/        # Post-migration SQL checks
+│   ├── private-content.example.json
+│   └── seed.sql             # Public catalog metadata only
+├── package.json             # Workspace and contributor scripts
+└── vercel.json              # Browser app deployment configuration
+```
+
+## Integrate into CollabCircle later
+
+CyberBreach is intentionally maintained as an independent project until the main CollabCircle website is ready for integration. Follow the [Next.js integration guide](apps/web/src/integration/README.md) when that work is approved. The guide explains the reusable React module, namespaced stylesheet, route mounting, environment variables, and backend setup.
+
+## Safety boundaries
+
+- Challenges and incident scenarios use fictional, self-authored training evidence or explicitly authorized environments.
+- Browser simulations do not contact real targets or execute arbitrary commands on a visitor's device.
+- No public shell, Docker socket, or privileged container runner is exposed by the web application.
+- External lab providers operate their own isolated environments and access policies.
+- Any future hosted lab service requires a separate security review, isolation model, network policy, resource limits, monitoring, and teardown process.
 
 See [the external research policy](docs/external-research-policy.md).
+
+## Project status
+
+The `main` branch is the consolidated development baseline. Phase 12 adds security and platform-hardening work on top of milestones 1–11. A successful CI run validates the automated checks in that workflow; it does not, by itself, certify a live Supabase deployment or production readiness. Complete the deployment checklist and verify the configured backend before opening the platform to learners.
+
+## License
+
+No repository-wide open-source license is currently declared. Unless and until a license is added, the source is provided for project development and review and should not be assumed to be freely reusable or redistributable.

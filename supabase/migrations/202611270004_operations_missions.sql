@@ -5,26 +5,47 @@
 create table if not exists public.operations_mission_catalog (
   mission_id text primary key,
   title text not null,
-  correct_option_id text not null,
   xp_reward integer not null default 100 check (xp_reward between 1 and 1000),
   is_active boolean not null default true,
   created_at timestamptz not null default now()
 );
 
-insert into public.operations_mission_catalog (mission_id, title, correct_option_id, xp_reward) values
-  ('auth-burst', 'Unusual account activity', 'preserve-contain-verify', 100),
-  ('dns-burst', 'Unexpected outbound DNS', 'preserve-isolate', 100),
-  ('priv-change', 'Unexpected privileged change', 'preserve-verify-revoke', 100)
+insert into public.operations_mission_catalog (mission_id, title, xp_reward) values
+  ('auth-burst', 'Unusual account activity', 100),
+  ('dns-burst', 'Unexpected outbound DNS', 100),
+  ('priv-change', 'Unexpected privileged change', 100)
 on conflict (mission_id) do update set
   title = excluded.title,
-  correct_option_id = excluded.correct_option_id,
   xp_reward = excluded.xp_reward,
   is_active = true;
+
+-- Private answer digests are provisioned by scripts/load-private-content.mjs.
+create table if not exists public.operations_mission_secrets (
+  mission_id text primary key references public.operations_mission_catalog(mission_id) on delete cascade,
+  correct_option_hash text not null,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.operations_mission_secrets enable row level security;
+revoke all on public.operations_mission_secrets from public, anon, authenticated;
+
+create table if not exists public.operations_mission_attempts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  mission_id text not null references public.operations_mission_catalog(mission_id) on delete cascade,
+  is_correct boolean not null,
+  attempted_at timestamptz not null default now()
+);
+
+create index if not exists operations_mission_attempts_user_mission_time_idx
+  on public.operations_mission_attempts (user_id, mission_id, attempted_at desc);
+
+alter table public.operations_mission_attempts enable row level security;
+revoke all on public.operations_mission_attempts from public, anon, authenticated;
 
 create table if not exists public.operations_mission_completions (
   user_id uuid not null references auth.users(id) on delete cascade,
   mission_id text not null references public.operations_mission_catalog(mission_id) on delete cascade,
-  answer_id text not null,
   completed_at timestamptz not null default now(),
   primary key (user_id, mission_id)
 );
@@ -119,12 +140,14 @@ create or replace function public.complete_operations_mission(
 returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_user_id uuid;
-  v_correct_option text;
+  v_correct_hash text;
   v_reward integer;
+  v_recent_attempts integer;
+  v_is_correct boolean;
   v_inserted integer;
 begin
   v_user_id := auth.uid();
@@ -134,21 +157,56 @@ begin
   end if;
 
   if p_mission_id is null or length(p_mission_id) > 100
-     or p_answer_id is null or length(p_answer_id) > 120 then
+     or p_answer_id is null or length(btrim(p_answer_id)) = 0 or length(p_answer_id) > 120 then
     raise exception 'A valid mission and answer are required' using errcode = '22023';
   end if;
 
-  select mission.correct_option_id, mission.xp_reward
-    into v_correct_option, v_reward
+  perform pg_advisory_xact_lock(
+    hashtextextended(v_user_id::text || ':ops:' || p_mission_id, 0)
+  );
+
+  select secret.correct_option_hash, mission.xp_reward
+    into v_correct_hash, v_reward
   from public.operations_mission_catalog as mission
+  join public.operations_mission_secrets as secret
+    on secret.mission_id = mission.mission_id
   where mission.mission_id = p_mission_id
     and mission.is_active = true;
 
   if not found then
-    raise exception 'Mission is not available' using errcode = 'P0002';
+    raise exception 'Mission answer is not configured' using errcode = 'P0002';
   end if;
 
-  if p_answer_id <> v_correct_option then
+  if exists (
+    select 1 from public.operations_mission_completions
+    where user_id = v_user_id and mission_id = p_mission_id
+  ) then
+    return jsonb_build_object(
+      'correct', true,
+      'completed', true,
+      'already_completed', true,
+      'xp_awarded', 0,
+      'message', 'Mission already completed.'
+    );
+  end if;
+
+  select count(*)::integer
+    into v_recent_attempts
+  from public.operations_mission_attempts
+  where user_id = v_user_id
+    and mission_id = p_mission_id
+    and attempted_at > now() - interval '1 minute';
+
+  if v_recent_attempts >= 10 then
+    raise exception 'Too many submissions. Wait a minute and try again.' using errcode = 'P0001';
+  end if;
+
+  v_is_correct := extensions.crypt(lower(btrim(p_answer_id)), v_correct_hash) = v_correct_hash;
+
+  insert into public.operations_mission_attempts (user_id, mission_id, is_correct)
+  values (v_user_id, p_mission_id, v_is_correct);
+
+  if not v_is_correct then
     return jsonb_build_object(
       'correct', false,
       'completed', false,
@@ -158,8 +216,8 @@ begin
     );
   end if;
 
-  insert into public.operations_mission_completions (user_id, mission_id, answer_id)
-  values (v_user_id, p_mission_id, p_answer_id)
+  insert into public.operations_mission_completions (user_id, mission_id)
+  values (v_user_id, p_mission_id)
   on conflict (user_id, mission_id) do nothing;
 
   get diagnostics v_inserted = row_count;

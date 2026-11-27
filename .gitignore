@@ -18,3 +18,9 @@ Thumbs.db
 .vscode/
 .idea/
 *.log
+
+# Private challenge answers, flags and walkthroughs (never commit)
+/supabase/private-content.json
+/supabase/private-content.*.json
+/private/
+/private-content/

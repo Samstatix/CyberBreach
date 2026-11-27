@@ -26,8 +26,10 @@
 - [ ] The initial Cybersecurity Director account is promoted through trusted SQL, never through the browser.
 - [ ] Event registration closes at the scheduled start time.
 - [ ] Individual and team event registrations enforce the event format.
-- [ ] Team event rosters are snapshotted at registration.
-- [ ] Event scores count only verified solves for selected challenges inside the event window.
+- [ ] Team event rosters are snapshotted atomically at registration while membership changes are serialized against the snapshot.
+- [ ] Event scores count verified correct flag attempts for selected challenges inside the event window.
+- [ ] A team receives each selected challenge's points once even when multiple roster members solve it.
+- [ ] Previously solved challenges can be re-submitted during an event for event-only credit.
 - [ ] Event leaderboards never accept client-submitted points.
 - [ ] Moderators can view drafts and cancel published events.
 - [ ] Individual event leaderboards display the participant name captured at registration.
@@ -43,20 +45,31 @@
 
 ## Source repository security
 - [ ] Follow the temporary public-repository decision documented in `docs/security-review.md`.
-- [ ] Rotate all challenge flags and mission/lab answer keys that were committed while the repository was public.
-- [ ] Move trusted answer material into a separately access-controlled deployment process before competitive public launch.
+- [ ] Treat all answer material in public Git history as compromised; rotate every CTF flag, Operations answer and lab answer.
+- [ ] Keep public seed files limited to challenge metadata, prompts, evidence and progressive hints.
+- [ ] Confirm Operations frontend options contain no `correct` flags, semantic answer IDs or per-option answer feedback.
+- [ ] Confirm guest Operations and Linux practice do not validate answers or award mission/lab XP locally.
+- [ ] Provision flags and walkthroughs only through the ignored private-content file and trusted administrator loader.
+- [ ] Store Operations and lab answers only as bcrypt hashes in private tables.
+- [ ] Confirm private-content files are ignored by Git and never appear in public source or build artifacts.
+- [ ] Run `npm run security:scan` successfully before every merge/release.
+- [ ] Do not rely on a later repository visibility change to retract old public history.
 - [ ] Keep private deployment material out of public source, build artifacts and browser bundles.
-- [ ] Complete the final handoff checklist in `docs/final-handoff-plan.md` before merging milestone work into `main`.
+- [ ] Keep `main` as the consolidated development baseline; merge reviewed phase branches through pull requests after CI.
 
 ## Supabase setup
-- [ ] Apply migrations `202611270001` through `202611270009` in filename order and run the seed after migrations.
+- [ ] Apply migrations `202611270001` through `202611270010` in filename order and run the public metadata seed after migrations.
+- [ ] Load fresh private content using `npm run private:load` after migration 010.
 - [ ] Verify RLS on every user-facing table.
 - [ ] Verify challenge secrets and solutions cannot be selected by anon/authenticated roles.
 - [ ] Verify a user cannot submit for another user or write their own score.
 - [ ] Verify rate limiting and duplicate-solve behavior.
 - [ ] Verify leaderboard opt-in and opt-out.
 - [ ] Verify the public leaderboard counts only `challenge_solve` ledger events, excluding Academy, Operations and lab XP.
-- [ ] Verify mission and lab-task answer keys are private and completion records are user-owned.
+- [ ] Verify CTF, Operations and lab answer tables are private and completion records are user-owned.
+- [ ] Verify migration 010 removed legacy answer columns and deactivated exposed CTF flags.
+- [ ] Verify the service-role-only private answer setter RPCs cannot be called by anon/authenticated roles.
+- [ ] Verify bcrypt Operations/lab checks, rate limits and advisory-lock behavior.
 - [ ] Verify Academy and Operations XP cannot be written directly by browser clients.
 - [ ] Verify `get_player_progress` returns only the authenticated user's records.
 - [ ] Configure email confirmation, password recovery redirect URLs and password policies.
@@ -66,6 +79,7 @@
 - [ ] Verify profile edits cannot change the user's role or other protected fields.
 
 ## Frontend validation
+- [ ] `npm run security:scan`
 - [ ] `npm run typecheck`
 - [ ] `npm test`
 - [ ] `npm run build`

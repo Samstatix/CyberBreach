@@ -16,6 +16,7 @@ on:
       - milestone-9-account-management
       - milestone-10-multi-discipline-labs
       - milestone-11-competitions
+      - phase-12/security-and-platform-hardening
   pull_request:
     branches:
       - main
@@ -41,6 +42,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Scan public source for private answer material
+        run: npm run security:scan
 
       # The repository does not have a committed lockfile yet. Use npm install
       # until the team generates and commits package-lock.json for reproducibility.
