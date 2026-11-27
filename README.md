@@ -20,6 +20,16 @@ CyberBreach is a self-contained React feature module developed in this repositor
 - Frontend: React + Vite + TypeScript, packaged as a mountable React module.
 - Platform services: Supabase Auth, PostgreSQL, Row Level Security and trusted database functions for scoring/progression.
 
+## Player progression
+
+- Completing a catalogued Academy lesson awards 25 personal XP.
+- A first-time verified CTF solve awards the challenge's published points as XP.
+- Levels use cumulative thresholds: 250 XP for Level 2, 750 total XP for Level 3, and progressively larger thresholds after that.
+- Ranks progress from Recruit through Trainee, Analyst, Specialist, Operator, Senior Operator and Elite.
+- Achievements are unlocked by trusted database functions after the relevant learning or solve milestones.
+- Guest progress is stored locally; signed-in progress is synchronized through Supabase.
+- The public leaderboard counts verified CTF solve points only. Academy XP does not change competitive rankings.
+
 ## Run locally
 Requirements: Node.js 20+ and npm 10+.
 
