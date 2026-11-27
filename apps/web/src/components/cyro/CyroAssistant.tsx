@@ -4,6 +4,13 @@ import { useLocation } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
+type TeachingMode = "explain" | "hint" | "quiz" | "next-step";
+const teachingActions: Array<{ mode: TeachingMode; label: string; prompt: string }> = [
+  { mode: "explain", label: "Explain simply", prompt: "Explain the topic on this page in simple beginner-friendly language with one everyday analogy." },
+  { mode: "hint", label: "Give me a hint", prompt: "Give one progressive hint for the exercise. Do not reveal the answer, flag, or full solution. Ask me to try the next step." },
+  { mode: "quiz", label: "Quiz me", prompt: "Ask one short question about this topic and wait for my answer before explaining." },
+  { mode: "next-step", label: "What next?", prompt: "Recommend one achievable next learning step and explain why." },
+];
 
 const starters = [
   "I'm completely new to cybersecurity. Where should I start?",
@@ -18,6 +25,7 @@ export default function CyroAssistant() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [logoFailed, setLogoFailed] = useState(false);
+  const [activeMode, setActiveMode] = useState<TeachingMode>("explain");
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey! I'm CYRO, your CyberBreach learning companion. No question is too basic. Tell me what you're learning, and I'll break it into small, clear steps." },
   ]);
@@ -36,7 +44,7 @@ export default function CyroAssistant() {
     setBusy(true);
     try {
       const { data, error: invokeError } = await supabase.functions.invoke("cyro-assistant", {
-        body: { messages: next.slice(-12), page: location.pathname },
+        body: { messages: next.slice(-12), page: location.pathname, mode: activeMode },
       });
       if (invokeError) throw invokeError;
       if (typeof data?.reply !== "string" || !data.reply.trim()) throw new Error("CYRO did not return an answer. Please try again.");
@@ -56,6 +64,7 @@ export default function CyroAssistant() {
           <button type="button" className="cyro-icon-button" onClick={() => setOpen(false)} aria-label="Close CYRO"><X size={17}/></button>
         </header>
         <div className="cyro-trust"><ShieldCheck size={13}/> Beginner-friendly guidance · Safe learning only</div>
+        <div className="cyro-actions" role="group" aria-label="CYRO teaching tools">{teachingActions.map((action) => <button type="button" key={action.mode} aria-pressed={activeMode === action.mode} className={activeMode === action.mode ? "active" : ""} onClick={() => { setActiveMode(action.mode); void sendMessage(action.prompt); }}>{action.label}</button>)}</div>
         <div className="cyro-messages" aria-live="polite">
           {messages.map((message, index) => <div className={`cyro-message ${message.role}`} key={index}>
             <span>{message.role === "assistant" ? "CYRO" : "YOU"}</span><p>{message.content}</p>
