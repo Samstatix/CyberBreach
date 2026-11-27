@@ -45,10 +45,11 @@ function saveGuestOperationRecord(record: OperationMissionRecord): boolean {
   if (records.some((item) => item.missionId === record.missionId)) return false;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...records, record]));
+    return true;
   } catch {
     // Guest progress is browser-only. A blocked storage area cannot persist it.
+    return false;
   }
-  return true;
 }
 
 function firstRow<T>(data: T[] | T | null): T | null {
@@ -73,7 +74,11 @@ export async function completeOperationsMission(
     return {
       correct: true, completed: true, already_completed: !awarded,
       xp_awarded: awarded ? 100 : 0,
-      message: awarded ? "Mission completed. 100 XP earned in guest mode." : "Mission already completed.",
+      message: awarded
+        ? "Mission completed. 100 XP earned in guest mode."
+        : getGuestOperationRecords().some((record) => record.missionId === missionId)
+          ? "Mission already completed."
+          : "Correct response, but browser storage is unavailable. Sign in to save progress.",
     };
   }
 
