@@ -6,14 +6,14 @@ CyberBreach is a self-contained React feature module developed in this repositor
 
 ## Current development baseline
 
-The active implementation baseline is `milestone-10-multi-discipline-labs`. Completed development phases include platform hardening, expanded Academy learning paths, community teams, account security and six interactive practice rooms. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
+The active implementation baseline is `milestone-11-competitions`. Completed development phases include platform hardening, expanded Academy learning paths, community teams, account security and six interactive practice rooms. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
 
 ## Product scope
 - **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
 - **Player progression:** eleven skill trees, XP levels, operator ranks and unlockable achievements. Personal XP is separate from the competitive CTF leaderboard.
 - **CTF Arena:** 18 original challenges across Web Exploitation, Cryptography, Reverse Engineering, Binary Exploitation, Forensics and Network Forensics, and OSINT & Misc. Every category has medium, hard and expert work.
 - **Cyber Labs:** six safe interactive practice rooms, the Linux evidence simulator, incident-response missions and links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
-- **Community:** team creation, invitation-based membership, private-by-default team workspaces and opt-in individual/team CTF leaderboards.
+- **Community:** team creation, invitation-based membership, private-by-default team workspaces, opt-in individual/team CTF leaderboards and moderator-managed scheduled competitions.
 - **AI Security Research:** LLM/agent security topics and official research references.
 
 CyberBreach is organized around five primary areas: Cyber Academy, CTF Arena, Cyber Labs (including Operations missions), Community and AI Security Research. Player progression connects activity across all five areas.
