@@ -6,14 +6,14 @@ CyberBreach is a self-contained React feature module developed in this repositor
 
 ## Current development baseline
 
-The active implementation baseline is `milestone-8-community-teams`. Completed development phases include Linux lab progression, platform hardening, expanded Academy learning paths and community teams. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
+The active implementation baseline is `milestone-10-multi-discipline-labs`. Completed development phases include platform hardening, expanded Academy learning paths, community teams, account security and six interactive practice rooms. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
 
 ## Product scope
 - **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
 - **Player progression:** eleven skill trees, XP levels, operator ranks and unlockable achievements. Personal XP is separate from the competitive CTF leaderboard.
 - **CTF Arena:** 18 original challenges across Web Exploitation, Cryptography, Reverse Engineering, Binary Exploitation, Forensics and Network Forensics, and OSINT & Misc. Every category has medium, hard and expert work.
-- **Cyber Labs:** browser simulations, interactive incident-response missions and links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
-- **Community:** opt-in public CTF leaderboard and safety principles.
+- **Cyber Labs:** six safe interactive practice rooms, the Linux evidence simulator, incident-response missions and links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
+- **Community:** team creation, invitation-based membership, private-by-default team workspaces and opt-in individual/team CTF leaderboards.
 - **AI Security Research:** LLM/agent security topics and official research references.
 
 CyberBreach is organized around five primary areas: Cyber Academy, CTF Arena, Cyber Labs (including Operations missions), Community and AI Security Research. Player progression connects activity across all five areas.
@@ -76,15 +76,12 @@ Authenticated learners can create or join one team at a time using a high-entrop
 5. Migration `202611270004_operations_missions.sql` adds answer-verified incident-response missions, mission XP and completion tracking.
 6. Migration `202611270005_lab_practice_tasks.sql` adds private answer verification and XP for browser-lab tasks.
 7. Migration `202611270006_linux_lab_path.sql` expands the Linux task set and unlocks the Linux Investigator achievement.
-8. Migration `202611270008_community_teams.sql` adds private teams, hashed invitation codes and opt-in CTF-only team rankings.
-9. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
-10. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
+8. Migration `202611270007_learning_paths_and_lab_hardening.sql` registers the new Academy lessons, rate-limits browser-lab submissions and keeps non-CTF XP out of competitive rankings.
+9. Migration `202611270008_community_teams.sql` adds private teams, hashed invitation codes and opt-in CTF-only team rankings.
+10. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
+11. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
-
-## Account security and privacy
-
-The Account page supports profile editing, password recovery and account deletion. Password recovery redirects to the current CyberBreach route; add the deployed `/account` URL (including the `/cybersecurity` prefix when mounted in CollabCircle) to Supabase Auth's allowed redirect URLs. Deploy the `delete-account` Edge Function from `supabase/functions/delete-account`; it verifies the caller JWT and deletes only that authenticated user. Supabase foreign-key cascades remove profile, CTF, XP, learning and team records.
 
 ## Multi-discipline browser workbench
 
