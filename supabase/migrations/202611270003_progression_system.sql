@@ -160,7 +160,7 @@ begin
   perform public.sync_user_achievements(new.user_id);
   return new;
 end;
-$;
+$$;
 
 revoke all on function public.handle_xp_ledger_achievement_sync() from public, anon, authenticated;
 
@@ -248,7 +248,7 @@ returns jsonb
 language plpgsql
 security definer
 set search_path = public
-as $
+as $$
 declare
   v_user_id uuid;
   v_total_xp bigint;
