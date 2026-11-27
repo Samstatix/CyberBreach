@@ -5,6 +5,7 @@ import {
   assessBuffer, decodeBase64, decodeCaesarCipher, forensicEvents,
   simulateInvoiceRequest, summarizeFailedLogins,
 } from "./labWorkbenchLogic";
+import { checkLabAnswer, getLabHint, guidedLabExercises, type LabExerciseId } from "./guidedLabExercises";
 
 type LabModule = "web" | "crypto" | "reverse" | "memory" | "forensics" | "osint";
 const modules: Array<{ id: LabModule; label: string; icon: typeof Bug; description: string }> = [
@@ -177,6 +178,30 @@ function OsintLab() {
   );
 }
 
+function GuidedExercisePanel({ exerciseId }: { exerciseId: LabExerciseId }) {
+  const exercise = guidedLabExercises.find((item) => item.id === exerciseId)!;
+  const [answer, setAnswer] = useState("");
+  const [hintLevel, setHintLevel] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [solved, setSolved] = useState(false);
+  const correct = submitted && checkLabAnswer(exercise, answer);
+  return (
+    <section className="guided-exercise" aria-labelledby="guided-exercise-title">
+      <div className="guided-exercise-heading"><span className="eyebrow">GUIDED PRACTICE / NOT SCORED</span><span>{solved ? "COMPLETED" : "LEARNING EXERCISE"}</span></div>
+      <h2 id="guided-exercise-title">{exercise.title}</h2>
+      <p>{exercise.objective}</p>
+      <label className="guided-exercise-question" htmlFor="guided-exercise-answer">{exercise.question}</label>
+      <div className="guided-exercise-answer-row">
+        <input id="guided-exercise-answer" value={answer} onChange={(event) => { setAnswer(event.target.value); setSubmitted(false); }} placeholder="Type your answer..." disabled={solved}/>
+        <button type="button" onClick={() => { setSubmitted(true); if (checkLabAnswer(exercise, answer)) setSolved(true); }} disabled={!answer.trim() || solved}>CHECK</button>
+      </div>
+      {submitted && <div className={correct ? "guided-exercise-feedback correct" : "guided-exercise-feedback"} role="status">{correct ? "Correct — well done." : "Not quite. Review a hint and try again."}</div>}
+      {!solved && <div className="guided-exercise-hints"><button type="button" onClick={() => setHintLevel((level) => Math.min(2, level + 1))} disabled={hintLevel === 3}> {hintLevel === 0 ? "GET A HINT" : "NEXT HINT"} </button>{hintLevel > 0 && <p>{getLabHint(exercise, hintLevel - 1)}</p>}</div>}
+      {solved && <div className="guided-exercise-feedback correct" role="status"><strong>Why this matters</strong><p>{exercise.explanation}</p><button type="button" onClick={() => { setAnswer(""); setHintLevel(0); setSubmitted(false); setSolved(false); }}>TRY AGAIN</button></div>}
+    </section>
+  );
+}
+
 export default function LabWorkbenchPage() {
   const [active, setActive] = useState<LabModule>("web");
   return (
@@ -200,6 +225,7 @@ export default function LabWorkbenchPage() {
         {active === "forensics" && <ForensicsLab/>}
         {active === "osint" && <OsintLab/>}
       </div>
+      <GuidedExercisePanel key={active} exerciseId={active}/>
       <div className="workbench-next-step"><div><span className="eyebrow">READY FOR A CHALLENGE?</span><strong>Practice the concept, then solve an original CTF task.</strong></div><Link className="secondary-button" to="/ctf">OPEN CTF ARENA <ArrowRight size={14}/></Link></div>
     </section>
   );
