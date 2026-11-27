@@ -30,6 +30,7 @@ create table if not exists public.competition_event_registrations (
   event_id uuid not null references public.competition_events(id) on delete cascade,
   participant_type text not null check (participant_type in ('individual', 'team')),
   participant_id uuid not null,
+  participant_name_snapshot text not null check (length(trim(participant_name_snapshot)) between 1 and 80),
   registered_by uuid not null references auth.users(id) on delete cascade,
   registered_at timestamptz not null default now(),
   unique (event_id, participant_type, participant_id)
@@ -97,7 +98,7 @@ begin
     raise exception 'Enter a valid title, slug and description' using errcode = '22023';
   end if;
 
-  if p_event_type not in ('individual', 'team') then
+  if p_event_type is null or p_event_type not in ('individual', 'team') then
     raise exception 'Event type must be individual or team' using errcode = '22023';
   end if;
 
@@ -138,7 +139,7 @@ begin
   select v_event_id, challenge.id
   from public.challenges as challenge
   where challenge.slug = any(p_challenge_slugs)
-    and challenge.is_published = true;
+    and challenge.status = 'published';
 
   get diagnostics v_inserted = row_count;
   if v_inserted <> cardinality(p_challenge_slugs) then
@@ -253,7 +254,7 @@ as $$
     ) end
   from public.competition_events as event
   where event.status = 'published'
-    and event.ends_at >= now() - interval '7 days'
+    and event.ends_at >= now() - interval '90 days'
   order by event.starts_at asc
   limit least(greatest(coalesce(p_limit, 25), 1), 100);
 $$;
@@ -272,6 +273,7 @@ declare
   v_event public.competition_events%rowtype;
   v_participant_type text;
   v_participant_id uuid;
+  v_participant_name text;
   v_registration_id uuid;
   v_member_count integer;
 begin
@@ -299,13 +301,15 @@ begin
     end if;
     v_participant_type := 'individual';
     v_participant_id := v_user_id;
+    select profile.display_name into v_participant_name
+    from public.profiles as profile where profile.id = v_user_id;
   else
     if p_team_id is null then
       raise exception 'Choose your team before registering for this team event' using errcode = '22023';
     end if;
 
-    perform 1 from public.teams
-    where id = p_team_id and owner_id = v_user_id
+    select team.name into v_participant_name from public.teams as team
+    where team.id = p_team_id and team.owner_id = v_user_id
     for update;
     if not found then
       raise exception 'Only the team owner can register a team' using errcode = '42501';
@@ -323,9 +327,9 @@ begin
   end if;
 
   insert into public.competition_event_registrations (
-    event_id, participant_type, participant_id, registered_by
+    event_id, participant_type, participant_id, participant_name_snapshot, registered_by
   ) values (
-    p_event_id, v_participant_type, v_participant_id, v_user_id
+    p_event_id, v_participant_type, v_participant_id, v_participant_name, v_user_id
   )
   on conflict (event_id, participant_type, participant_id) do nothing
   returning id into v_registration_id;
@@ -374,12 +378,11 @@ as $$
     select
       registration.id as registration_id,
       'individual'::text as kind,
-      profile.display_name as name,
+      registration.participant_name_snapshot as name,
       coalesce(sum(challenge.points), 0)::bigint as score,
       count(solve.challenge_id)::bigint as solve_count
     from public.competition_event_registrations as registration
     join selected_event as event on event.id = registration.event_id and event.event_type = 'individual'
-    join public.profiles as profile on profile.id = registration.participant_id
     left join public.challenge_solves as solve
       on solve.user_id = registration.participant_id
      and solve.solved_at >= event.starts_at
@@ -390,18 +393,17 @@ as $$
      )
     left join public.challenges as challenge on challenge.id = solve.challenge_id
     where registration.participant_type = 'individual'
-    group by registration.id, profile.display_name
+    group by registration.id, registration.participant_name_snapshot
   ),
   team_scores as (
     select
       registration.id as registration_id,
       'team'::text as kind,
-      team.name as name,
+      registration.participant_name_snapshot as name,
       coalesce(sum(challenge.points), 0)::bigint as score,
       count(solve.challenge_id)::bigint as solve_count
     from public.competition_event_registrations as registration
     join selected_event as event on event.id = registration.event_id and event.event_type = 'team'
-    join public.teams as team on team.id = registration.participant_id
     join public.competition_event_team_members as snapshot on snapshot.registration_id = registration.id
     left join public.challenge_solves as solve
       on solve.user_id = snapshot.user_id
@@ -413,7 +415,7 @@ as $$
      )
     left join public.challenges as challenge on challenge.id = solve.challenge_id
     where registration.participant_type = 'team'
-    group by registration.id, team.name
+    group by registration.id, registration.participant_name_snapshot
   ),
   all_scores as (
     select * from individual_scores
