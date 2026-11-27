@@ -53,7 +53,7 @@ export default function AppShell() {
         </header>
         <main className="page-content"><Outlet /></main>
         <footer className="site-footer">CYBERBREACH <span>·</span> LEARN WITH PURPOSE. PRACTICE WITH PERMISSION.</footer>
-        <CyroAssistant />
+        {user && <CyroAssistant />}
       </div>
     </div>
   );
