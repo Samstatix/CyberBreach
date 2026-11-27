@@ -14,7 +14,7 @@ This checklist defines the evidence required before declaring CyberBreach produc
 ## 2. Supabase deployment
 
 - [ ] Apply every migration in order, including `202611280011_cyro_learning_preferences.sql`, `202611280012_cyro_learning_activity.sql` and `202611280013_cyro_rate_limits.sql`.
-- [ ] Run the SQL verification scripts and inspect RLS policies, grants, SECURITY DEFINER search paths and function execute privileges.
+- [ ] Run verification scripts 008–013 (including 011/012 learner data and 013 rate limits) and inspect RLS policies, grants, SECURITY DEFINER search paths and function execute privileges.
 - [ ] Confirm user-owned progress, preferences and learning activity cannot be read or changed by another account.
 - [ ] Confirm challenge secrets, lab task secrets, private content and plaintext flags are not exposed through REST, RPC responses, seed files or frontend bundles.
 - [ ] Verify account deletion cascades only the authenticated user's data.
@@ -55,6 +55,8 @@ npm run typecheck
 npm test
 npm run build
 ```
+
+CI additionally runs `deno check` against both Supabase Edge Functions and `npm audit --audit-level=high`.
 
 All required checks must pass on the exact release commit. Review dependency audit output and resolve or formally accept high/critical findings before release.
 
