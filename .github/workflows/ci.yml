@@ -19,6 +19,10 @@ on:
       - milestone-11-competitions
       - phase-12/security-and-platform-hardening
       - phase-13/automated-security-regression
+      - phase-14/automated-security-regression
+      - phase-15/cyro-learning-assistant
+      - phase-16/cyro-accessibility-and-guardrails
+      - phase-17/cyro-adaptive-teaching
   pull_request:
     branches:
       - main
