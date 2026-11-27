@@ -209,3 +209,8 @@ Signed-in learners can sync completion of the six guided browser-lab exercises. 
 ## Shared browser-origin policy
 
 Both `cyro-assistant` and `delete-account` use the same exact-origin setting: `CYBERBREACH_ALLOWED_ORIGIN`. Set it to the production site origin (scheme and host only). Do not use wildcard CORS. Preview deployments should use a separate environment and explicit origin value rather than weakening the production allow-list. Requests without an Origin header are intended only for trusted server-to-server use and must still carry valid user authentication.
+
+
+## CYRO authenticated rate limits
+
+Migration `202611280013_cyro_rate_limits.sql` enforces a database-backed per-user limit of 20 requests per rolling fixed minute window and 200 requests per fixed hour window. The Edge Function calls the RPC after JWT verification and fails closed if the rate-limit service is unavailable. Browser roles cannot read or modify the counter table directly. Apply migration 013 before deploying the updated Edge Function. These limits are per account; gateway-level abuse monitoring and operational alerting remain required.
