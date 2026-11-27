@@ -14,6 +14,7 @@ on:
       - milestone-7-gameplay-integrity
       - milestone-8-community-teams
       - milestone-9-account-management
+      - milestone-10-multi-discipline-labs
   pull_request:
     branches:
       - main
