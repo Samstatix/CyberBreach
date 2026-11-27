@@ -32,6 +32,7 @@ Migration \`202611270010_security_competition_hardening.sql\` disables all previ
 - Operations and lab submissions use per-user/per-task advisory locks and ten-attempt-per-minute limits.
 - Plaintext Operations/lab submissions are not stored in attempt or completion records.
 - Browser roles cannot write XP, solve records, or private answer tables directly.
+- Guest Operations/Linux practice no longer uses client-side answer maps or local answer verification; signed-in users submit to trusted database RPCs.
 
 ## Team and competition integrity
 
