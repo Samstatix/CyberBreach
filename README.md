@@ -82,7 +82,7 @@ npm run build
 
 The production build is generated in `apps/web/dist`. The build also emits `apps/web/dist/cyberbreach.integration.css` for the future CollabCircle Next.js integration.
 
-## Deploy as a browser website on Vercel
+## Release readiness\n\nBefore production release, complete the evidence-based checklist in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md). A passing CI run does not certify external Supabase, Vercel or Ollama configuration.\n\n## Deploy as a browser website on Vercel
 
 The repository includes a `vercel.json` configuration for deploying the active Vite application from the repository root.
 
