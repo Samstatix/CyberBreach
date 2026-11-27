@@ -61,6 +61,8 @@ Deno.serve(async (request: Request) => {
   const { data: { user }, error: authError } = await authClient.auth.getUser();
   if (authError || !user) return json({ error: "Your session is invalid. Please sign in again." }, 401);
 
+  const { data: learnerPreferences } = await authClient.from("cyro_learning_preferences").select("teaching_level, preferred_language").eq("user_id", user.id).maybeSingle();
+
   const endpoint = Deno.env.get("CYRO_OLLAMA_URL");
   const model = Deno.env.get("CYRO_OLLAMA_MODEL") ?? "llama3.1:8b";
   const apiKey = Deno.env.get("CYRO_OLLAMA_API_KEY");
@@ -80,6 +82,10 @@ Deno.serve(async (request: Request) => {
   }
   if (messages[messages.length - 1].role !== "user") return json({ error: "The latest message must be from the learner." }, 400);
   const page = typeof body.page === "string" && /^\/[a-zA-Z0-9/_-]{0,100}$/.test(body.page) ? body.page : "/";
+  const hintLevel = Number.isInteger(body.hintLevel) ? Math.max(1, Math.min(3, Number(body.hintLevel))) : 1;
+  const moduleContext = moduleForPage(page);
+  const learnerLevel = ["beginner", "intermediate", "advanced"].includes(learnerPreferences?.teaching_level) ? learnerPreferences.teaching_level : "beginner";
+  const language = learnerPreferences?.preferred_language === "bn" ? "Bengali" : learnerPreferences?.preferred_language === "en" ? "English" : "the learner language when clear";
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 45_000);
@@ -91,7 +97,7 @@ Deno.serve(async (request: Request) => {
         model,
         stream: false,
         messages: [
-          { role: "system", content: systemPrompt + `\nCurrent CyberBreach section (route only): ${page}` },
+          { role: "system", content: systemPrompt + `\nCurrent CyberBreach section (route only): ${page}\nModule: ${moduleContext.name}\nModule guidance: ${moduleContext.guidance}\nTeaching mode: ${mode}\nMode instruction: ${modeInstructions[mode]}\nHint level: ${mode === "hint" ? hintLevel + " of 3" : "not applicable"}\nLearner-selected level: ${learnerLevel}\nPreferred language: ${language}. Treat these settings as preferences, not proof of skill.` },
           ...messages,
         ],
         options: { temperature: 0.4, num_predict: 500 },
