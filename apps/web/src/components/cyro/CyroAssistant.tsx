@@ -17,6 +17,7 @@ export default function CyroAssistant() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [logoFailed, setLogoFailed] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey! I'm CYRO, your CyberBreach learning companion. No question is too basic. Tell me what you're learning, and I'll break it into small, clear steps." },
   ]);
@@ -49,7 +50,7 @@ export default function CyroAssistant() {
     <div className="cyro-widget">
       {open && <section className="cyro-panel" aria-label="CYRO learning assistant">
         <header className="cyro-header">
-          <div className="cyro-avatar"><Bot size={20}/></div>
+          <div className="cyro-avatar">{!logoFailed ? <img src="/cyro-logo.png" alt="CYRO" onError={() => setLogoFailed(true)} /> : <Bot size={20}/>}</div>
           <div><strong>CYRO</strong><small>CYBERBREACH LEARNING COMPANION</small></div>
           <button type="button" className="cyro-icon-button" onClick={() => setOpen(false)} aria-label="Minimize CYRO"><Minimize2 size={17}/></button>
           <button type="button" className="cyro-icon-button" onClick={() => setOpen(false)} aria-label="Close CYRO"><X size={17}/></button>
