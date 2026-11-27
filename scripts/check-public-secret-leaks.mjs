@@ -5,22 +5,19 @@
  */
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { findPrivateContentViolations } from "./security-scan-rules.mjs";
 
-const roots = ["supabase/migrations", "apps/web/src"];
-const explicitFiles = ["supabase/seed.sql"];
-const extensions = new Set([".sql", ".ts", ".tsx", ".js", ".mjs"]);
-const forbidden = [
-  ["challenge secret seed", /insert\s+into\s+public\.challenge_secrets\b/i],
-  ["challenge walkthrough seed", /insert\s+into\s+public\.challenge_solutions\b/i],
-  ["plaintext operations answer", /correct_option_id\s*[,=]\s*'[^']+'/i],
-  ["literal SHA-256 lab answer", /answer_hash\s*[,=]\s*'[0-9a-f]{64}'/i],
-  ["literal SHA-256 CTF flag", /flag_hash\s*[,=]\s*'[0-9a-f]{64}'/i],
-  ["inline walkthrough content", /walkthrough_md\s*[,=]\s*'/i],
-  ["inline defensive solution content", /defensive_notes_md\s*[,=]\s*'/i],
-  ["client-side Operations answer map", /GUEST_MISSION_ANSWERS|isGuestOperationsAnswerCorrect/i],
-  ["client-side lab answer map", /GUEST_LAB_ANSWERS|isGuestLabTaskAnswerCorrect/i],
-  ["legacy semantic Operations answer ID", /preserve-contain-verify|preserve-isolate|preserve-verify-revoke/i],
+// Scan database migrations, verification SQL, server functions and browser
+// source. The private-content loader is checked explicitly; example JSON is
+// intentionally excluded because it contains placeholders, not real answers.
+const roots = [
+  "supabase/migrations",
+  "supabase/verification",
+  "supabase/functions",
+  "apps/web/src",
 ];
+const explicitFiles = ["supabase/seed.sql", "scripts/load-private-content.mjs"];
+const extensions = new Set([".sql", ".ts", ".tsx", ".js", ".mjs"]);
 
 async function collectFiles(path) {
   const entries = await readdir(path, { withFileTypes: true });
@@ -45,12 +42,8 @@ for (const root of roots) files.push(...await collectFiles(root));
 const findings = [];
 for (const path of files) {
   const content = await readFile(path, "utf8");
-  for (const [label, pattern] of forbidden) {
-    const match = pattern.exec(content);
-    if (match) {
-      const line = content.slice(0, match.index).split("\n").length;
-      findings.push(path + ":" + line + " — " + label);
-    }
+  for (const finding of findPrivateContentViolations(content)) {
+    findings.push(path + ":" + finding.line + " — " + finding.label);
   }
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { academyCourses, findCourse, findLesson } from "./academyContent";
+import { academyCourses, findCourse, findLesson, getCyroLessonContext } from "./academyContent";
 
 describe("CyberBreach Academy curriculum", () => {
   it("includes the extended web, cryptography, forensics and AI learning paths", () => {
@@ -39,6 +39,22 @@ describe("CyberBreach Academy curriculum", () => {
         expect(result?.lesson.id).toBe(lesson.id);
       }
     }
+  });
+
+  it("provides CYRO with lesson teaching content but never quiz answers", () => {
+    for (const course of academyCourses) {
+      for (const lesson of course.lessons) {
+        const context = getCyroLessonContext(lesson.id);
+        expect(context?.title).toBe(lesson.title);
+        expect(context?.objectives).toEqual(lesson.objectives);
+        expect(context?.blocks.length).toBeGreaterThan(0);
+        expect(context).not.toHaveProperty("question");
+        expect(context).not.toHaveProperty("options");
+        expect(context).not.toHaveProperty("correctOption");
+        expect(context).not.toHaveProperty("feedback");
+      }
+    }
+    expect(getCyroLessonContext("not-a-real-lesson")).toBeUndefined();
   });
 
   it("uses secure external reference URLs", () => {

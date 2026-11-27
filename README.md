@@ -17,7 +17,7 @@ The project is developed in this repository as an independent React application 
 - **Progression** — earn personal XP, advance through levels and operator ranks, unlock achievements, and develop skills across eleven skill trees.
 - **Community and Teams** — create or join a team, collaborate in private team spaces, and opt into team rankings.
 - **Competitions** — register for scheduled individual or team CTF events and compete using verified challenge solves.
-- **AI Security Research** — explore security topics involving AI systems, LLMs, and agents through curated learning and research references.
+- **CYRO learning assistant** — ask beginner-friendly questions from any platform page, request simpler explanations, examples and quick knowledge checks. CYRO is served through an authenticated Supabase Edge Function connected to a privately hosted Ollama-compatible model endpoint.\n- **AI Security Research** — explore security topics involving AI systems, LLMs, and agents through curated learning and research references.
 
 CyberBreach is intended for a broad audience, from people with no prior cybersecurity experience to experienced learners. Learning content and challenges are designed to be free, without paid challenge advantages or premium-only learning tiers.
 
@@ -49,13 +49,13 @@ The repository root is not a second frontend. The active HTML document is `apps/
 These steps are for developers working on CyberBreach. They are not required for ordinary learners.
 
 Requirements:
-- Node.js 20 or newer
+- Node.js 22.12 or newer
 - npm 10 or newer
 
 From the repository root:
 
 ```bash
-npm install
+npm ci
 cp .env.example .env
 npm run dev
 ```
@@ -69,7 +69,7 @@ VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ```
 
-The app can render in browse/demo mode without Supabase configuration, but authentication, synchronized progress, server-verified submissions, and competition features require a correctly configured Supabase project.
+The app can render in browse/demo mode without Supabase configuration, but authentication, synchronized progress, server-verified submissions, competitions, and CYRO require a correctly configured Supabase project. CYRO additionally requires the deployed `cyro-assistant` Edge Function and server-side `CYRO_OLLAMA_URL` / `CYRO_OLLAMA_MODEL` secrets; see `supabase/functions/README.md`.
 
 Quality checks:
 
@@ -82,7 +82,7 @@ npm run build
 
 The production build is generated in `apps/web/dist`. The build also emits `apps/web/dist/cyberbreach.integration.css` for the future CollabCircle Next.js integration.
 
-## Deploy as a browser website on Vercel
+## Release readiness\n\nBefore production release, complete the evidence-based checklist in [`docs/RELEASE_READINESS.md`](docs/RELEASE_READINESS.md). A passing CI run does not certify external Supabase, Vercel or Ollama configuration.\n\n## Deploy as a browser website on Vercel
 
 The repository includes a `vercel.json` configuration for deploying the active Vite application from the repository root.
 
@@ -194,3 +194,13 @@ The `main` branch is the consolidated development baseline. Phase 12 adds securi
 ## License
 
 No repository-wide open-source license is currently declared. Unless and until a license is added, the source is provided for project development and review and should not be assumed to be freely reusable or redistributable.
+
+
+## Guided lab exercises (Phase 25)
+
+Each of the six browser-simulated lab disciplines includes one short, unscored learning exercise with progressive hints and an explanation after a correct response. Exercises use synthetic scenarios and local browser logic only. They do not execute commands, access real systems, award CTF points or persist assessment results. They are teaching aids, not validated assessments.
+
+
+## CYRO learning activity profile (Phase 26)
+
+Signed-in learners can sync completion of the six guided browser-lab exercises. The database records only an allow-listed activity type and module ID, with one completion per learner and module. Reads are restricted by RLS to the owning account; writes go through an authenticated RPC that derives the user from `auth.uid()`. This history is separate from XP, CTF scores and diagnostic self-check answers. Apply migration `202611280012_cyro_learning_activity.sql` before enabling this sync. If the RPC is unavailable or the learner is signed out, the exercise remains usable locally and is not falsely reported as synced.

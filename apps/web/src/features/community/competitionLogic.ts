@@ -14,7 +14,9 @@ export function getCompetitionStatus(startsAt: string, endsAt: string, now = new
 }
 
 export function parseChallengeSlugs(value: string): string[] {
-  return [...new Set(value.split(",").map((slug) => slug.trim().toLowerCase()).filter(Boolean))];
+  const candidates = value.split(",").map((slug) => slug.trim().toLowerCase());
+  const validSlugs = candidates.filter((slug) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug));
+  return [...new Set(validSlugs)];
 }
 
 export function isValidCompetitionWindow(startsAt: string, endsAt: string, now = new Date()): boolean {

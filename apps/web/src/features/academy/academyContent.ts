@@ -846,6 +846,38 @@ export const academyCourses: AcademyCourse[] = [
   ...additionalCourses,
 ];
 
+export type CyroLessonContext = {
+  courseTitle: string;
+  lessonId: string;
+  title: string;
+  summary: string;
+  objectives: string[];
+  blocks: Array<{ heading: string; paragraphs: string[]; bullets: string[]; callout: string }>;
+  keyTerms: Array<{ term: string; definition: string }>;
+  workedExample: { title: string; steps: string[]; takeaway: string };
+};
+
+export function getCyroLessonContext(lessonId: string | undefined): CyroLessonContext | undefined {
+  const found = findLesson(lessonId);
+  if (!found) return undefined;
+  const { course, lesson } = found;
+  return {
+    courseTitle: course.title,
+    lessonId: lesson.id,
+    title: lesson.title,
+    summary: lesson.summary,
+    objectives: lesson.objectives,
+    blocks: lesson.blocks.map((block) => ({
+      heading: block.heading,
+      paragraphs: block.paragraphs ?? [],
+      bullets: block.bullets ?? [],
+      callout: block.callout ?? "",
+    })),
+    keyTerms: lesson.keyTerms,
+    workedExample: lesson.workedExample,
+  };
+}
+
 export function findCourse(courseId: string | undefined): AcademyCourse | undefined {
   return academyCourses.find((course) => course.id === courseId);
 }

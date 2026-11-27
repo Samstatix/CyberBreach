@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - milestone-1/react-foundation
+      - milestone-2/game-progression
       - milestone-2/progression-system
       - milestone-3/operations-missions
       - milestone-4/lab-progression
@@ -17,13 +18,31 @@ on:
       - milestone-10-multi-discipline-labs
       - milestone-11-competitions
       - phase-12/security-and-platform-hardening
+      - phase-13/automated-security-regression
+      - phase-14/automated-security-regression
+      - phase-15/cyro-learning-assistant
+      - phase-16/cyro-accessibility-and-guardrails
+      - phase-17/cyro-adaptive-teaching
+      - phase-18/cyro-contextual-hints
+      - phase-19/cyro-learning-preferences
+      - phase-20/cyro-lesson-grounding
+      - phase-21/cyro-learning-intelligence
+      - phase-22/cyro-diagnostic-assessment
+      - phase-23/cyro-remediation-paths
+      - phase-24/cyro-adaptive-teaching
+      - phase-25/guided-lab-exercises
+      - phase-26/learning-activity-profile
+      - phase-27/specialist-cyber-curriculum
+      - phase-28/cyro-edge-hardening
+      - phase-29/ollama-runtime-reliability
+      - phase-30/release-readiness
   pull_request:
     branches:
       - main
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: cyberbreach-ci-${{ github.ref }}
@@ -38,6 +57,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -46,16 +70,44 @@ jobs:
       - name: Scan public source for private answer material
         run: npm run security:scan
 
-      # The repository does not have a committed lockfile yet. Use npm install
-      # until the team generates and commits package-lock.json for reproducibility.
+      - name: Test private-content security scanner
+        run: npm run security:test
+
+      # Bootstrap a lockfile once on the release branch, then keep it committed.
+      - name: Generate release lockfile
+        if: github.ref == 'refs/heads/phase-30/release-readiness'
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Commit generated lockfile
+        if: github.ref == 'refs/heads/phase-30/release-readiness'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: lock audited npm dependencies"
+            git push
+          fi
+
       - name: Install workspace dependencies
-        run: npm install --no-audit --no-fund
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      - name: Validate Supabase Edge Functions
+        run: deno check --no-lock supabase/functions/cyro-assistant/index.ts supabase/functions/delete-account/index.ts
 
       - name: Type-check the React application
         run: npm run typecheck
 
       - name: Run curriculum and application tests
         run: npm test
+
+      - name: Audit dependencies for high-severity vulnerabilities
+        run: npm audit --audit-level=high
 
       - name: Build the production frontend
         run: npm run build
