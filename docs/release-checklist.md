@@ -18,9 +18,11 @@
 - [ ] Operations and AI research content has been reviewed.
 
 ## Source repository security
-- [ ] Resolve the public-repository answer-material exposure documented in `docs/security-review.md`.
+- [ ] Follow the temporary public-repository decision documented in `docs/security-review.md`.
 - [ ] Rotate all challenge flags and mission/lab answer keys that were committed while the repository was public.
+- [ ] Move trusted answer material into a separately access-controlled deployment process before competitive public launch.
 - [ ] Keep private deployment material out of public source, build artifacts and browser bundles.
+- [ ] Complete the final handoff checklist in `docs/final-handoff-plan.md` before merging milestone work into `main`.
 
 ## Supabase setup
 - [ ] Apply migrations `202611270001` through `202611270006` in filename order and run the seed after migrations.
