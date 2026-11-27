@@ -19,6 +19,8 @@
 - [ ] Team invitation rotation invalidates previous codes.
 - [ ] Team member views expose usernames/display names only, never emails.
 - [ ] Team owners alone can dissolve teams or change public visibility.
+- [ ] Users can leave a team, and owners can dissolve their team.
+- [ ] Public team leaderboard excludes all non-CTF XP.
 - [ ] Public team rankings count verified CTF points only and require owner opt-in.
 - [ ] Browser simulations cannot reach the host operating system.
 - [ ] External lab links use official provider pages.
