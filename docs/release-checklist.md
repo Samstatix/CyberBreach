@@ -28,6 +28,9 @@
 - [ ] Team event rosters are snapshotted at registration.
 - [ ] Event scores count only verified solves for selected challenges inside the event window.
 - [ ] Event leaderboards never accept client-submitted points.
+- [ ] Moderators can view drafts and cancel published events.
+- [ ] Individual event leaderboards display the participant name captured at registration.
+- [ ] Team event leaderboards retain the team name and roster snapshot even if the team later changes.
 - [ ] Browser simulations cannot reach the host operating system.
 - [ ] Six workbench modules use synthetic data only and make no external target requests.
 - [ ] Web authorization simulator distinguishes vulnerable and secure server-side object checks.
