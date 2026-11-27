@@ -4,6 +4,10 @@
 
 CyberBreach is a self-contained React feature module developed in this repository so it can later be mounted inside the main CollabCircle Next.js/Vercel website. This repository is the source of truth; the main website is not changed during CyberBreach development.
 
+## Current development baseline
+
+The active implementation baseline is `milestone-5/linux-lab-path`. Ongoing hardening work is tracked on `milestone-6/platform-hardening`; the main CollabCircle website remains untouched.
+
 ## Product scope
 - **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
 - **Player progression:** eleven skill trees, XP levels, operator ranks and unlockable achievements. Personal XP is separate from the competitive CTF leaderboard.
