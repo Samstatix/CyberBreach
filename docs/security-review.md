@@ -40,6 +40,10 @@ Migration `202611270008_community_teams.sql` keeps team tables inaccessible to b
 
 The `delete-account` Edge Function verifies the caller's Supabase JWT and derives the account ID from the verified user object. It does not accept a user ID from the browser. The service-role client is used only inside the function after verification. Deleting the Auth user relies on foreign-key cascades to remove account-owned records. The function is not operational until deployed and its server-only service-role environment variable is configured.
 
+## Competition event security
+
+Migration `202611270009_competition_events.sql` limits event creation, publishing and cancellation to moderator/admin profiles. Registration closes at the event start. Team registrations require the team owner and snapshot the roster; participant names are snapshotted so later profile/team changes do not rewrite event results. Event scores are derived from verified `challenge_solves` for selected event challenges and timestamps inside the scheduled window. No browser-supplied points are accepted. Run `supabase/verification/009_competition_events.sql` after applying the migration.
+
 ## Additional production checks
 
 - Apply migrations to a dedicated staging Supabase project and verify them in filename order.
