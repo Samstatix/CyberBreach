@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - milestone-1/react-foundation
+      - milestone-2/game-progression
       - milestone-2/progression-system
       - milestone-3/operations-missions
       - milestone-4/lab-progression
@@ -17,6 +18,7 @@ on:
       - milestone-10-multi-discipline-labs
       - milestone-11-competitions
       - phase-12/security-and-platform-hardening
+      - phase-13/automated-security-regression
   pull_request:
     branches:
       - main
@@ -45,6 +47,9 @@ jobs:
 
       - name: Scan public source for private answer material
         run: npm run security:scan
+
+      - name: Test private-content security scanner
+        run: npm run security:test
 
       # The repository does not have a committed lockfile yet. Use npm install
       # until the team generates and commits package-lock.json for reproducibility.
