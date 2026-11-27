@@ -1,6 +1,6 @@
 /**
  * Guest progress is local to this browser. Signed-in lesson completions are
- * recorded by a trusted Supabase function so XP cannot be written by the client.
+ * verified and recorded by the Supabase RPC before they are shown as synced.
  */
 import { notifyProgressUpdated } from "./progressionEvents";
 import { supabase } from "./supabase";
@@ -15,7 +15,7 @@ export function getCompletedLessonIds(userId?: string): string[] {
     const raw = window.localStorage.getItem(storageKey(userId));
     if (!raw) return [];
     const value: unknown = JSON.parse(raw);
-    return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+    return Array.isArray(value) ? [...new Set(value.filter((item): item is string => typeof item === "string"))] : [];
   } catch {
     return [];
   }
@@ -23,28 +23,31 @@ export function getCompletedLessonIds(userId?: string): string[] {
 
 export async function loadCompletedLessonIds(userId?: string): Promise<string[]> {
   const accountLocal = getCompletedLessonIds(userId);
-  const local = userId ? [...new Set([...accountLocal, ...getCompletedLessonIds()])] : accountLocal;
-  if (!userId) return local;
-  const client = supabase;
-  if (!client) return local;
+  const guestLocal = userId ? getCompletedLessonIds() : [];
+  const local = [...new Set([...accountLocal, ...guestLocal])];
+  if (!userId || !supabase) return local;
 
+  const client = supabase;
   const { data, error } = await client
     .from("academy_lesson_progress")
     .select("lesson_id")
     .eq("user_id", userId);
 
+  // If the API is unavailable, preserve the cached view but do not delete the
+  // guest queue. A later visit can retry the account synchronization.
   if (error || !data) return local;
 
   const remoteIds = data.map((row) => row.lesson_id);
   const missingLocalIds = local.filter((lessonId) => !remoteIds.includes(lessonId));
 
-  // Migrate previously cached completions through the allow-listed RPC. Unknown
-  // or obsolete IDs are rejected by the database and do not receive XP.
   if (missingLocalIds.length > 0) {
-    await Promise.all(missingLocalIds.map((lessonId) =>
+    const results = await Promise.all(missingLocalIds.map((lessonId) =>
       client.rpc("complete_academy_lesson", { p_lesson_id: lessonId }),
     ));
-    notifyProgressUpdated();
+    if (results.some((result) => result.error)) {
+      // Continue with the refreshed server state; rejected or obsolete IDs
+      // must not be displayed as completed merely because they were cached.
+    }
   }
 
   const refreshed = await client
@@ -52,37 +55,54 @@ export async function loadCompletedLessonIds(userId?: string): Promise<string[]>
     .select("lesson_id")
     .eq("user_id", userId);
 
-  const finalRemoteIds = refreshed.data ? refreshed.data.map((row) => row.lesson_id) : remoteIds;
-  const merged = [...new Set([...local, ...finalRemoteIds])];
+  if (refreshed.error || !refreshed.data) return remoteIds;
 
+  const verifiedIds = [...new Set(refreshed.data.map((row) => row.lesson_id))];
   try {
-    window.localStorage.setItem(storageKey(userId), JSON.stringify(merged));
+    window.localStorage.setItem(storageKey(userId), JSON.stringify(verifiedIds));
+    if (guestLocal.every((lessonId) => verifiedIds.includes(lessonId))) {
+      window.localStorage.removeItem(storageKey());
+    }
   } catch {
     // Database progress remains available even when browser storage is blocked.
   }
 
-  return merged;
+  if (missingLocalIds.length > 0) notifyProgressUpdated();
+  return verifiedIds;
 }
 
-export function markLessonComplete(lessonId: string, userId?: string): string[] {
-  const completed = new Set(getCompletedLessonIds(userId));
-  completed.add(lessonId);
-  const next = [...completed];
+export type LessonCompletionResult = {
+  completedIds: string[];
+  xpAwarded: number;
+  alreadyCompleted: boolean;
+  synced: boolean;
+};
 
-  try {
-    window.localStorage.setItem(storageKey(userId), JSON.stringify(next));
-  } catch {
-    // The current page still updates when browser storage is unavailable.
-  }
-
+export async function markLessonComplete(lessonId: string, userId?: string): Promise<LessonCompletionResult> {
   if (userId && supabase) {
-    void supabase.rpc("complete_academy_lesson", { p_lesson_id: lessonId }).then(({ error }) => {
-      if (error) console.error("Academy progress sync failed:", error.message);
-      notifyProgressUpdated();
-    });
-  } else {
+    const { data, error } = await supabase.rpc("complete_academy_lesson", { p_lesson_id: lessonId });
+    if (error) throw new Error(error.message);
+    const result = data as { completed?: boolean; xp_awarded?: number } | null;
+    if (!result?.completed) throw new Error("The Academy service did not confirm this lesson completion.");
+
+    const completedIds = [...new Set([...getCompletedLessonIds(userId), lessonId])];
+    try { window.localStorage.setItem(storageKey(userId), JSON.stringify(completedIds)); } catch { /* Server state is authoritative. */ }
     notifyProgressUpdated();
+    return {
+      completedIds,
+      xpAwarded: Number(result.xp_awarded ?? 0),
+      alreadyCompleted: Number(result.xp_awarded ?? 0) === 0,
+      synced: true,
+    };
   }
 
-  return next;
+  const completedIds = [...new Set([...getCompletedLessonIds(userId), lessonId])];
+  try { window.localStorage.setItem(storageKey(userId), JSON.stringify(completedIds)); } catch { /* Session remains usable. */ }
+  notifyProgressUpdated();
+  return {
+    completedIds,
+    xpAwarded: completedIds.includes(lessonId) ? 25 : 0,
+    alreadyCompleted: getCompletedLessonIds(userId).includes(lessonId),
+    synced: false,
+  };
 }
