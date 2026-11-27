@@ -42,7 +42,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: cyberbreach-ci-${{ github.ref }}
@@ -73,10 +73,29 @@ jobs:
       - name: Test private-content security scanner
         run: npm run security:test
 
-      # The repository does not have a committed lockfile yet. Use npm install
-      # until the team generates and commits package-lock.json for reproducibility.
+      # Bootstrap a lockfile once on the release branch, then keep it committed.
+      - name: Generate release lockfile
+        if: github.ref == 'refs/heads/phase-30/release-readiness'
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Commit generated lockfile
+        if: github.ref == 'refs/heads/phase-30/release-readiness'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: lock audited npm dependencies"
+            git push
+          fi
+
       - name: Install workspace dependencies
-        run: npm install --no-audit --no-fund
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
 
       - name: Validate Supabase Edge Functions
         run: deno check --no-lock supabase/functions/cyro-assistant/index.ts supabase/functions/delete-account/index.ts
