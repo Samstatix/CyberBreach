@@ -54,3 +54,8 @@ The table stores settings only, not chat transcripts or inferred personal traits
 On an Academy lesson route, the widget supplies the lesson's approved course title, lesson title, summary, objectives, teaching blocks, glossary and worked example. It deliberately excludes the knowledge-check question, options, correct answer and feedback. The Edge Function validates and bounds every field before including the context in the model prompt. The prompt marks this context as untrusted reference data and instructs the model not to follow embedded instructions.
 
 The lesson context is explanatory grounding, not a source of secrets or scoring authority. The authoritative quiz answer remains in the Academy's existing lesson implementation and is not sent to CYRO.
+
+
+## CYRO learning intelligence (Phase 21)
+
+For authenticated requests, the Edge Function reads the caller's own `academy_lesson_progress` rows and active `academy_lesson_catalog` entries through the caller-scoped Supabase client. It passes a bounded list of completed lesson titles and available next lessons to CYRO for recommendations. This is progress-aware guidance, not a mastery score: lesson completion does not prove understanding, and missing completions must not be described as weaknesses. A future diagnostic assessment must record learner responses through a trusted scoring flow before CYRO can make evidence-based skill-gap claims.
