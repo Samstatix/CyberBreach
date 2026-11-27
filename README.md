@@ -68,6 +68,10 @@ The Account page supports profile editing, password recovery and account deletio
 
 Authenticated learners can create or join one team at a time using a high-entropy invitation code. Only its SHA-256 digest is stored. Team owners can rotate invitations, dissolve the team and opt into public team rankings. Team members see display names and usernames, never member email addresses. Public team rankings include aggregate verified CTF points only.
 
+## Moderator setup
+
+Competition management is restricted to moderator/admin roles. After creating the director account, promote its Supabase Auth UUID through trusted SQL as described in [the moderator setup guide](docs/admin-setup.md). The browser cannot change account roles.
+
 ## Scheduled competitions
 
 CyberBreach moderators can create and publish individual or team CTF events from the Community Events page. Each event selects published challenges, has a fixed start/end window and closes registration when it begins. Team registration is performed by the team owner and snapshots the roster at registration time. Event scores are calculated from verified challenge solves for the selected challenges during the event window; no client-submitted scores are accepted. Moderator/admin roles are provisioned through trusted database administration, never through the browser.
