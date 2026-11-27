@@ -36,6 +36,10 @@ Migration `202611270007_learning_paths_and_lab_hardening.sql` adds a private att
 
 Migration `202611270008_community_teams.sql` keeps team tables inaccessible to browser roles directly. Membership and invitation changes use authenticated SECURITY DEFINER RPC functions. Invitation codes are high-entropy, stored only as SHA-256 digests and shown to the owner once; owners can rotate them. Team visibility defaults to private. Public team rankings expose aggregate CTF-only results and no member email addresses. Run `supabase/verification/008_community_teams.sql` against staging after applying the migration.
 
+## Account deletion and profile controls
+
+The `delete-account` Edge Function verifies the caller's Supabase JWT and derives the account ID from the verified user object. It does not accept a user ID from the browser. The service-role client is used only inside the function after verification. Deleting the Auth user relies on foreign-key cascades to remove account-owned records. The function is not operational until deployed and its server-only service-role environment variable is configured.
+
 ## Additional production checks
 
 - Apply migrations to a dedicated staging Supabase project and verify them in filename order.
