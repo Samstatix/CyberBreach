@@ -85,7 +85,8 @@ Safety rules:
 Answer in the learner's language when clear. Keep first answers concise (normally under 180 words), then expand when asked.`;
 
 Deno.serve(async (request: Request) => {
-  const origin = request.headers.get("Origin");\n  if (origin && (!allowedOrigin || origin !== allowedOrigin)) return new Response("Origin not allowed", { status: 403 });\n  if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  const origin = request.headers.get("Origin");
+  if (origin && (!allowedOrigin || origin !== allowedOrigin)) return new Response("Origin not allowed", { status: 403 });\n  if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
   const authorization = request.headers.get("Authorization");
   if (!authorization?.startsWith("Bearer ")) return json({ error: "Sign in to use CYRO." }, 401);
@@ -128,8 +129,10 @@ Deno.serve(async (request: Request) => {
   const apiKey = Deno.env.get("CYRO_OLLAMA_API_KEY");
   if (!endpoint) return json({ error: "CYRO's AI endpoint is not configured yet. Please try again later." }, 503);
 
-  const contentLength = Number(request.headers.get("Content-Length") ?? "0");\n  if (contentLength > 32_768) return json({ error: "Request is too large." }, 413);\n  let body: { messages?: ChatMessage[]; page?: string; mode?: TeachingMode; hintLevel?: number; lessonContext?: unknown };
-  try { body = await request.json(); } catch { return json({ error: "Invalid request body." }, 400); }\n  if (JSON.stringify(body).length > 32_768) return json({ error: "Request is too large." }, 413);
+  const contentLength = Number(request.headers.get("Content-Length") ?? "0");
+  if (contentLength > 32_768) return json({ error: "Request is too large." }, 413);\n  let body: { messages?: ChatMessage[]; page?: string; mode?: TeachingMode; hintLevel?: number; lessonContext?: unknown };
+  try { body = await request.json(); } catch { return json({ error: "Invalid request body." }, 400); }
+  if (JSON.stringify(body).length > 32_768) return json({ error: "Request is too large." }, 413);
   if (!Array.isArray(body.messages) || body.messages.length < 1 || body.messages.length > 12) {
     return json({ error: "Send between 1 and 12 chat messages." }, 400);
   }
