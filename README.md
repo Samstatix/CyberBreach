@@ -60,6 +60,10 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 
 Cyber Academy now includes 10 courses and 25 lessons, including dedicated beginner-first paths for Reverse Engineering, Binary Exploitation and OSINT. These explain unfamiliar terms, use worked examples and finish with short knowledge checks. The three new paths are also connected to their matching specialization skill trees.
 
+## Account security and privacy
+
+The Account page supports profile editing, password recovery and account deletion. Password recovery redirects to the current CyberBreach route; add the deployed `/account` URL (including the `/cybersecurity` prefix when mounted in CollabCircle) to Supabase Auth's allowed redirect URLs. Deploy the `delete-account` Edge Function from `supabase/functions/delete-account`; it verifies the caller JWT and deletes only that authenticated user. Supabase foreign-key cascades remove profile, CTF, XP, learning and team records.
+
 ## Community teams
 
 Authenticated learners can create or join one team at a time using a high-entropy invitation code. Only its SHA-256 digest is stored. Team owners can rotate invitations, dissolve the team and opt into public team rankings. Team members see display names and usernames, never member email addresses. Public team rankings include aggregate verified CTF points only.
