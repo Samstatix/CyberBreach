@@ -86,6 +86,10 @@ The browser uses only the Supabase publishable/anon key. Challenge flags are sto
 
 The Account page supports profile editing, password recovery and account deletion. Password recovery redirects to the current CyberBreach route; add the deployed `/account` URL (including the `/cybersecurity` prefix when mounted in CollabCircle) to Supabase Auth's allowed redirect URLs. Deploy the `delete-account` Edge Function from `supabase/functions/delete-account`; it verifies the caller JWT and deletes only that authenticated user. Supabase foreign-key cascades remove profile, CTF, XP, learning and team records.
 
+## Multi-discipline browser workbench
+
+Cyber Labs includes six synthetic practice rooms: Web authorization (IDOR/BOLA), cryptography encoding and Caesar shifts, reverse-engineering static inspection, a memory-boundary visualizer, authentication-log forensics and OSINT source verification. These are interactive teaching simulations only; they do not run code, contact real targets or award competitive CTF points. The Linux simulator remains a separate terminal-style practice environment.
+
 ## Browser lab task
 
 The Linux Foundations simulator includes four evidence tasks. Open Cyber Labs and launch the Linux practice terminal. Inspect each evidence source using the cat, ss, ip route and whoami commands, then submit the corresponding finding. The four tasks cover authentication evidence, listening services, the default gateway and the current user. Each correct finding awards 50 personal XP once. The terminal and its evidence are synthetic; no host shell or network connection is used.
