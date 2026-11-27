@@ -3,9 +3,9 @@ import { academyCourses, findCourse, findLesson } from "./academyContent";
 
 describe("CyberBreach Academy curriculum", () => {
   it("includes the extended web, cryptography, forensics and AI learning paths", () => {
-    expect(academyCourses.length).toBeGreaterThanOrEqual(7);
+    expect(academyCourses.length).toBeGreaterThanOrEqual(10);
     const totalLessons = academyCourses.reduce((total, course) => total + course.lessons.length, 0);
-    expect(totalLessons).toBeGreaterThanOrEqual(19);
+    expect(totalLessons).toBeGreaterThanOrEqual(25);
   });
 
   it("uses unique course and lesson identifiers", () => {
