@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const allowedOrigin = Deno.env.get("CYRO_ALLOWED_ORIGIN") ?? "";
+const allowedOrigin = Deno.env.get("CYBERBREACH_ALLOWED_ORIGIN") ?? "";
 const corsHeaders = {
   ...(allowedOrigin ? { "Access-Control-Allow-Origin": allowedOrigin, "Vary": "Origin" } : {}),
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
