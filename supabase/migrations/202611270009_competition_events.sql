@@ -433,10 +433,51 @@ as $$
   limit least(greatest(coalesce(p_limit, 25), 1), 100);
 $$;
 
+create or replace function public.get_moderator_competition_events(p_limit integer default 50)
+returns table (
+  event_id uuid,
+  slug text,
+  title text,
+  event_type text,
+  starts_at timestamptz,
+  ends_at timestamptz,
+  status text,
+  registered_count bigint
+)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $
+begin
+  if auth.uid() is null or not exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role in ('admin', 'moderator')
+  ) then
+    raise exception 'Moderator access required' using errcode = '42501';
+  end if;
+
+  return query
+  select
+    event.id,
+    event.slug,
+    event.title,
+    event.event_type,
+    event.starts_at,
+    event.ends_at,
+    event.status,
+    (select count(*)::bigint from public.competition_event_registrations as registration where registration.event_id = event.id)
+  from public.competition_events as event
+  order by event.created_at desc
+  limit least(greatest(coalesce(p_limit, 50), 1), 100);
+end;
+$;
+
 revoke all on function public.create_competition_event(text, text, text, text, timestamptz, timestamptz, integer, text[]) from public, anon;
 revoke all on function public.publish_competition_event(uuid) from public, anon;
 revoke all on function public.cancel_competition_event(uuid) from public, anon;
 revoke all on function public.get_public_competition_events(integer) from public;
+revoke all on function public.get_moderator_competition_events(integer) from public, anon;
 revoke all on function public.register_for_competition_event(uuid, uuid) from public, anon;
 revoke all on function public.get_competition_event_leaderboard(uuid, integer) from public;
 
@@ -444,6 +485,7 @@ grant execute on function public.create_competition_event(text, text, text, text
 grant execute on function public.publish_competition_event(uuid) to authenticated;
 grant execute on function public.cancel_competition_event(uuid) to authenticated;
 grant execute on function public.get_public_competition_events(integer) to anon, authenticated;
+grant execute on function public.get_moderator_competition_events(integer) to authenticated;
 grant execute on function public.register_for_competition_event(uuid, uuid) to authenticated;
 grant execute on function public.get_competition_event_leaderboard(uuid, integer) to anon, authenticated;
 
