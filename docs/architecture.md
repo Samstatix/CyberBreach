@@ -90,6 +90,7 @@ CyberBreach/
 - `challenge_solutions`: private walkthrough and defensive explanation, revealed after solve.
 - `lab_task_catalog`, `lab_task_attempts` and `lab_task_completions`: private answer verification, per-user rate-limiting and verified browser-lab completion.
 - `teams` and `team_members`: private team records and one-team-per-account membership. Invitation codes are stored only as SHA-256 digests.
+- `competition_events`, `competition_event_challenges`, `competition_event_registrations` and `competition_event_team_members`: moderator-managed event schedules, selected challenge sets, individual/team registration and roster snapshots. Event points are derived from verified solves during the event window.
 
 Account recovery uses Supabase Auth. Permanent account deletion is performed by the `delete-account` Edge Function, which verifies the JWT and uses a server-only service-role client to delete the authenticated user.
 
