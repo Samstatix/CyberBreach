@@ -45,10 +45,11 @@ function saveGuestLabTask(taskId: string, answer: string): boolean {
   if (records.some((record) => record.taskId === taskId)) return false;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...records, { taskId, answer }]));
+    return true;
   } catch {
-    // The current session can still display the result if storage is blocked.
+    // The current session can display the result, but cannot persist guest XP.
+    return false;
   }
-  return true;
 }
 
 export function isGuestLabTaskAnswerCorrect(taskId: string, answer: string): boolean {
@@ -84,7 +85,11 @@ export async function completeLabTask(
       completed: true,
       already_completed: !awarded,
       xp_awarded: awarded ? 50 : 0,
-      message: awarded ? "Investigation complete. 50 XP earned in guest mode." : "Lab task already completed.",
+      message: awarded
+        ? "Investigation complete. 50 XP earned in guest mode."
+        : getGuestLabTaskRecords().some((record) => record.taskId === taskId)
+          ? "Lab task already completed."
+          : "Correct finding, but browser storage is unavailable. Sign in to save progress.",
     };
   }
 
