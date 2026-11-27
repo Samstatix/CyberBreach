@@ -17,6 +17,11 @@
 - [ ] External lab links use official provider pages.
 - [ ] Operations and AI research content has been reviewed.
 
+## Source repository security
+- [ ] Resolve the public-repository answer-material exposure documented in `docs/security-review.md`.
+- [ ] Rotate all challenge flags and mission/lab answer keys that were committed while the repository was public.
+- [ ] Keep private deployment material out of public source, build artifacts and browser bundles.
+
 ## Supabase setup
 - [ ] Apply migrations `202611270001` through `202611270006` in filename order and run the seed after migrations.
 - [ ] Verify RLS on every user-facing table.
