@@ -23,13 +23,21 @@ describe("multi-discipline lab workbench", () => {
 
   it("decodes Base64 and rejects invalid input", () => {
     expect(decodeBase64("Q1lCRVJCUkVBQ0g=")).toBe("CYBERBREACH");
+    expect(decodeBase64("8J+YgA==")).toBe("💀");
     expect(() => decodeBase64("%%%")).toThrow();
+    expect(() => decodeBase64("/w==")).toThrow("encoded data");
   });
 
   it("models a buffer boundary and the effect of bounds checking", () => {
     expect(assessBuffer(6)).toEqual({ status: "safe", acceptedBytes: 6, overwrittenBytes: 0 });
     expect(assessBuffer(10, 8, false)).toEqual({ status: "overflow", acceptedBytes: 8, overwrittenBytes: 2 });
     expect(assessBuffer(10, 8, true)).toEqual({ status: "rejected", acceptedBytes: 0, overwrittenBytes: 0 });
+  });
+
+  it("keeps invalid numeric input from contaminating buffer calculations", () => {
+    expect(assessBuffer(Number.NaN)).toEqual({ status: "safe", acceptedBytes: 0, overwrittenBytes: 0 });
+    expect(assessBuffer(Number.POSITIVE_INFINITY, 8, false)).toEqual({ status: "safe", acceptedBytes: 0, overwrittenBytes: 0 });
+    expect(assessBuffer(10, Number.NaN, false)).toEqual({ status: "overflow", acceptedBytes: 1, overwrittenBytes: 9 });
   });
 
   it("finds the most repeated failed-login source without treating blocked or successful events as failures", () => {
