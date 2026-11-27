@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ArrowLeft, ChevronRight, CircleHelp, Eraser, ShieldCheck, TerminalSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../auth/AuthProvider";
+import { usePlayerProgress } from "../progression/progressionService";
+import { completeLabTask, syncGuestLabTasks } from "../../lib/labTaskProgress";
+import type { LabTaskResult } from "../../lib/labTaskProgress";
 
 type LineKind = "command" | "output" | "error";
 type TerminalLine = { id: number; kind: LineKind; text: string };
@@ -96,11 +100,27 @@ export default function TerminalSimulatorPage() {
   const [history, setHistory] = useState<string[]>([]);
   const [workingDirectory, setWorkingDirectory] = useState("/home/analyst");
   const [nextId, setNextId] = useState(5);
+  const [finding, setFinding] = useState("");
+  const [taskResult, setTaskResult] = useState<LabTaskResult | null>(null);
+  const [taskError, setTaskError] = useState("");
+  const [taskBusy, setTaskBusy] = useState(false);
   const outputRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+  const { progress } = usePlayerProgress(user?.id);
+  const labTaskComplete = progress.completedLabTaskIds.includes("linux-auth-source");
+  const inspectedAuthLog = history.some((item) => item.startsWith("cat ") && item.includes("auth.log"));
 
   useEffect(() => {
     outputRef.current?.scrollTo({ top: outputRef.current.scrollHeight, behavior: "smooth" });
   }, [lines]);
+
+  useEffect(() => {
+    if (user?.id) {
+      void syncGuestLabTasks(user.id).catch((error: unknown) => {
+        console.warn("Guest lab progress could not be synchronized:", error);
+      });
+    }
+  }, [user?.id]);
 
   function runCommand(rawCommand: string) {
     const trimmed = rawCommand.trim();
@@ -197,11 +217,28 @@ export default function TerminalSimulatorPage() {
     document.getElementById("simulated-terminal-input")?.focus();
   }
 
+  async function handleLabTaskSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setTaskBusy(true);
+    setTaskError("");
+    try {
+      const result = await completeLabTask("linux-auth-source", finding, user?.id);
+      setTaskResult(result);
+    } catch (error) {
+      setTaskError(error instanceof Error ? error.message : "The lab task could not be saved.");
+    } finally {
+      setTaskBusy(false);
+    }
+  }
+
   function resetTerminal() {
     setLines(initialLines);
     setHistory([]);
     setWorkingDirectory("/home/analyst");
     setCommand("");
+    setFinding("");
+    setTaskResult(null);
+    setTaskError("");
     setNextId(5);
   }
 
@@ -241,6 +278,19 @@ export default function TerminalSimulatorPage() {
         <div><CircleHelp size={18}/><strong>Mini investigation</strong></div>
         <p>Can you find the IP address that made repeated failed SSH login attempts? Start by reading the authentication log and identify the repeated source address.</p>
         <small>HINT: <code>cat /var/log/auth.log</code></small>
+        {labTaskComplete ? (
+          <p className="lab-task-result correct">Investigation complete. Your 50 XP reward has been recorded.</p>
+        ) : (
+          <>
+            <form className="lab-task-answer-form" onSubmit={handleLabTaskSubmit}>
+              <input aria-label="Repeated failed-login source IP" value={finding} onChange={(event) => setFinding(event.target.value)} placeholder="Enter the repeated source IP" />
+              <button type="submit" disabled={!inspectedAuthLog || !finding.trim() || taskBusy}>{taskBusy ? "CHECKING…" : "SUBMIT FINDING"}</button>
+            </form>
+            <p className="lab-task-result">{!inspectedAuthLog ? "First inspect the evidence with cat /var/log/auth.log to unlock the answer field." : "Submit the repeated source IP to complete this lab and earn 50 XP."}</p>
+            {taskResult && <p className={"lab-task-result " + (taskResult.correct ? "correct" : "incorrect")}>{taskResult.message}{taskResult.xp_awarded > 0 ? " +" + taskResult.xp_awarded + " XP." : ""}</p>}
+            {taskError && <p className="lab-task-result incorrect">{taskError}</p>}
+          </>
+        )}
       </div>
       <p className="practice-only-note">All output is synthetic training data. The address range 192.0.2.0/24 is reserved for documentation examples.</p>
     </section>

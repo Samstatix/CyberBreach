@@ -18,4 +18,5 @@ export const achievementCatalog: AchievementDefinition[] = [
   { slug: "full-clear", title: "Arena Finisher", description: "Solve all eighteen launch CTF challenges.", requirement: "Solve all 18 launch challenges", icon: "trophy" },
   { slug: "first-operation", title: "First Response", description: "Complete your first incident-response mission.", requirement: "Complete 1 Operations mission", icon: "shield-check" },
   { slug: "three-operations", title: "Incident Handler", description: "Complete all three launch incident-response missions.", requirement: "Complete all 3 Operations missions", icon: "activity" },
+  { slug: "first-lab", title: "Hands-On Analyst", description: "Complete your first browser-based Cyber Labs investigation.", requirement: "Complete 1 browser lab task", icon: "terminal" },
 ];

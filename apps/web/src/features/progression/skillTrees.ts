@@ -3,7 +3,7 @@ import { challengeCatalog } from "../ctf/challengeCatalog";
 export type SkillNode = {
   id: string;
   title: string;
-  kind: "lesson" | "challenge" | "mission";
+  kind: "lesson" | "challenge" | "mission" | "lab";
   reference: string;
 };
 
@@ -29,6 +29,15 @@ function missions(items: Array<[string, string]>): SkillNode[] {
     id: "mission:" + reference,
     title,
     kind: "mission",
+    reference,
+  }));
+}
+
+function labTasks(items: Array<[string, string]>): SkillNode[] {
+  return items.map(([reference, title]) => ({
+    id: "lab:" + reference,
+    title,
+    kind: "lab",
     reference,
   }));
 }
@@ -85,10 +94,13 @@ export const skillTrees: SkillTree[] = [
     title: "Linux and Systems",
     description: "Build confidence with filesystems, users and permissions.",
     accent: "SYSTEMS",
-    nodes: lessons([
-      ["linux-filesystem", "Files, folders and navigation"],
-      ["linux-permissions", "Users and file permissions"],
-    ]),
+    nodes: [
+      ...lessons([
+        ["linux-filesystem", "Files, folders and navigation"],
+        ["linux-permissions", "Users and file permissions"],
+      ]),
+      ...labTasks([["linux-auth-source", "SSH authentication log investigation"]]),
+    ],
   },
   {
     id: "cryptography",

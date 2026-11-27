@@ -19,6 +19,11 @@ describe("CyberBreach operator skill trees", () => {
     expect(incidentResponse?.nodes.every((node) => node.kind === "mission")).toBe(true);
   });
 
+  it("connects the Linux path to the simulated authentication-log lab", () => {
+    const linux = skillTrees.find((tree) => tree.id === "linux-systems");
+    expect(linux?.nodes.some((node) => node.kind === "lab" && node.reference === "linux-auth-source")).toBe(true);
+  });
+
   it("keeps every skill node identifier unique", () => {
     const ids = skillTrees.flatMap((tree) => tree.nodes.map((node) => node.id));
     expect(new Set(ids).size).toBe(ids.length);

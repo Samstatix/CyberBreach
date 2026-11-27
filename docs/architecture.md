@@ -2,7 +2,7 @@
 
 **Status:** Active implementation architecture  
 **Repository:** `Samstatix/CyberBreach`  
-**Working branch:** `milestone-3/operations-missions`  
+**Working branch:** `milestone-4/lab-progression`  
 **Integration target:** a future route inside the main CollabCircle Next.js/Vercel website. This repository remains the only development source of truth.
 
 ## Product boundary

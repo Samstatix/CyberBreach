@@ -26,11 +26,12 @@ CyberBreach is organized around five primary areas: Cyber Academy, CTF Arena, Cy
 - Completing a catalogued Academy lesson awards 25 personal XP.
 - A first-time verified CTF solve awards the challenge's published points as XP.
 - A correctly completed incident-response mission awards 100 personal XP once per mission.
+- A verified browser-lab investigation awards 50 personal XP once per task.
 - Levels use cumulative thresholds: 250 XP for Level 2, 750 total XP for Level 3, and progressively larger thresholds after that.
 - Ranks progress from Recruit through Trainee, Analyst, Specialist, Operator, Senior Operator and Elite.
 - Achievements are unlocked by trusted database functions after the relevant learning, mission or solve milestones.
 - Guest progress is stored locally; signed-in progress is synchronized through Supabase.
-- The public leaderboard counts verified CTF solve points only. Academy and mission XP do not change competitive rankings.
+- The public leaderboard counts verified CTF solve points only. Academy, mission and browser-lab XP do not change competitive rankings.
 
 ## Run locally
 Requirements: Node.js 20+ and npm 10+.
@@ -57,8 +58,9 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 3. Run `supabase/seed.sql` after migrations to add the six categories and 18 original challenges.
 4. Migration `202611270003_progression_system.sql` adds the lesson allow-list, server-awarded Academy XP, achievements and the player progression RPC.
 5. Migration `202611270004_operations_missions.sql` adds answer-verified incident-response missions, mission XP and completion tracking.
-6. Configure email confirmation and password policy in Supabase Auth.
-7. Keep the service-role key out of browser/Vercel public variables.
+6. Migration `202611270005_lab_practice_tasks.sql` adds private answer verification and XP for browser-lab tasks.
+7. Configure email confirmation and password policy in Supabase Auth.
+8. Keep the service-role key out of browser/Vercel public variables.
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 

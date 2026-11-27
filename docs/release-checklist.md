@@ -9,6 +9,7 @@
 - [ ] Eleven skill trees display completion across lessons, CTF challenges and Operations missions.
 - [ ] XP, levels, ranks and achievements are calculated from trusted progress records.
 - [ ] Correct Operations mission answers award 100 XP once and incorrect answers can be retried.
+- [ ] The Linux authentication-log task requires evidence inspection and awards 50 XP once.
 - [ ] Competitive leaderboard points exclude Academy and Operations XP.
 - [ ] Public leaderboard visibility is opt-in and reversible.
 - [ ] Browser simulations cannot reach the host operating system.
@@ -16,13 +17,13 @@
 - [ ] Operations and AI research content has been reviewed.
 
 ## Supabase setup
-- [ ] Apply migrations `202611270001` through `202611270004` in filename order and run the seed after migrations.
+- [ ] Apply migrations `202611270001` through `202611270005` in filename order and run the seed after migrations.
 - [ ] Verify RLS on every user-facing table.
 - [ ] Verify challenge secrets and solutions cannot be selected by anon/authenticated roles.
 - [ ] Verify a user cannot submit for another user or write their own score.
 - [ ] Verify rate limiting and duplicate-solve behavior.
 - [ ] Verify leaderboard opt-in and opt-out.
-- [ ] Verify mission answer keys are private and mission completions are user-owned.
+- [ ] Verify mission and lab-task answer keys are private and completion records are user-owned.
 - [ ] Verify Academy and Operations XP cannot be written directly by browser clients.
 - [ ] Verify `get_player_progress` returns only the authenticated user's records.
 - [ ] Configure email confirmation and password policies.

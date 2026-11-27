@@ -8,6 +8,7 @@ on:
       - milestone-1/react-foundation
       - milestone-2/progression-system
       - milestone-3/operations-missions
+      - milestone-4/lab-progression
   pull_request:
     branches:
       - main
