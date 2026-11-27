@@ -50,6 +50,11 @@ const modeInstructions: Record<TeachingMode, string> = {
   quiz: "Ask exactly one short question and wait for the learner to answer. Do not include the answer in the same response.",
   "next-step": "Recommend one achievable next learning step and explain why it follows from the current topic.",
 };
+function detectRepeatedConfusion(messages: ChatMessage[]): boolean {
+  const signals = /\\b(i (?:still )?(?:do not|don't|dont) understand|i am confused|i'm confused|this is confusing|explain again|not clear|too difficult|too complicated|lost me)\\b/i;
+  return messages.filter((message) => message.role === "user" && signals.test(message.content)).length >= 2;
+}
+
 const systemPrompt = `You are CYRO (Cybernetic Response & Operator), the friendly learning companion inside CyberBreach.
 Your job is to teach cybersecurity to absolute beginners without talking down to them.
 Teaching rules:
@@ -130,7 +135,7 @@ Deno.serve(async (request: Request) => {
   const hintLevel = Number.isInteger(body.hintLevel) ? Math.max(1, Math.min(3, Number(body.hintLevel))) : 1;
   const moduleContext = moduleForPage(page);
   const learnerLevel = ["beginner", "intermediate", "advanced"].includes(learnerPreferences?.teaching_level) ? learnerPreferences.teaching_level : "beginner";
-  const language = learnerPreferences?.preferred_language === "bn" ? "Bengali" : learnerPreferences?.preferred_language === "en" ? "English" : "the learner language when clear";
+  const language = learnerPreferences?.preferred_language === "bn" ? "Bengali" : learnerPreferences?.preferred_language === "en" ? "English" : "the learner language when clear";\n  const needsAlternativeExplanation = detectRepeatedConfusion(messages);
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 45_000);
