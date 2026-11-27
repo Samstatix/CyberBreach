@@ -28,7 +28,28 @@ export function decodeCaesarCipher(input: string, shift: number): string {
 }
 
 export function decodeBase64(input: string): string {
-  const binary = atob(input.trim());
+  // Ignore display whitespace so learners can paste wrapped Base64, but reject
+  // invalid alphabet characters, impossible lengths and malformed padding.
+  const encoded = input.replace(/\\s/g, "");
+  if (!/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) {
+    throw new Error("Invalid Base64 characters or padding.");
+  }
+
+  const unpadded = encoded.replace(/=+$/, "");
+  const padding = encoded.length - unpadded.length;
+  if (unpadded.length % 4 === 1) {
+    throw new Error("Invalid Base64 length.");
+  }
+  if (padding > 0 && (
+    encoded.length % 4 !== 0 ||
+    (padding === 1 && unpadded.length % 4 !== 3) ||
+    (padding === 2 && unpadded.length % 4 !== 2)
+  )) {
+    throw new Error("Invalid Base64 padding.");
+  }
+
+  const normalized = unpadded + "=".repeat((4 - (unpadded.length % 4)) % 4);
+  const binary = atob(normalized);
   const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
   return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 }
