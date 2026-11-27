@@ -23,7 +23,7 @@
 Do not merge milestone work into `main` until all of the following are true:
 
 - [ ] The agreed product scope is implemented and reviewed.
-- [ ] All main user journeys work: sign-up/sign-in, Academy, progression, CTF, Labs, Operations, Community and AI Security Research.
+- [ ] All main user journeys work: sign-up/sign-in, password recovery, account deletion, Academy, progression, CTF, all six practice rooms, Linux Labs, Operations, Community teams and AI Security Research.
 - [ ] TypeScript type-check passes.
 - [ ] Automated tests pass.
 - [ ] Production build passes.
