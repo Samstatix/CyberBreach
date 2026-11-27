@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { getCyroLessonContext } from "../../features/academy/academyContent";
 import { diagnosticQuestions, scoreDiagnostic } from "../../features/cyro/diagnosticAssessment";
+import { buildRemediationSuggestions } from "../../features/cyro/remediationPlanner";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type TeachingMode = "explain" | "hint" | "quiz" | "next-step";
@@ -89,8 +90,9 @@ export default function CyroAssistant() {
     const result = scoreDiagnostic(answers);
     setDiagnosticComplete(true);
     setDiagnosticActive(false);
-    const summary = result.byCategory.map((item) => `${item.category}: ${item.correct ? "correct" : "needs practice"}`).join("; ");
-    void sendMessage(`I completed a six-question self-check. My score was ${result.correct}/${result.total} (${result.percentage}%). Category results: ${summary}. Please explain what this small sample suggests, what it cannot prove, and recommend a beginner-friendly next step. Do not treat this as a formal certification or definitive measure of ability.`, "explain");
+    const summary = result.byCategory.map((item) => `${item.category}: ${item.correct ? "sample answer correct" : "sample answer missed"}`).join("; ");
+    const revision = buildRemediationSuggestions(result.byCategory).map((item) => `${item.category}: ${item.courseTitle} → ${item.lessonTitle} (${item.reason})`).join("\\n");
+    void sendMessage(`I completed an informal six-question self-check. My score was ${result.correct}/${result.total} (${result.percentage}%). Sample outcomes: ${summary}. Possible revision starting points (not diagnoses): ${revision || "No missed categories in this small sample."}. Please explain what this sample suggests, what it cannot prove, and recommend a beginner-friendly next step. Do not treat this as certification or a definitive measure of ability.`, "explain");
   }
 
   async function sendMessage(text = input, mode: TeachingMode = activeMode, requestedHintLevel = hintLevel) {
