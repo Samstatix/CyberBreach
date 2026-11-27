@@ -28,3 +28,8 @@ supabase secrets set CYRO_OLLAMA_API_KEY=YOUR_SERVER_SIDE_TOKEN
 CYRO calls the Ollama `/api/chat` endpoint from the Edge Function. The Ollama service must be reachable over HTTPS from Supabase; a developer's localhost URL will not work for the deployed product. Do not expose Ollama directly to the browser or commit endpoint credentials. Keep Ollama bound to a private network or protected gateway with authentication and rate limits.
 
 The Edge Function verifies the Supabase access token, validates message shape and length, applies a short timeout, and keeps the model endpoint and optional token server-side. It does not execute tools or commands. Configure per-user rate limiting and request monitoring at the gateway before broad public rollout.
+
+
+## CYRO adaptive teaching modes
+
+The floating assistant offers four explicit teaching modes: `explain`, `hint`, `quiz`, and `next-step`. The frontend sends a fixed mode identifier, and the Edge Function maps it to server-side teaching instructions. Hint mode is instructed to provide a single incremental hint without revealing flags or complete solutions. Quiz mode asks one question and waits for the learner's response.
