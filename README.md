@@ -86,9 +86,9 @@ CyberBreach moderators can create and publish individual or team CTF events from
 7. Migration `202611270006_linux_lab_path.sql` expands the Linux task set and unlocks the Linux Investigator achievement.
 8. Migration `202611270007_learning_paths_and_lab_hardening.sql` registers the new Academy lessons, rate-limits browser-lab submissions and keeps non-CTF XP out of competitive rankings.
 9. Migration `202611270008_community_teams.sql` adds private teams, hashed invitation codes and opt-in CTF-only team rankings.
-9. Migration `202611270009_competition_events.sql` adds moderator-managed event scheduling, individual/team registration, roster snapshots and verified event leaderboards.
-10. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
-11. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
+10. Migration `202611270009_competition_events.sql` adds moderator-managed event scheduling, individual/team registration, roster snapshots and verified event leaderboards.
+11. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
+12. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 
