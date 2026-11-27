@@ -86,3 +86,15 @@ CYRO has server-authored teaching notes for Academy, CTF Arena, Cyber Labs, Secu
 Set the Supabase secret `CYRO_ALLOWED_ORIGIN` to the exact browser origin that hosts CyberBreach (scheme and host, no path), for example the production Vercel domain assigned to this project. If a custom domain and preview domain both need access, deploy separate environments or extend the allow-list implementation deliberately; do not restore wildcard CORS. Browser requests with a missing or mismatched configured origin are rejected. Server-to-server calls without an Origin header remain possible and must still authenticate.
 
 The function rejects declared or parsed JSON request bodies larger than 32 KiB, in addition to existing per-message limits. Configure the exact production origin before browser rollout. This origin check is not a substitute for authentication, per-user rate limiting, abuse monitoring or gateway-level request controls.
+
+
+## CYRO Ollama runtime controls (Phase 29)
+
+Optional server-side settings:
+- `CYRO_TIMEOUT_MS`: request timeout, clamped to 10–60 seconds (default 45 seconds).
+- `CYRO_MAX_TOKENS`: response token budget, clamped to 100–800 (default 500).
+- `CYRO_OLLAMA_MODEL`: validated model identifier.
+- `CYRO_OLLAMA_URL`: must be a valid HTTPS URL reachable from the Supabase Edge Function runtime.
+- `CYRO_OLLAMA_API_KEY`: optional server-side bearer token.
+
+The function rejects invalid/non-HTTPS endpoint configuration, bounds the timeout and output budget, and returns a controlled error when the model endpoint responds with malformed JSON or an empty reply. It does not automatically switch models: fallback should be explicitly configured and tested rather than silently changing model behaviour. Test cold starts, concurrent load, model availability, latency and cost before public release.
