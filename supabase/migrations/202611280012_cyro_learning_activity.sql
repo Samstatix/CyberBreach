@@ -23,7 +23,7 @@ set search_path = public
 as $$
 declare
   v_user_id uuid := auth.uid();
-  v_inserted boolean := false;
+  v_inserted integer := 0;
 begin
   if v_user_id is null then
     raise exception 'Authentication required' using errcode = '28000';
@@ -36,7 +36,7 @@ begin
   values (v_user_id, p_activity_type, p_activity_id)
   on conflict (user_id, activity_type, activity_id) do nothing;
   get diagnostics v_inserted = row_count;
-  return jsonb_build_object('recorded', v_inserted, 'activity_type', p_activity_type, 'activity_id', p_activity_id);
+  return jsonb_build_object('recorded', v_inserted = 1, 'activity_type', p_activity_type, 'activity_id', p_activity_id);
 end;
 $$;
 revoke all on function public.record_cyro_learning_activity(text,text) from public, anon;
