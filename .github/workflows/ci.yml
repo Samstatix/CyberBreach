@@ -61,6 +61,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -77,11 +82,17 @@ jobs:
       - name: Install workspace dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Validate Supabase Edge Functions
+        run: deno check --no-lock supabase/functions/cyro-assistant/index.ts supabase/functions/delete-account/index.ts
+
       - name: Type-check the React application
         run: npm run typecheck
 
       - name: Run curriculum and application tests
         run: npm test
+
+      - name: Audit dependencies for high-severity vulnerabilities
+        run: npm audit --audit-level=high
 
       - name: Build the production frontend
         run: npm run build
