@@ -103,7 +103,7 @@ export default function OperationsPage() {
 
   return (
     <section className="section-page operations-page">
-      <div className="eyebrow">INVESTIGATE / OPERATIONS MISSIONS</div>
+      <div className="eyebrow">PRACTICE / CYBER LABS / OPERATIONS</div>
       <h1>Think like an incident responder.</h1>
       <p className="section-description">Work through fictional security incidents. Read the evidence, choose a proportionate response and learn why the decision matters. These are practice scenarios, not live alerts.</p>
 

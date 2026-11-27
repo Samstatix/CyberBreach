@@ -6,10 +6,9 @@ CyberBreach is a self-contained React feature module developed in this repositor
 
 ## Product scope
 - **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
-- **Player progression:** ten skill trees, XP levels, operator ranks and unlockable achievements. Personal XP is separate from the competitive CTF leaderboard.
+- **Player progression:** eleven skill trees, XP levels, operator ranks and unlockable achievements. Personal XP is separate from the competitive CTF leaderboard.
 - **CTF Arena:** 18 original challenges across Web Exploitation, Cryptography, Reverse Engineering, Binary Exploitation, Forensics and Network Forensics, and OSINT & Misc. Every category has medium, hard and expert work.
-- **Cyber Labs:** browser simulations plus links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
-- **Operations:** interactive fictional incident-response scenarios.
+- **Cyber Labs:** browser simulations, interactive incident-response missions and links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
 - **Community:** opt-in public CTF leaderboard and safety principles.
 - **AI Security Research:** LLM/agent security topics and official research references.
 
@@ -27,9 +26,9 @@ CyberBreach is a self-contained React feature module developed in this repositor
 - A correctly completed incident-response mission awards 100 personal XP once per mission.
 - Levels use cumulative thresholds: 250 XP for Level 2, 750 total XP for Level 3, and progressively larger thresholds after that.
 - Ranks progress from Recruit through Trainee, Analyst, Specialist, Operator, Senior Operator and Elite.
-- Achievements are unlocked by trusted database functions after the relevant learning or solve milestones.
+- Achievements are unlocked by trusted database functions after the relevant learning, mission or solve milestones.
 - Guest progress is stored locally; signed-in progress is synchronized through Supabase.
-- The public leaderboard counts verified CTF solve points only. Academy XP does not change competitive rankings.
+- The public leaderboard counts verified CTF solve points only. Academy and mission XP do not change competitive rankings.
 
 ## Run locally
 Requirements: Node.js 20+ and npm 10+.
@@ -61,9 +60,9 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 
-## Incident-response missions
+## Incident-response missions within Cyber Labs
 
-The Operations area contains three original fictional incident-response missions:
+Cyber Labs includes three original fictional incident-response missions:
 - Unusual account activity
 - Unexpected outbound DNS
 - Unexpected privileged change

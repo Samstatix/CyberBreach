@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 const areas = [
   { title: "Cyber Academy", desc: "Understand the idea first. Learn the tools and techniques one small step at a time.", tag: "LEARN", to: "/academy", icon: BookOpen },
   { title: "CTF Arena", desc: "Six focused categories, serious challenges and hints that teach you how to think.", tag: "CHALLENGE", to: "/ctf", icon: Flag },
-  { title: "Cyber Labs", desc: "Practice investigation and security skills in controlled training environments.", tag: "PRACTICE", to: "/labs", icon: FlaskConical },
-  { title: "Operations", desc: "Work through realistic incident scenarios and explain your decisions.", tag: "INVESTIGATE", to: "/operations", icon: ShieldCheck },
+  { title: "Cyber Labs", desc: "Use safe browser simulations, incident-response missions and real isolated training environments.", tag: "PRACTICE", to: "/labs", icon: FlaskConical },
   { title: "Community", desc: "Share knowledge, follow the opt-in leaderboard and learn with other practitioners.", tag: "CONNECT", to: "/community", icon: Users },
 ];
 
@@ -21,7 +20,7 @@ export default function DashboardPage() {
         </div>
         <div className="hero-emblem"><div className="emblem-ring"><ShieldCheck size={58} strokeWidth={1.1} /></div><span>THINK · TEST · LEARN</span></div>
       </section>
-      <div className="section-heading"><div><span className="eyebrow">YOUR TRAINING ENVIRONMENT</span><h2>Choose your next move</h2></div><span className="section-note">01 / 06 PILLARS</span></div>
+      <div className="section-heading"><div><span className="eyebrow">YOUR TRAINING ENVIRONMENT</span><h2>Choose your next move</h2></div><span className="section-note">01 / 05 PILLARS</span></div>
       <section className="area-grid">
         {areas.map(({ title, desc, tag, to, icon: Icon }) => (
           <Link className="area-card" to={to} key={title}>

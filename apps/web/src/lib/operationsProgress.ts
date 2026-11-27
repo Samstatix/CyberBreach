@@ -84,12 +84,14 @@ export async function completeOperationsMission(
 }
 
 export async function syncGuestOperationProgress(userId?: string): Promise<void> {
-  if (!userId || !supabase) return;
+  if (!userId) return;
+  const client = supabase;
+  if (!client) return;
   const records = getGuestOperationRecords();
   if (records.length === 0) return;
 
   const results = await Promise.all(records.map((record) =>
-    supabase.rpc("complete_operations_mission", {
+    client.rpc("complete_operations_mission", {
       p_mission_id: record.missionId,
       p_answer_id: record.answerId,
     }),

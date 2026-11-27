@@ -1,4 +1,4 @@
-import { ArrowRight, Clock3, ExternalLink, MonitorPlay, Server, ShieldCheck } from "lucide-react";
+import { Activity, ArrowRight, Clock3, ExternalLink, MonitorPlay, Server, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { runtimeConfig } from "../../lib/runtimeConfig";
 
@@ -17,6 +17,7 @@ export default function LabsPage(){
   <div className="lab-mode-grid">
    <article className="lab-mode-card"><div className="lab-mode-icon"><MonitorPlay size={24}/></div><span className="area-tag">MODE 01 / BROWSER</span><h2>Interactive simulations</h2><p>Exercises run inside this page using synthetic data and an allow-listed command set.</p><ul><li>Linux command-line simulator</li><li>Authentication log investigation</li><li>Safe, guided evidence exercises</li></ul><div className="lab-mode-status">AVAILABLE · NO REAL HOST ACCESS</div><Link className="lab-launch-link" to="/labs/linux-terminal">OPEN LINUX SIMULATOR <ArrowRight size={14}/></Link></article>
    <article className="lab-mode-card"><div className="lab-mode-icon"><Server size={24}/></div><span className="area-tag">MODE 02 / REAL ENVIRONMENTS</span><h2>Isolated training platforms</h2><p>Launch real practice environments hosted by specialist providers. Each provider controls its own accounts, lab scope and terms.</p><ul><li>Disposable target environments</li><li>Real tools and operating systems</li><li>Provider-managed reset and isolation</li></ul><div className="lab-mode-status"><ShieldCheck size={13}/> EXTERNAL PROVIDERS · OPEN IN NEW TAB</div></article>
+   <article className="lab-mode-card"><div className="lab-mode-icon"><Activity size={24}/></div><span className="area-tag">MODE 03 / INCIDENT RESPONSE</span><h2>Incident response missions</h2><p>Investigate fictional incidents, assess the evidence and choose a proportionate response. Correct decisions build your operator profile.</p><ul><li>Identity compromise and suspicious DNS</li><li>Privileged-change investigations</li><li>Evidence preservation and scoped containment</li></ul><div className="lab-mode-status">AVAILABLE · 100 XP PER MISSION</div><Link className="lab-launch-link" to="/operations">OPEN OPERATIONS MISSIONS <ArrowRight size={14}/></Link></article>
   </div>
   <div className="section-heading"><div><span className="eyebrow">REAL LAB ENVIRONMENTS</span><h2>Choose a trusted provider</h2></div><span className="section-note">EXTERNAL TRAINING</span></div>
   <div className="external-lab-grid">{externalLabs.map(lab=><article className="external-lab-card" key={lab.url}><span className="area-tag">{lab.kind}</span><h3>{lab.name}</h3><p>{lab.description}</p><a href={lab.url} target="_blank" rel="noreferrer">OPEN PROVIDER <ExternalLink size={13}/></a></article>)}</div>

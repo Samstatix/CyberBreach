@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { Activity, Award, BookOpen, BrainCircuit, Flag, FlaskConical, LayoutDashboard, Menu, Shield, Trophy, Users, UserRound } from "lucide-react";
+import { Award, BookOpen, BrainCircuit, Flag, FlaskConical, LayoutDashboard, Menu, Shield, Trophy, Users, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../features/auth/AuthProvider";
 import { usePlayerProgress } from "../../features/progression/progressionService";
@@ -7,7 +7,6 @@ import { usePlayerProgress } from "../../features/progression/progressionService
 const links = [
   { to: "/", label: "Overview", icon: LayoutDashboard, end: true },
   { to: "/academy", label: "Cyber Academy", icon: BookOpen },
-  { to: "/operations", label: "Operations", icon: Activity },
   { to: "/ctf", label: "CTF Arena", icon: Flag },
   { to: "/labs", label: "Cyber Labs", icon: FlaskConical },
   { to: "/progression", label: "Progression", icon: Award },
