@@ -1,0 +1,15 @@
+{
+  "name": "cyberbreach",
+  "private": true,
+  "version": "0.3.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @cyberbreach/web",
+    "build": "npm run build --workspace @cyberbreach/web",
+    "typecheck": "npm run typecheck --workspace @cyberbreach/web",
+    "test": "npm run test --workspace @cyberbreach/web",
+    "dev:web": "npm run dev --workspace @cyberbreach/web"
+  }
+}

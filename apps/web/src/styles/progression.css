@@ -1,0 +1,86 @@
+/* Unified player progression, skill trees and achievements */
+.topbar-actions{display:flex;align-items:center;gap:15px}
+.player-progress-link{display:flex;align-items:center;gap:9px;padding:6px 9px;border:1px solid var(--border);border-radius:7px;background:rgba(54,185,237,.045);color:var(--accent)}
+.player-level-mark{padding:5px 6px;border:1px solid rgba(54,185,237,.25);border-radius:4px;font:9px var(--font-mono);white-space:nowrap}
+.player-progress-copy strong,.player-progress-copy small{display:block}
+.player-progress-copy strong{color:var(--text-0);font-size:9px}
+.player-progress-copy small{margin-top:3px;color:var(--text-2);font:8px var(--font-mono)}
+.progression-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 24px;margin-top:25px;padding:25px;border:1px solid rgba(54,185,237,.22);border-radius:var(--radius-lg);background:radial-gradient(ellipse at 90% 10%,rgba(54,185,237,.13),transparent 42%),linear-gradient(135deg,#111e2c,#0d1722);box-shadow:var(--shadow-panel)}
+.progression-rank{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font:9px var(--font-mono);letter-spacing:1.4px}
+.progression-rank span{font-size:13px}
+.progression-identity h2{margin:13px 0 5px;font-size:36px;letter-spacing:-1.3px}
+.progression-identity p{margin:0;color:var(--text-1);font-size:11px;line-height:1.8}
+.progression-xp-total{display:grid;align-content:center;justify-items:end}
+.progression-xp-total strong{color:var(--accent);font:32px var(--font-mono)}
+.progression-xp-total span{margin-top:5px;color:var(--text-2);font:9px var(--font-mono);letter-spacing:1.2px}
+.progression-level-track,.skill-tree-track{height:8px;overflow:hidden;border:1px solid var(--border);border-radius:99px;background:#080e16}
+.progression-level-track{grid-column:1/-1}
+.progression-level-track span,.skill-tree-track span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#167aa6,#64d0fa);transition:width .3s ease}
+.progression-level-meta{grid-column:1/-1;display:flex;justify-content:space-between;gap:12px;color:var(--text-2);font:9px var(--font-mono)}
+.progression-level-meta strong{color:var(--accent-bright);font-weight:500}
+.progression-warning{padding:11px 13px;border:1px solid rgba(233,180,92,.25);border-radius:6px;color:var(--warning);background:rgba(233,180,92,.05);font-size:10px;line-height:1.7}
+.progression-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:15px}
+.progression-stats article{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:7px 12px;padding:15px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-1);color:var(--accent)}
+.progression-stats article strong{color:var(--text-0);font:21px var(--font-mono)}
+.progression-stats article span{grid-column:1/-1;color:var(--text-2);font:8px var(--font-mono);letter-spacing:1px}
+.progression-section-heading{margin-top:42px}
+.skill-tree-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.skill-tree-card{padding:18px;border:1px solid var(--border);border-radius:var(--radius-md);background:linear-gradient(145deg,rgba(20,31,45,.95),rgba(13,22,33,.95))}
+.skill-tree-card-head{display:flex;justify-content:space-between;align-items:center;color:var(--text-2);font:8px var(--font-mono);letter-spacing:1px}
+.skill-tree-card-head strong{color:var(--accent);font-size:10px}
+.skill-tree-card h3{margin:13px 0 6px;font-size:15px}
+.skill-tree-card>p{min-height:36px;margin:0 0 13px;color:var(--text-1);font-size:10px;line-height:1.7}
+.skill-tree-track{height:5px;margin-bottom:13px}
+.skill-tree-nodes{display:grid;gap:6px}
+.skill-tree-node{display:flex;align-items:center;gap:8px;min-height:34px;padding:7px 9px;border:1px solid rgba(36,54,74,.7);border-radius:5px;color:var(--text-1);background:rgba(7,13,20,.45);font-size:9px}
+.skill-tree-node svg{flex:0 0 auto;color:var(--text-2)}
+.skill-tree-node span{flex:1}
+.skill-tree-node small{color:var(--success);font:8px var(--font-mono)}
+.skill-tree-node.completed{border-color:rgba(57,201,138,.18);color:var(--text-0);background:rgba(57,201,138,.035)}
+.skill-tree-node.completed svg{color:var(--success)}
+.skill-tree-node:hover{border-color:var(--accent-dim);color:var(--text-0)}
+.achievement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.achievement-card{display:flex;align-items:flex-start;gap:11px;padding:14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-1);color:var(--text-2)}
+.achievement-icon{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border:1px solid var(--border);border-radius:8px;background:var(--bg-2)}
+.achievement-card>div:nth-child(2){flex:1;min-width:0}
+.achievement-card h3{margin:1px 0 5px;color:var(--text-1);font-size:11px}
+.achievement-card p{min-height:31px;margin:0;color:var(--text-2);font-size:9px;line-height:1.6}
+.achievement-card small{display:block;margin-top:9px;color:var(--text-2);font:7px var(--font-mono);letter-spacing:.7px}
+.achievement-card>svg{flex:0 0 auto;margin-top:3px}
+.achievement-card.unlocked{border-color:rgba(54,185,237,.24);background:linear-gradient(145deg,rgba(54,185,237,.075),rgba(13,22,33,.95));color:var(--accent)}
+.achievement-card.unlocked .achievement-icon{border-color:rgba(54,185,237,.25);color:var(--accent);background:rgba(54,185,237,.09)}
+.achievement-card.unlocked h3{color:var(--text-0)}
+.achievement-card.unlocked small{color:var(--success)}
+.progression-footer-note{display:flex;gap:12px;margin-top:22px;padding:16px;border:1px solid rgba(54,185,237,.17);border-radius:var(--radius-md);background:rgba(54,185,237,.045);color:var(--accent)}
+.progression-footer-note>div{flex:1}
+.progression-footer-note strong{color:var(--text-0);font-size:11px}
+.progression-footer-note p{margin:5px 0 0;color:var(--text-1);font-size:10px;line-height:1.8}
+.progression-account-cta{margin-top:14px;color:var(--text-1);font-size:10px}
+.progression-account-cta a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.progression-loading{display:block;margin-top:10px;color:var(--text-2);font:8px var(--font-mono)}
+@media(max-width:1050px){.achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.progression-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.topbar-status{display:none}}
+@media(max-width:760px){.progression-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar-actions{gap:8px}.player-progress-copy{display:none}.player-progress-link{padding:6px}.progression-hero{padding:20px}.skill-tree-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.progression-stats{grid-template-columns:1fr}.progression-stats article{grid-template-columns:auto auto 1fr}.progression-stats article span{grid-column:auto}.achievement-grid{grid-template-columns:1fr}.progression-level-meta{flex-direction:column}.progression-xp-total strong{font-size:25px}.progression-identity h2{font-size:30px}}
+
+.lesson-xp-note{margin:14px 0 0;color:var(--accent);font:9px var(--font-mono);letter-spacing:.3px}
+
+.operations-mission-progress{display:grid;gap:10px;margin-top:25px;padding:16px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-1)}
+.operations-mission-progress>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.operations-mission-progress>div:first-child strong{color:var(--accent);font:9px var(--font-mono);letter-spacing:.8px}
+.operations-mission-progress>span{color:var(--text-2);font-size:9px}
+.operations-mission-track{height:6px;overflow:hidden;border-radius:99px;background:#080e16}
+.operations-mission-track span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#167aa6,#64d0fa);transition:width .3s ease}
+.operation-xp-result{color:var(--success)!important;font:9px var(--font-mono);line-height:1.7}
+.operations-completion-note{display:flex;gap:12px;margin-top:18px;padding:16px;border:1px solid rgba(57,201,138,.2);border-radius:var(--radius-md);background:rgba(57,201,138,.045);color:var(--success)}
+.operations-completion-note>div{flex:1}
+.operations-completion-note strong{color:var(--text-0);font-size:11px}
+.operations-completion-note p{margin:5px 0 0;color:var(--text-1);font-size:10px;line-height:1.8}
+
+.lab-task-answer-form{display:flex;gap:8px;margin-top:13px}
+.lab-task-answer-form input{flex:1;min-width:0;padding:10px 11px;border:1px solid var(--border);border-radius:6px;background:var(--bg-2);color:var(--text-0);font:11px var(--font-mono)}
+.lab-task-answer-form input:focus{outline:1px solid var(--accent);border-color:var(--accent)}
+.lab-task-answer-form button{padding:9px 13px;border:1px solid rgba(54,185,237,.3);border-radius:6px;background:rgba(54,185,237,.1);color:var(--accent);font:9px var(--font-mono);letter-spacing:.8px}
+.lab-task-answer-form button:disabled{opacity:.45;cursor:not-allowed}
+.lab-task-result{margin-top:10px;color:var(--text-1);font-size:10px;line-height:1.7}
+.lab-task-result.correct{color:var(--success)}
+.lab-task-result.incorrect{color:var(--warning)}

@@ -1,0 +1,23 @@
+:root {
+  color-scheme: dark;
+  --bg-0: #080d14;
+  --bg-1: #0e1621;
+  --bg-2: #141f2d;
+  --bg-3: #1b2939;
+  --border: #24364a;
+  --text-0: #e8f0f7;
+  --text-1: #91a2b4;
+  --text-2: #62778d;
+  --accent: #36b9ed;
+  --accent-bright: #64d0fa;
+  --accent-dim: #176b91;
+  --success: #39c98a;
+  --warning: #e9b45c;
+  --danger: #ef6b75;
+  --font-ui: "Segoe UI", Inter, system-ui, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-panel: 0 18px 50px rgba(0, 0, 0, .22);
+}
