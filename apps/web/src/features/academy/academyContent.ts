@@ -257,6 +257,118 @@ const additionalCourses: AcademyCourse[] = [
       }
     ]
   }
+
+  {
+    id: "reverse-engineering-foundations",
+    title: "Reverse Engineering Foundations",
+    level: "LOW-LEVEL FOUNDATIONS",
+    description: "Learn how to inspect a program, understand its structure and reason about its behaviour without needing to write assembly first.",
+    outcomes: ["Explain what a compiled program contains.", "Use strings and metadata as clues, not proof.", "Describe a safe static and dynamic analysis workflow."],
+    lessons: [
+      {
+        id: "reverse-static-inspection", title: "Read a program without running it", duration: "10 min",
+        summary: "Start with file type, metadata, readable strings and byte patterns before executing an unfamiliar program.",
+        objectives: ["Explain static analysis in simple words.", "Identify three useful clues in a program file.", "Understand why one clue is not enough to prove what a program does."],
+        blocks: [
+          { heading: "A program leaves clues", paragraphs: ["A compiled program is not just a picture or a document. It contains machine instructions and data that a processor can interpret. Even when the original source code is unavailable, the file still contains clues about its structure.", "Static analysis means examining a file without running it. An analyst may inspect its file type, headers, imported library names and readable text strings. These clues help form questions for the next stage of an investigation."] },
+          { heading: "Use clues carefully", bullets: ["File metadata can suggest the operating system or executable format.", "Readable strings may reveal messages, file paths or configuration names.", "Imported libraries can suggest which features the program may use.", "A string or library name is a clue, not proof that a behaviour actually occurs."], callout: "Treat an unfamiliar binary as untrusted evidence. Do not double-click it on your everyday computer just to see what happens." }
+        ],
+        keyTerms: [{term:"Binary",definition:"A file containing data represented as bytes; an executable binary can contain machine instructions."},{term:"Static analysis",definition:"Examining a program or file without executing it."},{term:"Strings",definition:"Readable text sequences that can sometimes be recovered from a binary."},{term:"Header",definition:"Structured metadata near the start of a file that describes its format."}],
+        workedExample: { title:"A fictional training executable", steps:["The file is named sample.bin, but the name does not prove its format.","A file-identification tool reports an ELF executable.","A strings view shows the text /etc/sample.conf.","The analyst records these clues and checks the file in an isolated lab before drawing conclusions."], takeaway:"Start with safe, repeatable observations. Never treat a filename or a single string as a complete explanation." },
+        question:"What best describes static analysis?", options:[{id:"run",label:"Run the program and watch what it changes."},{id:"inspect",label:"Inspect the file without executing it."},{id:"delete",label:"Delete the file before recording evidence."}], correctOption:"inspect",
+        feedback:"Static analysis examines a program or artifact without running it. Dynamic analysis observes behaviour during controlled execution.",
+        sources:[{label:"Ghidra — Software Reverse Engineering Framework",url:"https://ghidra-sre.org/"},{label:"Open Security Training 2",url:"https://p.ost2.fyi/"}]
+      },
+      {
+        id: "reverse-control-flow", title: "Follow the program's decisions", duration: "11 min",
+        summary: "Understand functions, branches and control flow in a decompiler's simplified view.",
+        objectives: ["Explain what a function does.", "Recognize a conditional branch.", "Describe how to compare a decompiler view with observed behaviour."],
+        blocks: [
+          { heading: "Think in steps and decisions", paragraphs: ["A program is made of instructions. Developers often group related instructions into functions, such as checking a password or reading a file. A function receives information, performs work and may return a result.", "Control flow is the order in which instructions run. A conditional branch is a decision: if a condition is true, follow one path; otherwise, follow another. A decompiler tries to turn machine instructions into a more readable, source-like view."] },
+          { heading: "Do not trust the decompiler blindly", bullets: ["Function names may be guessed by the analyst; they are not always original names.", "A decompiler can make mistakes when the file is unusual or information is missing.", "Compare the decompiler output with assembly, strings and controlled observations.", "Record what is known separately from what is only suspected."], callout: "Reverse engineering is evidence-based reasoning. The goal is to explain what the program does, not to guess what the author intended." }
+        ],
+        keyTerms: [{term:"Function",definition:"A reusable block of program instructions that performs a task."},{term:"Control flow",definition:"The order and branching paths through which a program executes instructions."},{term:"Decompiler",definition:"A tool that translates machine code into a more readable, source-like representation."},{term:"Branch",definition:"A point where program execution can follow different paths depending on a condition."}],
+        workedExample: { title:"A fictional access check", steps:["A function receives a user role.","It compares the role with the word admin.","If the values match, it follows the allow branch.","Otherwise, it follows the deny branch.","The analyst tests both cases in an isolated training sample and documents the observed result."], takeaway:"Follow inputs, decisions and outputs. A readable decompiler view is a hypothesis that should be checked against evidence." },
+        question:"What does a conditional branch represent?", options:[{id:"decision",label:"A decision that can send execution down different paths."},{id:"backup",label:"A copy of the whole program."},{id:"format",label:"A file extension chosen by the operating system."}], correctOption:"decision",
+        feedback:"A conditional branch changes the path of execution based on a condition, such as whether a comparison is true.",
+        sources:[{label:"Ghidra Documentation",url:"https://ghidra.re/"} ,{label:"Open Security Training 2 — Program Analysis",url:"https://p.ost2.fyi/"}]
+      }
+    ]
+  },
+  {
+    id: "binary-exploitation-foundations",
+    title: "Binary Exploitation Foundations",
+    level: "SYSTEMS AND MEMORY",
+    description: "Build a safe mental model of memory, stack frames and common protections before attempting isolated CTF exercises.",
+    outcomes: ["Describe the stack and heap at a high level.", "Explain why writing beyond a buffer is dangerous.", "Recognize the purpose of common memory protections."],
+    lessons: [
+      {
+        id: "pwn-memory-layout", title: "How a program uses memory", duration: "10 min",
+        summary: "Understand code, data, stack and heap as different areas used while a program runs.",
+        objectives: ["Name common process memory areas.", "Explain a stack frame using a simple analogy.", "Describe why buffer boundaries matter."],
+        blocks: [
+          { heading: "A running program needs workspace", paragraphs: ["When a program runs, the operating system gives it a virtual address space. You can imagine this as a large map of memory that the process is allowed to use. Different regions serve different purposes.", "The code region contains instructions. Data regions hold global or static values. The stack supports function calls and local variables. The heap is used for memory requested while the program runs. The exact layout depends on the operating system and program."] },
+          { heading: "A stack frame is a temporary work area", bullets: ["Calling a function creates a new stack frame for its call context.", "Local variables may be stored in that frame.", "When the function returns, its frame is no longer active.", "A buffer is a fixed-size area intended to hold a certain amount of data.", "Writing beyond that boundary can corrupt nearby program state."], callout: "The important beginner idea: memory has boundaries. Programs must check input size before copying data into a fixed-size buffer." }
+        ],
+        keyTerms: [{term:"Virtual address space",definition:"The memory addresses a process can use, as presented by the operating system."},{term:"Stack",definition:"Memory commonly used for function calls and local variables."},{term:"Heap",definition:"Memory used for allocations requested while a program is running."},{term:"Buffer",definition:"A reserved area of memory used to hold data."}],
+        workedExample: { title:"A small text field", steps:["A program reserves space for 8 characters.","A user provides 6 characters, which fit.","A second user provides 20 characters.","If the program copies all 20 without checking the limit, data beyond the intended buffer may be overwritten.","A safe program checks the length and rejects or safely handles oversized input."], takeaway:"A buffer's size is a boundary, not a suggestion. Validate lengths and use memory-safe interfaces." },
+        question:"What is the main purpose of a stack frame?", options:[{id:"call",label:"To hold information used during a function call."},{id:"internet",label:"To store a website's DNS records."},{id:"backup",label:"To keep a permanent copy of every file."}], correctOption:"call",
+        feedback:"A stack frame holds a function call's context, including items such as local variables and return information.",
+        sources:[{label:"pwn.college — Program Security",url:"https://pwn.college/"},{label:"CTF 101 — Binary Exploitation",url:"https://ctf101.org/binary-exploitation/"}]
+      },
+      {
+        id: "pwn-memory-protections", title: "Why memory protections matter", duration: "11 min",
+        summary: "Learn what NX, ASLR, stack canaries and bounds checks are designed to make harder.",
+        objectives: ["Explain the purpose of four common protections.", "Understand that protections work in layers.", "Connect secure coding with exploit mitigation."],
+        blocks: [
+          { heading: "Several layers reduce risk", paragraphs: ["A memory bug can have serious consequences, but it does not automatically mean that an attacker can control a program. Modern systems use multiple protections to make exploitation harder and reduce the impact of mistakes.", "No single protection fixes unsafe code. Developers should prevent memory errors first, while operating systems and compilers add additional layers of defence."] },
+          { heading: "Know the names", bullets: ["Bounds checking: verify that input fits the space available before copying or processing it.", "Stack canaries: place a value near sensitive stack data and check whether it changed unexpectedly.", "ASLR: randomize memory locations so addresses are less predictable.", "NX or DEP: mark selected memory regions as non-executable so data is not treated as instructions."], callout: "A CTF may ask you to identify which protection is present. Learn what each one does before trying a challenge." }
+        ],
+        keyTerms: [{term:"Stack canary",definition:"A guard value used to detect certain stack overwrites before a function returns."},{term:"ASLR",definition:"Address Space Layout Randomization; it varies memory locations to make addresses harder to predict."},{term:"NX / DEP",definition:"A protection that prevents execution from selected memory regions."},{term:"Bounds checking",definition:"Checking that an operation stays within the allowed size or range."}],
+        workedExample: { title:"Reviewing a fictional build", steps:["A compiler report says stack protection is enabled.","The binary metadata indicates position-independent execution.","The operating system uses address randomization.","The analyst records the protections but still reviews input handling for unsafe memory operations."], takeaway:"Mitigations raise the difficulty of exploitation. They do not replace fixing the underlying memory-safety bug." },
+        question:"What does ASLR make less predictable?", options:[{id:"addresses",label:"Memory addresses used by a process."},{id:"password",label:"The user's password length."},{id:"filename",label:"The file's displayed name."}], correctOption:"addresses",
+        feedback:"ASLR varies memory locations so that an attacker cannot rely as easily on fixed addresses.",
+        sources:[{label:"pwn.college",url:"https://pwn.college/"},{label:"MITRE CWE — Memory Buffer Errors",url:"https://cwe.mitre.org/data/definitions/119.html"}]
+      }
+    ]
+  },
+  {
+    id: "osint-foundations",
+    title: "OSINT and Digital Investigation",
+    level: "INVESTIGATION FOUNDATIONS",
+    description: "Learn to research public information ethically, verify claims and write findings without exposing private people or data.",
+    outcomes: ["Set a clear and lawful research scope.", "Evaluate source reliability and corroborate evidence.", "Explain uncertainty in a responsible report."],
+    lessons: [
+      {
+        id: "osint-scope-and-ethics", title: "Start with a safe research scope", duration: "9 min",
+        summary: "Understand the difference between public information and permission to investigate or publish it.",
+        objectives: ["Define a research question before searching.", "Identify information that should not be collected.", "Apply data minimization and respect scope."],
+        blocks: [
+          { heading: "Public does not mean unrestricted", paragraphs: ["Open-source intelligence, or OSINT, is the process of collecting and analysing information from sources that are publicly available or lawfully accessible. A page being visible online does not automatically make every use of its information ethical or lawful.", "Before starting, write down the question, the subject you are authorized to research, the sources you may use and the actions that are out of scope. Prefer organizations, public infrastructure and fictional CTF subjects over private individuals."] },
+          { heading: "Use the minimum information needed", bullets: ["Do not bypass logins, access controls or technical restrictions.", "Do not impersonate people or contact a target under false pretences.", "Avoid collecting home addresses, private contact details or unrelated personal data.", "Do not publish personal information just because it can be found.", "Keep notes on source, collection time, purpose and handling restrictions."], callout: "If a task moves outside its stated scope, stop and ask for authorization. A CTF clue is not permission to investigate a real person." }
+        ],
+        keyTerms: [{term:"OSINT",definition:"Intelligence developed from publicly available or lawfully accessible information."},{term:"Scope",definition:"The agreed subject, question, sources and actions permitted for an investigation."},{term:"Data minimization",definition:"Collecting and retaining only the information needed for a legitimate purpose."},{term:"Attribution",definition:"A claim connecting an account, action or artifact to a person or organization; it requires careful evidence."}],
+        workedExample: { title:"A fictional company research task", steps:["The task asks for the official support domain of a fictional company.","The analyst checks the company's own website and public documentation.","The analyst records the page title, URL and collection date.","The analyst avoids employee profiles, personal contact details and unrelated social accounts."], takeaway:"A narrow research question produces safer and more reliable findings." },
+        question:"A CTF asks you to identify a fictional organization's official domain. Which approach is best?", options:[{id:"scope",label:"Use the organization's official public website and record the source."},{id:"private",label:"Search for an employee's home address to confirm the domain."},{id:"bypass",label:"Bypass a login wall to access more information."}], correctOption:"scope",
+        feedback:"Use sources that fit the stated scope. Personal information and access-control bypasses are unnecessary and inappropriate.",
+        sources:[{label:"Bellingcat Online Investigation Toolkit",url:"https://bellingcat.gitbook.io/toolkit"},{label:"NIST Privacy Framework",url:"https://www.nist.gov/privacy-framework"}]
+      },
+      {
+        id: "osint-source-verification", title: "Verify before you believe", duration: "10 min",
+        summary: "Corroborate information, check dates and separate facts from assumptions.",
+        objectives: ["Compare independent sources.", "Check timestamps and context.", "Communicate confidence and uncertainty."],
+        blocks: [
+          { heading: "One source is rarely enough", paragraphs: ["A search result can be outdated, copied from another site or missing important context. A screenshot can be edited. A map pin can be approximate. Treat every item as a claim that needs checking.", "Corroboration means comparing independent sources. Two pages that repeat the same original post are not necessarily two independent confirmations. Look for the earliest source and understand how each source obtained the information."] },
+          { heading: "Write what the evidence supports", bullets: ["Record the original URL and the time you accessed it.", "Check whether the page has an update date or refers to an older event.", "Compare names, dates and locations across independent sources.", "Separate directly observed facts from interpretations.", "Use confidence language such as confirmed, likely, possible or unverified."], callout: "A good OSINT report makes uncertainty visible. It does not turn a weak clue into a confident accusation." }
+        ],
+        keyTerms: [{term:"Corroboration",definition:"Checking a claim against additional, preferably independent, evidence."},{term:"Provenance",definition:"The origin and history of an information item."},{term:"Confidence",definition:"How strongly the available evidence supports a conclusion."},{term:"False positive",definition:"A result incorrectly treated as a match or meaningful finding."}],
+        workedExample: { title:"Checking a reported event date", steps:["A social post claims an event happened today.","The image metadata is unavailable, so it cannot confirm the date.","A local news report and the organizer's public notice show the event occurred last month.","The analyst records the original post as outdated and cites the two independent sources."], takeaway:"Verify time and context before reporting. An image or post may be genuine but still be old or misrepresented." },
+        question:"Two websites repeat the same original social post. Are they automatically independent confirmation?", options:[{id:"yes",label:"Yes, because there are two URLs."},{id:"no",label:"No. Check whether both rely on the same original source."},{id:"always",label:"Yes, if both use the same headline."}], correctOption:"no",
+        feedback:"Two URLs may repeat one source. Strong corroboration checks independent evidence and traces each claim to its origin.",
+        sources:[{label:"Bellingcat Online Investigation Toolkit",url:"https://bellingcat.gitbook.io/toolkit"},{label:"NIST NICE Framework",url:"https://www.nist.gov/itl/applied-cybersecurity/nice/nice-framework-resource-center"}]
+      }
+    ]
+  },
 ];
 
 export const academyCourses: AcademyCourse[] = [
