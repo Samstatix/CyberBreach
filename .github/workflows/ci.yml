@@ -28,6 +28,7 @@ on:
       - phase-20/cyro-lesson-grounding
       - phase-21/cyro-learning-intelligence
       - phase-22/cyro-diagnostic-assessment
+      - phase-23/cyro-remediation-paths
   pull_request:
     branches:
       - main
