@@ -82,6 +82,7 @@ Deno.serve(async (request: Request) => {
   }
   if (messages[messages.length - 1].role !== "user") return json({ error: "The latest message must be from the learner." }, 400);
   const page = typeof body.page === "string" && /^\/[a-zA-Z0-9/_-]{0,100}$/.test(body.page) ? body.page : "/";
+  const mode: TeachingMode = body.mode && Object.hasOwn(modeInstructions, body.mode) ? body.mode : "explain";
   const hintLevel = Number.isInteger(body.hintLevel) ? Math.max(1, Math.min(3, Number(body.hintLevel))) : 1;
   const moduleContext = moduleForPage(page);
   const learnerLevel = ["beginner", "intermediate", "advanced"].includes(learnerPreferences?.teaching_level) ? learnerPreferences.teaching_level : "beginner";
