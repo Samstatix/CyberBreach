@@ -17,7 +17,7 @@ export const guidedLabExercises: GuidedLabExercise[] = [
   { id:"osint", title:"Check independent corroboration", objective:"Distinguish an independent record from a copied repost.", question:"Which source independently corroborates the official event notice: the calendar mirror or the municipal venue register?", acceptedAnswers:["municipal venue register","the municipal venue register","venue register"], hints:["A repost repeats the original claim.","Look for a record created by a separate organisation.","The venue register is maintained by the municipality."], explanation:"The municipal venue register is independent corroboration. The calendar mirror is a repost and should not be counted as a separate source." },
 ];
 export function normalizeLabAnswer(value: string): string {
-  return value.trim().toLowerCase().replace(/[.,!?]/g, "").replace(/\\s+/g, " ");
+  return value.trim().toLowerCase().replace(/[.,!?]/g, "").replace(/\s+/g, " ");
 }
 export function checkLabAnswer(exercise: GuidedLabExercise, answer: string): boolean {
   const normalized = normalizeLabAnswer(answer);
