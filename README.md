@@ -5,7 +5,8 @@
 CyberBreach is a self-contained React feature module developed in this repository so it can later be mounted inside the main CollabCircle Next.js/Vercel website. This repository is the source of truth; the main website is not changed during CyberBreach development.
 
 ## Product scope
-- **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress.
+- **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
+- **Player progression:** ten skill trees, XP levels, operator ranks and unlockable achievements. Personal XP is separate from the competitive CTF leaderboard.
 - **CTF Arena:** 18 original challenges across Web Exploitation, Cryptography, Reverse Engineering, Binary Exploitation, Forensics and Network Forensics, and OSINT & Misc. Every category has medium, hard and expert work.
 - **Cyber Labs:** browser simulations plus links to real isolated environments operated by TryHackMe, Hack The Box Academy, PortSwigger and OverTheWire. A reviewed hosted-lab portal can be connected later.
 - **Operations:** interactive fictional incident-response scenarios.
@@ -42,8 +43,9 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 1. Create a Supabase project.
 2. Apply every SQL migration in `supabase/migrations` in filename order.
 3. Run `supabase/seed.sql` after migrations to add the six categories and 18 original challenges.
-4. Configure email confirmation and password policy in Supabase Auth.
-5. Keep the service-role key out of browser/Vercel public variables.
+4. Migration `202611270003_progression_system.sql` adds the lesson allow-list, server-awarded Academy XP, achievements and the player progression RPC.
+5. Configure email confirmation and password policy in Supabase Auth.
+6. Keep the service-role key out of browser/Vercel public variables.
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 

@@ -16,6 +16,7 @@ const AccountPage=lazy(()=>import("../features/auth/AccountPage"));
 const OperationsPage=lazy(()=>import("../features/operations/OperationsPage"));
 const CommunityPage=lazy(()=>import("../features/community/CommunityPage"));
 const ResearchPage=lazy(()=>import("../features/research/ResearchPage"));
+const ProgressionPage=lazy(()=>import("../features/progression/ProgressionPage"));
 
 function PageLoading(){return <section className="section-page"><div className="eyebrow">CYBERBREACH</div><p>Loading this learning area…</p></section>;}
 
@@ -33,6 +34,7 @@ export default function App(){
   <Route path="ctf/:category" element={<CTFCategoryPage/>}/>
   <Route path="labs" element={<LabsPage/>}/>
   <Route path="labs/linux-terminal" element={<TerminalSimulatorPage/>}/>
+  <Route path="progression" element={<ProgressionPage/>}/>
   <Route path="community" element={<CommunityPage/>}/>
   <Route path="research" element={<ResearchPage/>}/>
   <Route path="*" element={<Navigate to="/" replace/>}/>

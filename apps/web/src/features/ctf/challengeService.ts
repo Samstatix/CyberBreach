@@ -1,3 +1,4 @@
+import { notifyProgressUpdated } from "../../lib/progressionEvents";
 import { supabase } from "../../lib/supabase";
 
 export type FlagSubmission = {
@@ -27,6 +28,7 @@ export async function submitChallengeFlag(challengeId: string, flag: string): Pr
   if (error) throw new Error(error.message);
   const result = firstRow(data as FlagSubmission[] | FlagSubmission | null);
   if (!result) throw new Error("The scoring service returned an empty response.");
+  if (result.correct && !result.already_solved) notifyProgressUpdated();
   return result;
 }
 
