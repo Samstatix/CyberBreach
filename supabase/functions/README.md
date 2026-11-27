@@ -13,3 +13,18 @@ The function verifies the caller's access token with Supabase Auth and deletes o
 The Edge Function requires the project-provided `SUPABASE_URL`, `SUPABASE_ANON_KEY` and server-only `SUPABASE_SERVICE_ROLE_KEY` environment variables. If the service-role key is not injected automatically by the Supabase project, set it with the Supabase CLI secrets command. Never commit it or add it to Vercel's `NEXT_PUBLIC_` variables.
 
 Password recovery is handled by Supabase Auth. Add the deployed CyberBreach account route to Authentication → URL Configuration → Redirect URLs. For the main CollabCircle mount, include the full `/cybersecurity/account` path.
+
+## CYRO learning assistant
+
+Deploy the authenticated CYRO proxy:
+
+```bash
+supabase functions deploy cyro-assistant
+supabase secrets set CYRO_OLLAMA_URL=https://YOUR-REACHABLE-OLLAMA-HOST/api/chat CYRO_OLLAMA_MODEL=llama3.1:8b
+# Optional, only if the Ollama-compatible endpoint requires bearer authentication:
+supabase secrets set CYRO_OLLAMA_API_KEY=YOUR_SERVER_SIDE_TOKEN
+```
+
+CYRO calls the Ollama `/api/chat` endpoint from the Edge Function. The Ollama service must be reachable over HTTPS from Supabase; a developer's localhost URL will not work for the deployed product. Do not expose Ollama directly to the browser or commit endpoint credentials. Keep Ollama bound to a private network or protected gateway with authentication and rate limits.
+
+The Edge Function verifies the Supabase access token, validates message shape and length, applies a short timeout, and keeps the model endpoint and optional token server-side. It does not execute tools or commands. Configure per-user rate limiting and request monitoring at the gateway before broad public rollout.
