@@ -44,7 +44,11 @@
 - [ ] Verify mission and lab-task answer keys are private and completion records are user-owned.
 - [ ] Verify Academy and Operations XP cannot be written directly by browser clients.
 - [ ] Verify `get_player_progress` returns only the authenticated user's records.
-- [ ] Configure email confirmation and password policies.
+- [ ] Configure email confirmation, password recovery redirect URLs and password policies.
+- [ ] Deploy the JWT-verified `delete-account` Edge Function with server-only service-role credentials.
+- [ ] Verify account deletion removes profile, CTF, Academy, XP, lab and team records.
+- [ ] Verify a caller cannot delete another account by changing request data.
+- [ ] Verify profile edits cannot change the user's role or other protected fields.
 
 ## Frontend validation
 - [ ] `npm run typecheck`
