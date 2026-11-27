@@ -61,6 +61,15 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 
+## Incident-response missions
+
+The Operations area contains three original fictional incident-response missions:
+- Unusual account activity
+- Unexpected outbound DNS
+- Unexpected privileged change
+
+Each mission asks the learner to select a proportionate response based on the supplied evidence. A correct response earns 100 personal XP once per mission. Signed-in completions are verified and recorded by the `complete_operations_mission` database function; guest completions remain local to the browser. Mission XP contributes to operator ranks and achievements but is excluded from the competitive CTF leaderboard.
+
 ## Vercel integration later
 Follow [the Next.js integration guide](apps/web/src/integration/README.md). The integration is intentionally not deployed or copied into the main CollabCircle repository from this branch.
 
