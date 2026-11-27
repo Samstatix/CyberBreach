@@ -95,49 +95,6 @@ begin
 end;
 $$;
 
--- Join using a high-entropy invitation code. A user can belong to one team at a time.
-create or replace function public.join_community_team(p_invite_code text)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, extensions
-as $$
-declare
-  v_user_id uuid;
-  v_team_id uuid;
-begin
-  v_user_id := auth.uid();
-  if v_user_id is null then
-    raise exception 'Sign in before joining a team' using errcode = '28000';
-  end if;
-
-  if p_invite_code is null or length(trim(p_invite_code)) <> 48 then
-    raise exception 'Enter a valid team invitation code' using errcode = '22023';
-  end if;
-
-  select team.id into v_team_id
-  from public.teams as team
-  where team.invite_code_hash = encode(extensions.digest(trim(p_invite_code), 'sha256'), 'hex');
-
-  if v_team_id is null then
-    raise exception 'Invitation code is invalid or has been rotated' using errcode = 'P0002';
-  end if;
-
-  if exists (select 1 from public.team_members where user_id = v_user_id and team_id = v_team_id) then
-    return public.get_my_community_team();
-  end if;
-
-  if exists (select 1 from public.team_members where user_id = v_user_id) then
-    raise exception 'You already belong to a team. Leave your current team first.' using errcode = '23505';
-  end if;
-
-  insert into public.team_members (team_id, user_id, role)
-  values (v_team_id, v_user_id, 'member');
-
-  return public.get_my_community_team();
-end;
-$$;
-
 -- Return only the signed-in user's team and the names of its members. No emails or invite hashes.
 create or replace function public.get_my_community_team()
 returns jsonb
@@ -183,6 +140,50 @@ begin
   where mine.user_id = v_user_id;
 
   return v_team;
+end;
+$$;
+
+
+-- Join using a high-entropy invitation code. A user can belong to one team at a time.
+create or replace function public.join_community_team(p_invite_code text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+declare
+  v_user_id uuid;
+  v_team_id uuid;
+begin
+  v_user_id := auth.uid();
+  if v_user_id is null then
+    raise exception 'Sign in before joining a team' using errcode = '28000';
+  end if;
+
+  if p_invite_code is null or length(trim(p_invite_code)) <> 48 then
+    raise exception 'Enter a valid team invitation code' using errcode = '22023';
+  end if;
+
+  select team.id into v_team_id
+  from public.teams as team
+  where team.invite_code_hash = encode(extensions.digest(trim(p_invite_code), 'sha256'), 'hex');
+
+  if v_team_id is null then
+    raise exception 'Invitation code is invalid or has been rotated' using errcode = 'P0002';
+  end if;
+
+  if exists (select 1 from public.team_members where user_id = v_user_id and team_id = v_team_id) then
+    return public.get_my_community_team();
+  end if;
+
+  if exists (select 1 from public.team_members where user_id = v_user_id) then
+    raise exception 'You already belong to a team. Leave your current team first.' using errcode = '23505';
+  end if;
+
+  insert into public.team_members (team_id, user_id, role)
+  values (v_team_id, v_user_id, 'member');
+
+  return public.get_my_community_team();
 end;
 $$;
 
