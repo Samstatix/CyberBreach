@@ -2,7 +2,7 @@
 
 **Status:** Active implementation architecture  
 **Repository:** `Samstatix/CyberBreach`  
-**Current development baseline:** `milestone-10-multi-discipline-labs`  
+**Current development baseline:** `milestone-11-competitions`  
 **Previous milestones:** `milestone-5/linux-lab-path`, `milestone-6/platform-hardening`, `milestone-7-gameplay-integrity`  
 **Integration target:** a future route inside the main CollabCircle Next.js/Vercel website. This repository remains the only development source of truth.
 
@@ -90,6 +90,7 @@ CyberBreach/
 - `challenge_solutions`: private walkthrough and defensive explanation, revealed after solve.
 - `lab_task_catalog`, `lab_task_attempts` and `lab_task_completions`: private answer verification, per-user rate-limiting and verified browser-lab completion.
 - `teams` and `team_members`: private team records and one-team-per-account membership. Invitation codes are stored only as SHA-256 digests.
+- `competition_events`, `competition_event_challenges`, `competition_event_registrations` and `competition_event_team_members`: moderator-managed event schedules, selected challenge sets, participant registration and team-roster snapshots. Event points derive from verified solves during the event window.
 - `competition_events`, `competition_event_challenges`, `competition_event_registrations` and `competition_event_team_members`: moderator-managed event schedules, selected challenge sets, individual/team registration and roster snapshots. Event points are derived from verified solves during the event window.
 
 Account recovery uses Supabase Auth. Permanent account deletion is performed by the `delete-account` Edge Function, which verifies the JWT and uses a server-only service-role client to delete the authenticated user.
