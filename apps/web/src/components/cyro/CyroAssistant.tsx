@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Bot, MessageCircle, Minimize2, Send, ShieldCheck, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
+import { findLesson } from "../../features/academy/academyContent";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type TeachingMode = "explain" | "hint" | "quiz" | "next-step";
@@ -83,8 +84,20 @@ export default function CyroAssistant() {
     setError("");
     setBusy(true);
     try {
+      const lessonMatch = location.pathname.match(/^\\/academy\\/lessons\\/([a-z0-9-]+)$/);
+      const foundLesson = lessonMatch ? findLesson(lessonMatch[1]) : undefined;
+      const lessonContext = foundLesson ? {
+        courseTitle: foundLesson.course.title,
+        lessonId: foundLesson.lesson.id,
+        title: foundLesson.lesson.title,
+        summary: foundLesson.lesson.summary,
+        objectives: foundLesson.lesson.objectives,
+        blocks: foundLesson.lesson.blocks.map((block) => ({ heading: block.heading, paragraphs: block.paragraphs ?? [], bullets: block.bullets ?? [], callout: block.callout ?? "" })),
+        keyTerms: foundLesson.lesson.keyTerms,
+        workedExample: foundLesson.lesson.workedExample,
+      } : undefined;
       const { data, error: invokeError } = await supabase.functions.invoke("cyro-assistant", {
-        body: { messages: next.slice(-12), page: location.pathname, mode, hintLevel: requestedHintLevel },
+        body: { messages: next.slice(-12), page: location.pathname, mode, hintLevel: requestedHintLevel, lessonContext },
       });
       if (invokeError) throw invokeError;
       if (typeof data?.reply !== "string" || !data.reply.trim()) throw new Error("CYRO did not return an answer. Please try again.");
