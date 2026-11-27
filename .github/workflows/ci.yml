@@ -11,6 +11,7 @@ on:
       - milestone-4/lab-progression
       - milestone-5/linux-lab-path
       - milestone-6/platform-hardening
+      - milestone-7-gameplay-integrity
   pull_request:
     branches:
       - main
