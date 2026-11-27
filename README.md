@@ -56,6 +56,10 @@ npm run build
 
 The build also emits `apps/web/dist/cyberbreach.integration.css` for a later namespaced Next.js mount.
 
+## Expanded Academy learning paths
+
+Cyber Academy now includes 10 courses and 25 lessons, including dedicated beginner-first paths for Reverse Engineering, Binary Exploitation and OSINT. These explain unfamiliar terms, use worked examples and finish with short knowledge checks. The three new paths are also connected to their matching specialization skill trees.
+
 ## Database setup
 1. Create a Supabase project.
 2. Apply every SQL migration in `supabase/migrations` in filename order.
