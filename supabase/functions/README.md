@@ -64,3 +64,8 @@ For authenticated requests, the Edge Function reads the caller's own `academy_le
 ## CYRO diagnostic self-check (Phase 22)
 
 The widget includes an optional six-question, one-question-at-a-time self-check covering networking, Linux, web security, cryptography, digital forensics and AI security. Scoring runs in the browser and the aggregate category outcome is sent as user-provided conversational context to CYRO for cautious feedback. Results are not persisted, are not server-verified, and must never be presented as certification, a formal skill rating or proof of mastery. The prompt explicitly asks CYRO to explain the limitations of this small sample. Do not use these self-check results for competitive rankings, access control, hiring or other consequential decisions.
+
+
+## CYRO revision planning (Phase 23)
+
+The self-check can map a missed sample question to the first available lesson in the matching Academy course, when that course exists. These are optional revision starting points, not diagnoses or learner labels. Results remain ephemeral in the widget and are not written to learner records. The user may dismiss the self-check and continue using CYRO normally.
