@@ -23,7 +23,7 @@ describe("multi-discipline lab workbench", () => {
 
   it("decodes Base64 and rejects invalid input", () => {
     expect(decodeBase64("Q1lCRVJCUkVBQ0g=")).toBe("CYBERBREACH");
-    expect(decodeBase64("8J+YgA==")).toBe("💀");
+    expect(decodeBase64("8J+SgA==")).toBe("💀");
     expect(() => decodeBase64("%%%")).toThrow();
     expect(() => decodeBase64("/w==")).toThrow("encoded data");
   });
