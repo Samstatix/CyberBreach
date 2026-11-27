@@ -12,7 +12,7 @@ const teachingActions: Array<{ mode: TeachingMode; label: string; prompt: string
   { mode: "explain", label: "Explain simply", prompt: "Explain the topic on this page in simple beginner-friendly language with one everyday analogy." },
   { mode: "hint", label: "Give me a hint", prompt: "Give one progressive hint for the exercise. Do not reveal the answer, flag, or full solution. Ask me to try the next step." },
   { mode: "quiz", label: "Quiz me", prompt: "Ask one short question about this topic and wait for my answer before explaining." },
-  { mode: "next-step", label: "What next?", prompt: "Recommend one achievable next learning step and explain why." },
+  { mode: "next-step", label: "What next?", prompt: "Using my verified completed Academy lessons and the available curriculum, recommend the best next lesson. Do not assume that completion proves mastery or that an uncompleted lesson is a weakness." },
 ];
 
 const starters = [
