@@ -27,6 +27,8 @@ import "@/styles/cyberbreach.integration.css";
 ```
 6. Configure Vercel variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and optionally `NEXT_PUBLIC_CYBERBREACH_LAB_PORTAL_URL`.
 7. Apply SQL migrations in filename order and run `supabase/seed.sql` after migrations.
+8. Deploy `supabase/functions/delete-account` and configure the server-only `SUPABASE_SERVICE_ROLE_KEY` in Supabase Edge Function secrets.
+9. Add the exact CyberBreach account recovery URL to Supabase Auth's allowed redirect URLs.
 
 ## Build the isolated CSS bundle
 From the repository root:
