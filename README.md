@@ -67,7 +67,7 @@ The browser uses only the Supabase publishable/anon key. Challenge flags are sto
 
 ## Browser lab task
 
-The Linux Foundations simulator includes four evidence tasks. Open Cyber Labs and launch the Linux practice terminal. Inspect each evidence source using the cat, ss, ip route and whoami commands, then submit the corresponding finding. Each correct finding awards 50 personal XP once. The terminal and its evidence are synthetic; no host shell or network connection is used.
+The Linux Foundations simulator includes four evidence tasks. Open Cyber Labs and launch the Linux practice terminal. Inspect each evidence source using the cat, ss, ip route and whoami commands, then submit the corresponding finding. The four tasks cover authentication evidence, listening services, the default gateway and the current user. Each correct finding awards 50 personal XP once. The terminal and its evidence are synthetic; no host shell or network connection is used.
 
 ## Incident-response missions within Cyber Labs
 
