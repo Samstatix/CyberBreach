@@ -39,3 +39,15 @@
   .account-link { padding: 7px 8px; font-size: 8px; }
   .account-card { margin-top: 22px; padding: 19px; }
 }
+
+/* Account profile, recovery and deletion controls */
+.account-profile-form{margin-top:20px;padding-top:17px;border-top:1px solid var(--border)}
+.account-profile-form>span{margin-bottom:3px}
+.account-profile-form textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:6px;background:var(--bg-0);color:var(--text-0);font:11px var(--font-ui);resize:vertical}
+.account-profile-form textarea:focus{outline:none;border-color:var(--accent-dim)}
+.account-danger-zone{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:22px;padding:15px;border:1px solid rgba(239,107,117,.25);border-radius:7px;background:rgba(239,107,117,.045)}
+.account-danger-zone strong{font-size:11px;color:#f18a91}
+.account-danger-zone p{max-width:520px;margin:5px 0 0;color:var(--text-1);font-size:9px;line-height:1.7}
+.danger-button{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;padding:9px 11px;border:1px solid rgba(239,107,117,.35);border-radius:5px;background:rgba(239,107,117,.08);color:#f18a91;font:8px var(--font-mono);cursor:pointer}
+.danger-button:disabled{opacity:.5;cursor:wait}
+@media(max-width:620px){.account-danger-zone{align-items:flex-start;flex-direction:column}}
