@@ -2,7 +2,7 @@
 
 **Status:** Active implementation architecture  
 **Repository:** `Samstatix/CyberBreach`  
-**Current development baseline:** `milestone-8-community-teams`  
+**Current development baseline:** `milestone-10-multi-discipline-labs`  
 **Previous milestones:** `milestone-5/linux-lab-path`, `milestone-6/platform-hardening`, `milestone-7-gameplay-integrity`  
 **Integration target:** a future route inside the main CollabCircle Next.js/Vercel website. This repository remains the only development source of truth.
 
@@ -49,6 +49,7 @@ Supabase provides Auth and PostgreSQL. RLS protects user-owned data; SQL functio
 - `xp_ledger` is the append-only personal XP ledger. The level curve uses cumulative thresholds; ranks progress from Recruit to Elite.
 - `achievement_catalog` defines badges and `user_achievements` stores append-only unlocks computed by trusted database functions.
 - `get_player_progress` returns the signed-in user's XP, level, rank, lesson completions, challenge solves, mission completions, lab task completions and unlocked achievements.
+- The multi-discipline workbench is practice-only and awards no competitive points; its six modules use synthetic data and make no real target requests.
 - Individual and team public leaderboards deliberately count only `challenge_solve` ledger events. Academy, Operations and browser-lab XP do not affect competitive rankings.
 
 ### Labs boundary
@@ -89,6 +90,8 @@ CyberBreach/
 - `challenge_solutions`: private walkthrough and defensive explanation, revealed after solve.
 - `lab_task_catalog`, `lab_task_attempts` and `lab_task_completions`: private answer verification, per-user rate-limiting and verified browser-lab completion.
 - `teams` and `team_members`: private team records and one-team-per-account membership. Invitation codes are stored only as SHA-256 digests.
+
+Account recovery uses Supabase Auth. Permanent account deletion is performed by the `delete-account` Edge Function, which verifies the JWT and uses a server-only service-role client to delete the authenticated user.
 
 ## Security requirements
 1. Keep RLS enabled on every browser-accessible table.
