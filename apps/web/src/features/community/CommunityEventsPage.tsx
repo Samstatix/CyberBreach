@@ -216,7 +216,7 @@ export default function CommunityEventsPage() {
               <div><strong>{event.title}</strong><small>{event.slug} · {event.event_type} · {event.registered_count} registered</small><small>{dateLabel(event.starts_at)} – {dateLabel(event.ends_at)}</small></div>
               <span className={"admin-event-status " + event.status}>{event.status.toUpperCase()}</span>
               {event.status === "draft" && <button className="secondary-button" type="button" onClick={() => void manageAdminEvent(event.event_id, "publish")} disabled={busyEvent === event.event_id}>PUBLISH</button>}
-              {event.status === "published" && new Date(event.ends_at).getTime() > Date.now() && <button className="danger-button" type="button" onClick={() => void manageAdminEvent(event.event_id, "cancel")} disabled={busyEvent === event.event_id}>CANCEL</button>}
+              {(event.status === "draft" || (event.status === "published" && new Date(event.ends_at).getTime() > Date.now())) && <button className="danger-button" type="button" onClick={() => void manageAdminEvent(event.event_id, "cancel")} disabled={busyEvent === event.event_id}>CANCEL</button>}
             </div>)}
           </div>
         </article>
