@@ -49,7 +49,7 @@ export default function CyroAssistant() {
       });
       if (invokeError) throw invokeError;
       if (typeof data?.reply !== "string" || !data.reply.trim()) throw new Error("CYRO did not return an answer. Please try again.");
-      setMessages((current) => [...current, { role: "assistant", content: data.reply }].slice(-14));
+      setMessages((current): ChatMessage[] => [...current, { role: "assistant", content: data.reply as string }].slice(-14));
     } catch (err) {
       setError(err instanceof Error ? err.message : "CYRO is temporarily unavailable.");
     } finally { setBusy(false); }
