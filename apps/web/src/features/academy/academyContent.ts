@@ -256,8 +256,7 @@ const additionalCourses: AcademyCourse[] = [
         sources:[{label:"OWASP GenAI Security Project",url:"https://genai.owasp.org/"},{label:"NIST AI Risk Management Framework",url:"https://www.nist.gov/itl/ai-risk-management-framework"}]
       }
     ]
-  }
-
+  },
   {
     id: "reverse-engineering-foundations",
     title: "Reverse Engineering Foundations",
