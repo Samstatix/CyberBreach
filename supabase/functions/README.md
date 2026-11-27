@@ -33,3 +33,10 @@ The Edge Function verifies the Supabase access token, validates message shape an
 ## CYRO adaptive teaching modes
 
 The floating assistant offers four explicit teaching modes: `explain`, `hint`, `quiz`, and `next-step`. The frontend sends a fixed mode identifier, and the Edge Function maps it to server-side teaching instructions. Hint mode is instructed to provide a single incremental hint without revealing flags or complete solutions. Quiz mode asks one question and waits for the learner's response.
+
+
+## CYRO module-aware teaching and progressive hints
+
+The Edge Function derives module context from an allow-listed route prefix; it does not trust a client-supplied module label. Current contexts cover Academy, CTF Arena, Cyber Labs, Security Operations, Progression, AI Security Research and Community.
+
+Hint mode accepts a numeric level from 1 to 3 and clamps it server-side. The prompt directs the model to move from concept identification (level 1), to narrower evidence/reasoning (level 2), to the next operation (level 3), without returning flags or complete solutions. This is model guidance, not a formal guarantee; keep challenge flags and solutions server-side and validate any scored submission independently.
