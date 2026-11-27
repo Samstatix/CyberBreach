@@ -6,7 +6,7 @@ CyberBreach is a self-contained React feature module developed in this repositor
 
 ## Current development baseline
 
-The active implementation baseline is `milestone-5/linux-lab-path`. Ongoing hardening work is tracked on `milestone-6/platform-hardening`; the main CollabCircle website remains untouched.
+The active implementation baseline is `milestone-5/linux-lab-path`. Ongoing hardening work is tracked on `milestone-6/platform-hardening`; the main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
 
 ## Product scope
 - **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
@@ -84,6 +84,10 @@ Each mission asks the learner to select a proportionate response based on the su
 
 ## Vercel integration later
 Follow [the Next.js integration guide](apps/web/src/integration/README.md). The integration is intentionally not deployed or copied into the main CollabCircle repository from this branch.
+
+## Final repository handoff
+
+Development proceeds on milestone branches. After all product features, integrations, migrations, documentation and release checks are complete, the finished work will be consolidated into `main`. The owner can then download the complete repository and change its visibility to private. See [the final handoff plan](docs/final-handoff-plan.md).
 
 ## Security boundaries
 - All challenge artifacts and incident scenarios are fictional and self-authored.
