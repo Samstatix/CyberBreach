@@ -27,6 +27,7 @@ on:
       - phase-19/cyro-learning-preferences
       - phase-20/cyro-lesson-grounding
       - phase-21/cyro-learning-intelligence
+      - phase-22/cyro-diagnostic-assessment
   pull_request:
     branches:
       - main
