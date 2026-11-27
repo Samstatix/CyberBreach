@@ -160,7 +160,7 @@ Deno.serve(async (request: Request) => {
   const mode: TeachingMode = body.mode && Object.hasOwn(modeInstructions, body.mode) ? body.mode : "explain";
   const hintLevel = Number.isInteger(body.hintLevel) ? Math.max(1, Math.min(3, Number(body.hintLevel))) : 1;
   const moduleContext = moduleForPage(page);
-  const learnerLevel = ["beginner", "intermediate", "advanced"].includes(learnerPreferences?.teaching_level) ? learnerPreferences.teaching_level : "beginner";
+  const learnerLevel = ["beginner", "intermediate", "advanced"].includes(learnerPreferences?.teaching_level ?? "") ? learnerPreferences?.teaching_level ?? "beginner" : "beginner";
   const language = learnerPreferences?.preferred_language === "bn" ? "Bengali" : learnerPreferences?.preferred_language === "en" ? "English" : "the learner language when clear";
   const needsAlternativeExplanation = detectRepeatedConfusion(messages);
 
