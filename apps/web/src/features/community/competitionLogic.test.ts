@@ -13,6 +13,7 @@ describe("competition event logic", () => {
 
   it("deduplicates and normalizes challenge slugs", () => {
     expect(parseChallengeSlugs("WEB-ONE, crypto-two, web-one, ")).toEqual(["web-one", "crypto-two"]);
+    expect(parseChallengeSlugs("valid-one, ../admin, two words, -leading, trailing-, valid-one")).toEqual(["valid-one"]);
   });
 
   it("classifies upcoming, live and completed events", () => {
