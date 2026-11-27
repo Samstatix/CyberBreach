@@ -89,7 +89,7 @@ export default function CyroAssistant() {
     const result = scoreDiagnostic(answers);
     setDiagnosticActive(false);
     const summary = result.byCategory.map((item) => `${item.category}: ${item.correct ? "sample answer correct" : "sample answer missed"}`).join("; ");
-    const revision = buildRemediationSuggestions(result.byCategory).map((item) => `${item.category}: ${item.courseTitle} → ${item.lessonTitle} (${item.reason})`).join("\\n");
+    const revision = buildRemediationSuggestions(result.byCategory).map((item) => `${item.category}: ${item.courseTitle} → ${item.lessonTitle} (${item.reason})`).join("\n");
     void sendMessage(`I completed an informal six-question self-check. My score was ${result.correct}/${result.total} (${result.percentage}%). Sample outcomes: ${summary}. Possible revision starting points (not diagnoses): ${revision || "No missed categories in this small sample."}. Please explain what this sample suggests, what it cannot prove, and recommend a beginner-friendly next step. Do not treat this as certification or a definitive measure of ability.`, "explain");
   }
 
