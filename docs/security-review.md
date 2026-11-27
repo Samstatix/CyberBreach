@@ -32,6 +32,10 @@ This is an accepted temporary visibility decision, not a security remediation. M
 
 Migration `202611270007_learning_paths_and_lab_hardening.sql` adds a private attempt log and a per-user/per-task limit of ten submissions per minute for browser-lab tasks. Submitted plaintext answers are not stored. Because this repository remains public during development, previously committed low-entropy lab answer hashes must still be treated as exposed; rate limiting does not repair offline disclosure.
 
+## Community team security
+
+Migration `202611270008_community_teams.sql` keeps team tables inaccessible to browser roles directly. Membership and invitation changes use authenticated SECURITY DEFINER RPC functions. Invitation codes are high-entropy, stored only as SHA-256 digests and shown to the owner once; owners can rotate them. Team visibility defaults to private. Public team rankings expose aggregate CTF-only results and no member email addresses. Run `supabase/verification/008_community_teams.sql` against staging after applying the migration.
+
 ## Additional production checks
 
 - Apply migrations to a dedicated staging Supabase project and verify them in filename order.
