@@ -179,7 +179,8 @@ Deno.serve(async (request: Request) => {
       signal: controller.signal,
     });
     if (!response.ok) return json({ error: "CYRO's AI service is temporarily unavailable." }, 502);
-    let result: unknown;\n    try { result = await response.json(); } catch { return json({ error: "CYRO received an invalid response from its AI service." }, 502); }
+    let result: unknown;
+    try { result = await response.json(); } catch { return json({ error: "CYRO received an invalid response from its AI service." }, 502); }
     const reply = (result as { message?: { content?: unknown } } | null)?.message?.content;
     if (typeof reply !== "string" || !reply.trim()) return json({ error: "CYRO could not form a response. Please try again." }, 502);
     return json({ reply: reply.trim().slice(0, 6000) });
