@@ -35,7 +35,10 @@ export default function CyroAssistant() {
   const [preferredLanguage, setPreferredLanguage] = useState<PreferredLanguage>("auto");
   const [preferencesReady, setPreferencesReady] = useState(false);
   const [preferencesSaving, setPreferencesSaving] = useState(false);
-  const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});\n  const [diagnosticIndex, setDiagnosticIndex] = useState(0);\n  const [diagnosticComplete, setDiagnosticComplete] = useState(false);\n  const [diagnosticActive, setDiagnosticActive] = useState(false);
+  const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});
+  const [diagnosticIndex, setDiagnosticIndex] = useState(0);
+  const [diagnosticComplete, setDiagnosticComplete] = useState(false);
+  const [diagnosticActive, setDiagnosticActive] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey! I'm CYRO, your CyberBreach learning companion. No question is too basic. Tell me what you're learning, and I'll break it into small, clear steps." },
   ]);
@@ -76,7 +79,21 @@ export default function CyroAssistant() {
     } finally { setPreferencesSaving(false); }
   }
 
-  function startDiagnostic() { setDiagnosticAnswers({}); setDiagnosticIndex(0); setDiagnosticComplete(false); setDiagnosticActive(true); }\n\n  function submitDiagnosticAnswer(optionId: string) {\n    const question = diagnosticQuestions[diagnosticIndex];\n    const answers = { ...diagnosticAnswers, [question.id]: optionId };\n    setDiagnosticAnswers(answers);\n    if (diagnosticIndex + 1 < diagnosticQuestions.length) { setDiagnosticIndex((value) => value + 1); return; }\n    const result = scoreDiagnostic(answers);\n    setDiagnosticComplete(true);\n    setDiagnosticActive(false);\n    const summary = result.byCategory.map((item) => `${item.category}: ${item.correct ? "correct" : "needs practice"}`).join("; ");\n    void sendMessage(`I completed a six-question self-check. My score was ${result.correct}/${result.total} (${result.percentage}%). Category results: ${summary}. Please explain what this small sample suggests, what it cannot prove, and recommend a beginner-friendly next step. Do not treat this as a formal certification or definitive measure of ability.`, "explain");\n  }\n\n  async function sendMessage(text = input, mode: TeachingMode = activeMode, requestedHintLevel = hintLevel) {
+  function startDiagnostic() { setDiagnosticAnswers({}); setDiagnosticIndex(0); setDiagnosticComplete(false); setDiagnosticActive(true); }
+
+  function submitDiagnosticAnswer(optionId: string) {
+    const question = diagnosticQuestions[diagnosticIndex];
+    const answers = { ...diagnosticAnswers, [question.id]: optionId };
+    setDiagnosticAnswers(answers);
+    if (diagnosticIndex + 1 < diagnosticQuestions.length) { setDiagnosticIndex((value) => value + 1); return; }
+    const result = scoreDiagnostic(answers);
+    setDiagnosticComplete(true);
+    setDiagnosticActive(false);
+    const summary = result.byCategory.map((item) => `${item.category}: ${item.correct ? "correct" : "needs practice"}`).join("; ");
+    void sendMessage(`I completed a six-question self-check. My score was ${result.correct}/${result.total} (${result.percentage}%). Category results: ${summary}. Please explain what this small sample suggests, what it cannot prove, and recommend a beginner-friendly next step. Do not treat this as a formal certification or definitive measure of ability.`, "explain");
+  }
+
+  async function sendMessage(text = input, mode: TeachingMode = activeMode, requestedHintLevel = hintLevel) {
     const prompt = text.trim();
     if (!prompt || busy) return;
     if (!supabase) { setError("CYRO needs a connected CyberBreach account service. Please try again later."); return; }
@@ -112,7 +129,8 @@ export default function CyroAssistant() {
         <div className="cyro-preferences"><label>Teaching level<select aria-label="CYRO teaching level" value={teachingLevel} disabled={!preferencesReady || preferencesSaving} onChange={(event) => void savePreferences(event.target.value as TeachingLevel, preferredLanguage)}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label><label>Language<select aria-label="CYRO preferred language" value={preferredLanguage} disabled={!preferencesReady || preferencesSaving} onChange={(event) => void savePreferences(teachingLevel, event.target.value as PreferredLanguage)}><option value="auto">Auto detect</option><option value="en">English</option><option value="bn">বাংলা</option></select></label></div>
         {activeMode === "hint" && <div className="cyro-hint-progress" aria-live="polite">HINT PROGRESSION · {hintLevel || 1} / 3 · Each hint reveals a little more</div>}
         <div className="cyro-actions" role="group" aria-label="CYRO teaching tools"><button type="button" onClick={startDiagnostic}>6-domain skill check</button>{teachingActions.map((action) => <button type="button" key={action.mode} aria-pressed={activeMode === action.mode} className={activeMode === action.mode ? "active" : ""} onClick={() => { const nextHint = action.mode === "hint" ? Math.min(hintLevel + 1, 3) : 0; setHintLevel(nextHint); setActiveMode(action.mode); const prompt = action.mode === "hint" ? `Give me hint level ${nextHint} of 3 for the exercise on this page. Do not reveal the answer.` : action.prompt; void sendMessage(prompt, action.mode, nextHint); }}>{action.label}</button>)}</div>
-        { diagnosticActive && <section className="cyro-diagnostic" aria-label="Cybersecurity self-check"><div className="cyro-diagnostic-heading"><strong>Quick skill check</strong><span>{diagnosticIndex + 1} / {diagnosticQuestions.length}</span></div><p>{diagnosticQuestions[diagnosticIndex].prompt}</p><div className="cyro-diagnostic-options">{diagnosticQuestions[diagnosticIndex].options.map((option) => <button type="button" key={option.id} onClick={() => submitDiagnosticAnswer(option.id)}>{option.label}</button>)}</div><button type="button" className="cyro-diagnostic-cancel" onClick={() => setDiagnosticActive(false)}>Close self-check</button></section> }\n        <div className="cyro-messages" aria-live="polite">
+        { diagnosticActive && <section className="cyro-diagnostic" aria-label="Cybersecurity self-check"><div className="cyro-diagnostic-heading"><strong>Quick skill check</strong><span>{diagnosticIndex + 1} / {diagnosticQuestions.length}</span></div><p>{diagnosticQuestions[diagnosticIndex].prompt}</p><div className="cyro-diagnostic-options">{diagnosticQuestions[diagnosticIndex].options.map((option) => <button type="button" key={option.id} onClick={() => submitDiagnosticAnswer(option.id)}>{option.label}</button>)}</div><button type="button" className="cyro-diagnostic-cancel" onClick={() => setDiagnosticActive(false)}>Close self-check</button></section> }
+        <div className="cyro-messages" aria-live="polite">
           {messages.map((message, index) => <div className={`cyro-message ${message.role}`} key={index}>
             <span>{message.role === "assistant" ? "CYRO" : "YOU"}</span><p>{message.content}</p>
           </div>)}
