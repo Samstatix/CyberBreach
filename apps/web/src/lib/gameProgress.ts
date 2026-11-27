@@ -12,14 +12,14 @@ export type PlayerProgress = {
   achievements: Array<{ id: string; title: string; description: string; unlocked: boolean }>;
 };
 
-function levelForXp(xp: number) {
+export function getLevelForXp(xp: number) {
   let level = 1;
   while (xp >= level * level * 100) level += 1;
   return level;
 }
 
 export async function loadPlayerProgress(userId?: string): Promise<PlayerProgress> {
-  const completedLessons = getCompletedLessonIds(userId).length;
+  let completedLessons = getCompletedLessonIds(userId).length;
   let xp = completedLessons * 25;
   let solvedChallenges = 0;
 
@@ -37,7 +37,7 @@ export async function loadPlayerProgress(userId?: string): Promise<PlayerProgres
     }
   }
 
-  const level = levelForXp(xp);
+  const level = getLevelForXp(xp);
   const levelFloor = (level - 1) * (level - 1) * 100;
   const nextLevelXp = level * level * 100;
   const progressPercent = Math.min(100, Math.max(0, ((xp - levelFloor) / (nextLevelXp - levelFloor)) * 100));
