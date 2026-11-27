@@ -17,6 +17,9 @@ const forbidden = [
   ["literal SHA-256 CTF flag", /flag_hash\s*[,=]\s*'[0-9a-f]{64}'/i],
   ["inline walkthrough content", /walkthrough_md\s*[,=]\s*'/i],
   ["inline defensive solution content", /defensive_notes_md\s*[,=]\s*'/i],
+  ["client-side Operations answer map", /GUEST_MISSION_ANSWERS|isGuestOperationsAnswerCorrect/i],
+  ["client-side lab answer map", /GUEST_LAB_ANSWERS|isGuestLabTaskAnswerCorrect/i],
+  ["legacy semantic Operations answer ID", /preserve-contain-verify|preserve-isolate|preserve-verify-revoke/i],
 ];
 
 async function collectFiles(path) {
