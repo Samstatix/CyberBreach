@@ -3,6 +3,7 @@ import { Award, BookOpen, BrainCircuit, Flag, FlaskConical, LayoutDashboard, Men
 import { useState } from "react";
 import { useAuth } from "../../features/auth/AuthProvider";
 import { usePlayerProgress } from "../../features/progression/progressionService";
+import CyroAssistant from "../cyro/CyroAssistant";
 
 const links = [
   { to: "/", label: "Overview", icon: LayoutDashboard, end: true },
@@ -52,6 +53,7 @@ export default function AppShell() {
         </header>
         <main className="page-content"><Outlet /></main>
         <footer className="site-footer">CYBERBREACH <span>·</span> LEARN WITH PURPOSE. PRACTICE WITH PERMISSION.</footer>
+        <CyroAssistant />
       </div>
     </div>
   );
