@@ -33,6 +33,7 @@ on:
       - phase-25/guided-lab-exercises
       - phase-26/learning-activity-profile
       - phase-27/specialist-cyber-curriculum
+      - phase-28/cyro-edge-hardening
   pull_request:
     branches:
       - main
