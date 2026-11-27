@@ -65,7 +65,7 @@ function CryptographyLab() {
           <p className="workbench-hint">A Caesar cipher moves each letter by a fixed number of places. It is useful for learning, not for protecting real data.</p>
         </div>
         <div className="workbench-control-card">
-          <span className="eyebrow">TOOL 02 / BASE64</span><label>Encoded text<input value={base64Text} onChange={(event) => setBase64Text(event.target.value) spellCheck={false}/></label>
+          <span className="eyebrow">TOOL 02 / BASE64</span><label>Encoded text<input value={base64Text} onChange={(event) => setBase64Text(event.target.value)} spellCheck={false}/></label>
           <div className="workbench-output"><small>DECODED TEXT</small><strong>{base64Result || "No valid output"}</strong></div>
           {base64Text && !base64Result && <p className="workbench-error">This is not valid Base64 text.</p>}
           <p className="workbench-hint">Base64 is not encryption. Anyone with the encoded text can decode it without a secret key.</p>
@@ -154,7 +154,7 @@ function ForensicsLab() {
         </div>
         <div className="workbench-control-card">
           <span className="eyebrow">EVENT TIMELINE / {filtered.length} RECORDS</span>
-          <div className="forensic-timeline">{filtered.map((event, index) => <div className="forensic-event" key={event.time + event.sourceIp}><time>{event.time}</time><div><strong>{event.event}</strong><small>{event.sourceIp}</small></div><span className={`event-outcome ${event.outcome}`}>{event.outcome.toUpperCase()}</span></div>)}</div>
+          <div className="forensic-timeline">{filtered.map((event) => <div className="forensic-event" key={event.time + event.sourceIp}><time>{event.time}</time><div><strong>{event.event}</strong><small>{event.sourceIp}</small></div><span className={`event-outcome ${event.outcome}`}>{event.outcome.toUpperCase()}</span></div>)}</div>
         </div>
       </div>
     </div>
