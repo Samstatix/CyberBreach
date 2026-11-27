@@ -12,6 +12,7 @@ const AcademyCoursePage=lazy(()=>import("../features/academy/AcademyCoursePage")
 const AcademyLessonPage=lazy(()=>import("../features/academy/AcademyLessonPage"));
 const PhishingHunterPage=lazy(()=>import("../features/academy/PhishingHunterPage"));
 const TerminalSimulatorPage=lazy(()=>import("../features/labs/TerminalSimulatorPage"));
+const LabWorkbenchPage=lazy(()=>import("../features/labs/LabWorkbenchPage"));
 const AccountPage=lazy(()=>import("../features/auth/AccountPage"));
 const OperationsPage=lazy(()=>import("../features/operations/OperationsPage"));
 const CommunityPage=lazy(()=>import("../features/community/CommunityPage"));
@@ -34,6 +35,7 @@ export default function App(){
   <Route path="ctf/:category" element={<CTFCategoryPage/>}/>
   <Route path="labs" element={<LabsPage/>}/>
   <Route path="labs/linux-terminal" element={<TerminalSimulatorPage/>}/>
+  <Route path="labs/workbench" element={<LabWorkbenchPage/>}/>
   <Route path="progression" element={<ProgressionPage/>}/>
   <Route path="community" element={<CommunityPage/>}/>
   <Route path="research" element={<ResearchPage/>}/>
