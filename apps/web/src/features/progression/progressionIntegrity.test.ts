@@ -38,5 +38,8 @@ describe("CyberBreach progression catalogue integrity", () => {
     expect(new Set(achievementCatalog.map((achievement) => achievement.slug)).size).toBe(achievementCatalog.length);
     expect(new Set(skillTrees.map((tree) => tree.id)).size).toBe(skillTrees.length);
     expect(skillTrees).toHaveLength(11);
+    for (const treeId of ["reverse-engineering", "binary-exploitation", "osint"]) {
+      expect(skillTrees.find((tree) => tree.id === treeId)?.nodes.filter((node) => node.kind === "lesson")).toHaveLength(2);
+    }
   });
 });
