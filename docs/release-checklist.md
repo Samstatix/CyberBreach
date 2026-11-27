@@ -15,6 +15,11 @@
 - [ ] Completing all four Linux tasks unlocks the Linux Investigator achievement.
 - [ ] Competitive leaderboard points exclude Academy and Operations XP.
 - [ ] Public leaderboard visibility is opt-in and reversible.
+- [ ] Team membership is limited to one team per account and invitation codes are stored only as hashes.
+- [ ] Team invitation rotation invalidates previous codes.
+- [ ] Team member views expose usernames/display names only, never emails.
+- [ ] Team owners alone can dissolve teams or change public visibility.
+- [ ] Public team rankings count verified CTF points only and require owner opt-in.
 - [ ] Browser simulations cannot reach the host operating system.
 - [ ] External lab links use official provider pages.
 - [ ] Operations and AI research content has been reviewed.
@@ -27,7 +32,7 @@
 - [ ] Complete the final handoff checklist in `docs/final-handoff-plan.md` before merging milestone work into `main`.
 
 ## Supabase setup
-- [ ] Apply migrations `202611270001` through `202611270007` in filename order and run the seed after migrations.
+- [ ] Apply migrations `202611270001` through `202611270008` in filename order and run the seed after migrations.
 - [ ] Verify RLS on every user-facing table.
 - [ ] Verify challenge secrets and solutions cannot be selected by anon/authenticated roles.
 - [ ] Verify a user cannot submit for another user or write their own score.
