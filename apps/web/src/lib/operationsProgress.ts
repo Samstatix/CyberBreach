@@ -1,20 +1,23 @@
 import { notifyProgressUpdated } from "./progressionEvents";
 import { supabase } from "./supabase";
 
-export type OperationMissionRecord = {
-  missionId: string;
-  answerId: string;
-};
-
+export type OperationMissionRecord = { missionId: string; answerId: string };
 export type OperationMissionResult = {
-  correct: boolean;
-  completed: boolean;
-  already_completed: boolean;
-  xp_awarded: number;
-  message: string;
+  correct: boolean; completed: boolean; already_completed: boolean;
+  xp_awarded: number; message: string;
 };
 
 const STORAGE_KEY = "cyberbreach.operations.completed.v1.guest";
+const GUEST_MISSION_ANSWERS: Record<string, string> = {
+  "auth-burst": "preserve-contain-verify",
+  "dns-burst": "preserve-isolate",
+  "priv-change": "preserve-verify-revoke",
+};
+
+/** Keep guest-mode practice validation consistent with the visible scenario choices. */
+export function isGuestOperationsAnswerCorrect(missionId: string, answerId: string): boolean {
+  return GUEST_MISSION_ANSWERS[missionId] === answerId;
+}
 
 export function getGuestOperationRecords(): OperationMissionRecord[] {
   try {
@@ -23,10 +26,10 @@ export function getGuestOperationRecords(): OperationMissionRecord[] {
     const value: unknown = JSON.parse(raw);
     if (!Array.isArray(value)) return [];
     return value.filter((item): item is OperationMissionRecord =>
-      Boolean(item) &&
-      typeof item === "object" &&
+      Boolean(item) && typeof item === "object" &&
       typeof (item as OperationMissionRecord).missionId === "string" &&
-      typeof (item as OperationMissionRecord).answerId === "string",
+      typeof (item as OperationMissionRecord).answerId === "string" &&
+      isGuestOperationsAnswerCorrect((item as OperationMissionRecord).missionId, (item as OperationMissionRecord).answerId),
     );
   } catch {
     return [];
@@ -39,12 +42,11 @@ export function getGuestCompletedOperationIds(): string[] {
 
 function saveGuestOperationRecord(record: OperationMissionRecord): boolean {
   const records = getGuestOperationRecords();
-  const exists = records.some((item) => item.missionId === record.missionId);
-  if (exists) return false;
+  if (records.some((item) => item.missionId === record.missionId)) return false;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...records, record]));
   } catch {
-    // The current page still reports the completed practice attempt.
+    // Guest progress is browser-only. A blocked storage area cannot persist it.
   }
   return true;
 }
@@ -60,12 +62,16 @@ export async function completeOperationsMission(
   userId?: string,
 ): Promise<OperationMissionResult> {
   if (!userId || !supabase) {
+    if (!isGuestOperationsAnswerCorrect(missionId, answerId)) {
+      return {
+        correct: false, completed: false, already_completed: false, xp_awarded: 0,
+        message: "That response does not match the evidence. Review the incident and try again.",
+      };
+    }
     const awarded = saveGuestOperationRecord({ missionId, answerId });
     notifyProgressUpdated();
     return {
-      correct: true,
-      completed: true,
-      already_completed: !awarded,
+      correct: true, completed: true, already_completed: !awarded,
       xp_awarded: awarded ? 100 : 0,
       message: awarded ? "Mission completed. 100 XP earned in guest mode." : "Mission already completed.",
     };
@@ -76,7 +82,6 @@ export async function completeOperationsMission(
     p_answer_id: answerId,
   });
   if (error) throw new Error(error.message);
-
   const result = firstRow(data as OperationMissionResult[] | OperationMissionResult | null);
   if (!result) throw new Error("The mission service returned an empty response.");
   if (result.correct) notifyProgressUpdated();
@@ -84,20 +89,25 @@ export async function completeOperationsMission(
 }
 
 export async function syncGuestOperationProgress(userId?: string): Promise<void> {
-  if (!userId) return;
-  const client = supabase;
-  if (!client) return;
+  if (!userId || !supabase) return;
   const records = getGuestOperationRecords();
   if (records.length === 0) return;
 
   const results = await Promise.all(records.map((record) =>
-    client.rpc("complete_operations_mission", {
+    supabase!.rpc("complete_operations_mission", {
       p_mission_id: record.missionId,
       p_answer_id: record.answerId,
     }),
   ));
 
-  const failed = results.find((result) => result.error);
-  if (failed?.error) throw new Error(failed.error.message);
+  for (const result of results) {
+    if (result.error) throw new Error(result.error.message);
+    const payload = result.data as { correct?: boolean } | null;
+    if (!payload?.correct) throw new Error("A guest mission could not be verified by the account service.");
+  }
+
+  // A guest completion may be imported into one account only. Removing the
+  // local queue after server confirmation prevents replay into another account.
+  try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* Storage may be unavailable. */ }
   notifyProgressUpdated();
 }
