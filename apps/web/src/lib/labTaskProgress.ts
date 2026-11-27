@@ -51,6 +51,10 @@ function saveGuestLabTask(taskId: string, answer: string): boolean {
   return true;
 }
 
+export function isGuestLabTaskAnswerCorrect(taskId: string, answer: string): boolean {
+  return Boolean(GUEST_LAB_ANSWERS[taskId]) && answer.trim().toLowerCase() === GUEST_LAB_ANSWERS[taskId];
+}
+
 function firstRow<T>(data: T[] | T | null): T | null {
   if (Array.isArray(data)) return data[0] ?? null;
   return data;
@@ -63,7 +67,7 @@ export async function completeLabTask(
 ): Promise<LabTaskResult> {
   if (!userId || !supabase) {
     const normalized = answer.trim().toLowerCase();
-    if (!GUEST_LAB_ANSWERS[taskId] || normalized !== GUEST_LAB_ANSWERS[taskId]) {
+    if (!isGuestLabTaskAnswerCorrect(taskId, normalized)) {
       return {
         correct: false,
         completed: false,
@@ -109,7 +113,13 @@ export async function syncGuestLabTasks(userId?: string): Promise<void> {
     }),
   ));
 
-  const failed = results.find((result) => result.error);
-  if (failed?.error) throw new Error(failed.error.message);
+  for (const result of results) {
+    if (result.error) throw new Error(result.error.message);
+    const payload = result.data as { correct?: boolean } | null;
+    if (!payload?.correct) throw new Error("A guest lab task could not be verified by the account service.");
+  }
+
+  // Import browser-only completions once. The server remains the source of truth.
+  try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* Storage may be unavailable. */ }
   notifyProgressUpdated();
 }
