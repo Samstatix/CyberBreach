@@ -13,6 +13,7 @@ on:
       - milestone-6/platform-hardening
       - milestone-7-gameplay-integrity
       - milestone-8-community-teams
+      - milestone-9-account-management
   pull_request:
     branches:
       - main
