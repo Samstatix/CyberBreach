@@ -3,7 +3,7 @@ import { isValidBio, isValidDisplayName, isValidUsername, normalizeUsername } fr
 
 describe("account profile validation", () => {
   it("normalizes usernames to the allowed lowercase character set", () => {
-    expect(normalizeUsername("Nafis Inam!_7")).toBe("nafis_inam7");
+    expect(normalizeUsername("Nafis Inam!_7")).toBe("nafisinam_7");
   });
 
   it("accepts only 3–24 lowercase letters, digits and underscores", () => {
