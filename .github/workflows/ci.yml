@@ -34,6 +34,7 @@ on:
       - phase-26/learning-activity-profile
       - phase-27/specialist-cyber-curriculum
       - phase-28/cyro-edge-hardening
+      - phase-29/ollama-runtime-reliability
   pull_request:
     branches:
       - main
