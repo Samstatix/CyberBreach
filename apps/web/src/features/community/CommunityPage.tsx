@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import { ArrowUpRight, Award, BookOpen, Copy, Crown, LogOut, ShieldCheck, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
@@ -69,7 +70,7 @@ export default function CommunityPage() {
     void loadMyTeam();
   }, [loadMyTeam]);
 
-  async function createTeam(event: React.FormEvent<HTMLFormElement>) {
+  async function createTeam(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!supabase) return;
     setTeamBusy(true); setTeamError(""); setTeamNotice(""); setNewInviteCode("");
@@ -90,7 +91,7 @@ export default function CommunityPage() {
     } finally { setTeamBusy(false); }
   }
 
-  async function joinTeam(event: React.FormEvent<HTMLFormElement>) {
+  async function joinTeam(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!supabase) return;
     setTeamBusy(true); setTeamError(""); setTeamNotice("");
@@ -190,7 +191,7 @@ export default function CommunityPage() {
             <div><span className="eyebrow">YOUR TEAM / {team.slug}</span><h3>{team.name}</h3><p>{team.description || "A CyberBreach learning team."}</p></div>
             <span className="team-role">{team.role === "owner" ? <><Crown size={13}/> TEAM OWNER</> : <><Users size={13}/> MEMBER</>}</span>
           </div>
-          <div className="team-members-heading"><strong>TEAM MEMBERS</strong><span>{team.members.length} / 1+ MEMBERS</span></div>
+          <div className="team-members-heading"><strong>TEAM MEMBERS</strong><span>{team.members.length} MEMBERS</span></div>
           <div className="team-member-list">
             {team.members.map((member) => <div className="team-member-row" key={member.username}><span className="team-member-avatar">{member.display_name.slice(0,1).toUpperCase()}</span><div><strong>{member.display_name}</strong><small>@{member.username}</small></div>{member.role === "owner" && <span className="team-owner-label">OWNER</span>}</div>)}
           </div>
