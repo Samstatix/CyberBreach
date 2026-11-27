@@ -102,6 +102,10 @@ Deno.serve(async (request: Request) => {
   const { data: { user }, error: authError } = await authClient.auth.getUser();
   if (authError || !user) return json({ error: "Your session is invalid. Please sign in again." }, 401);
 
+  const { data: withinRateLimit, error: rateLimitError } = await authClient.rpc("consume_cyro_rate_limit");
+  if (rateLimitError) return json({ error: "CYRO usage controls are temporarily unavailable." }, 503);
+  if (withinRateLimit !== true) return json({ error: "You've reached CYRO's usage limit. Please try again later." }, 429);
+
   const { data: learnerPreferences } = await authClient.from("cyro_learning_preferences").select("teaching_level, preferred_language").eq("user_id", user.id).maybeSingle();
 
   // Progress is read only for the authenticated learner and remains server-derived.
