@@ -5,19 +5,27 @@
 create table if not exists public.lab_task_catalog (
   task_id text primary key,
   title text not null,
-  answer_hash text not null,
   xp_reward integer not null default 50 check (xp_reward between 1 and 500),
   is_active boolean not null default true,
   created_at timestamptz not null default now()
 );
 
-insert into public.lab_task_catalog (task_id, title, answer_hash, xp_reward) values
-  ('linux-auth-source', 'Linux authentication log investigation', '1a17a4b9dec75a663e54e523037f05b0e5a5e13d023247a6b0f9774cc80829a2', 50)
+insert into public.lab_task_catalog (task_id, title, xp_reward) values
+  ('linux-auth-source', 'Linux authentication log investigation', 50)
 on conflict (task_id) do update set
   title = excluded.title,
-  answer_hash = excluded.answer_hash,
   xp_reward = excluded.xp_reward,
   is_active = true;
+
+-- Private task answers are provisioned by scripts/load-private-content.mjs.
+create table if not exists public.lab_task_secrets (
+  task_id text primary key references public.lab_task_catalog(task_id) on delete cascade,
+  answer_hash text not null,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.lab_task_secrets enable row level security;
+revoke all on public.lab_task_secrets from public, anon, authenticated;
 
 create table if not exists public.lab_task_completions (
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -118,7 +126,7 @@ create or replace function public.complete_lab_task(p_task_id text, p_answer tex
 returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_user_id uuid;
@@ -133,21 +141,21 @@ begin
   end if;
 
   if p_task_id is null or length(p_task_id) > 100
-     or p_answer is null or length(p_answer) > 256 then
+     or p_answer is null or length(btrim(p_answer)) = 0 or length(p_answer) > 256 then
     raise exception 'A valid task and answer are required' using errcode = '22023';
   end if;
 
-  select task.answer_hash, task.xp_reward
+  select secret.answer_hash, task.xp_reward
     into v_answer_hash, v_reward
   from public.lab_task_catalog as task
-  where task.task_id = p_task_id
-    and task.is_active = true;
+  join public.lab_task_secrets as secret on secret.task_id = task.task_id
+  where task.task_id = p_task_id and task.is_active = true;
 
   if not found then
-    raise exception 'Lab task is not available' using errcode = 'P0002';
+    raise exception 'Lab task answer is not configured' using errcode = 'P0002';
   end if;
 
-  if encode(extensions.digest(lower(trim(p_answer)), 'sha256'), 'hex') <> v_answer_hash then
+  if extensions.crypt(lower(btrim(p_answer)), v_answer_hash) <> v_answer_hash then
     return jsonb_build_object(
       'correct', false,
       'completed', false,
