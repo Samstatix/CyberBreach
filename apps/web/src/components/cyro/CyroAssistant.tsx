@@ -84,7 +84,7 @@ export default function CyroAssistant() {
     setError("");
     setBusy(true);
     try {
-      const lessonMatch = location.pathname.match(/^\\/academy\\/lessons\\/([a-z0-9-]+)$/);
+      const lessonMatch = location.pathname.match(/^\/academy\/lessons\/([a-z0-9-]+)$/);
       const lessonContext = lessonMatch ? getCyroLessonContext(lessonMatch[1]) : undefined;
       const { data, error: invokeError } = await supabase.functions.invoke("cyro-assistant", {
         body: { messages: next.slice(-12), page: location.pathname, mode, hintLevel: requestedHintLevel, lessonContext },
