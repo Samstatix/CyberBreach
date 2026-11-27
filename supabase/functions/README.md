@@ -69,3 +69,8 @@ The widget includes an optional six-question, one-question-at-a-time self-check 
 ## CYRO revision planning (Phase 23)
 
 The self-check can map a missed sample question to the first available lesson in the matching Academy course, when that course exists. These are optional revision starting points, not diagnoses or learner labels. Results remain ephemeral in the widget and are not written to learner records. The user may dismiss the self-check and continue using CYRO normally.
+
+
+## CYRO adaptive teaching (Phase 24)
+
+The Edge Function checks recent user messages for repeated, explicit confusion phrases. When more than one such signal is present, the system prompt asks the model to change teaching strategy rather than repeat the same explanation: use a different analogy, define fewer terms, show one small example, and ask a gentle comprehension question. This is a lightweight conversational heuristic, not a reliable assessment of emotion, ability or comprehension. Learners can always request a different explanation directly.
