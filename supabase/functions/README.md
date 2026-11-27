@@ -47,3 +47,10 @@ Hint mode accepts a numeric level from 1 to 3 and clamps it server-side. The pro
 Migration `202611280011_cyro_learning_preferences.sql` creates a private, per-user preferences table with row-level security. Learners can select Beginner, Intermediate or Advanced teaching level and Auto, English or Bengali response language in the CYRO panel. The Edge Function reads only the authenticated user's row and uses these values as style preferences, not as verified evidence of competence.
 
 The table stores settings only, not chat transcripts or inferred personal traits. Users can clear their row from the database/account settings workflow; a dedicated in-product reset control can be added in a later UI increment.
+
+
+## CYRO lesson grounding (Phase 20)
+
+On an Academy lesson route, the widget supplies the lesson's approved course title, lesson title, summary, objectives, teaching blocks, glossary and worked example. It deliberately excludes the knowledge-check question, options, correct answer and feedback. The Edge Function validates and bounds every field before including the context in the model prompt. The prompt marks this context as untrusted reference data and instructs the model not to follow embedded instructions.
+
+The lesson context is explanatory grounding, not a source of secrets or scoring authority. The authoritative quiz answer remains in the Academy's existing lesson implementation and is not sent to CYRO.
