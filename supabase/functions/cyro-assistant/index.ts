@@ -11,9 +11,20 @@ const json = (body: Record<string, unknown>, status = 200) =>
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type TeachingMode = "explain" | "hint" | "quiz" | "next-step";
+type ModuleContext = { name: string; guidance: string };
+function moduleForPage(page: string): ModuleContext {
+  if (page.startsWith("/academy")) return { name: "Cyber Academy", guidance: "Teach foundations and lesson concepts assuming no prior knowledge." };
+  if (page.startsWith("/ctf")) return { name: "CTF Arena", guidance: "Guide reasoning about fictional challenge evidence. Never disclose flags, hidden answers or full walkthroughs." };
+  if (page.startsWith("/labs")) return { name: "Cyber Labs", guidance: "Explain safe simulated lab controls, inputs and outputs. Keep examples within the sandbox." };
+  if (page.startsWith("/operations")) return { name: "Security Operations", guidance: "Teach defensive triage, evidence preservation, scoping, containment and escalation using fictional scenarios." };
+  if (page.startsWith("/progression")) return { name: "Learning Progression", guidance: "Recommend study activities without claiming access to private progress records." };
+  if (page.startsWith("/research")) return { name: "AI Security Research", guidance: "Explain AI and LLM security concepts, emphasizing safe, authorized research." };
+  if (page.startsWith("/community")) return { name: "Community", guidance: "Explain collaboration, competition etiquette, safe sharing and responsible disclosure." };
+  return { name: "CyberBreach Overview", guidance: "Orient new learners and recommend a beginner-friendly starting point." };
+}
 const modeInstructions: Record<TeachingMode, string> = {
   explain: "Explain one concept at a time in plain language, define jargon, and use an everyday analogy.",
-  hint: "Give exactly one small hint, not the answer, flag, payload, or full solution. Encourage the learner to reason about the next step.",
+  hint: "Give one incremental hint for the requested level. Never reveal a flag, final answer, payload or complete solution. Level 1 points to the concept; level 2 narrows the evidence or reasoning; level 3 describes the next operation without giving its result.",
   quiz: "Ask exactly one short question and wait for the learner to answer. Do not include the answer in the same response.",
   "next-step": "Recommend one achievable next learning step and explain why it follows from the current topic.",
 };
@@ -55,7 +66,7 @@ Deno.serve(async (request: Request) => {
   const apiKey = Deno.env.get("CYRO_OLLAMA_API_KEY");
   if (!endpoint) return json({ error: "CYRO's AI endpoint is not configured yet. Please try again later." }, 503);
 
-  let body: { messages?: ChatMessage[]; page?: string; mode?: TeachingMode };
+  let body: { messages?: ChatMessage[]; page?: string; mode?: TeachingMode; hintLevel?: number };
   try { body = await request.json(); } catch { return json({ error: "Invalid request body." }, 400); }
   if (!Array.isArray(body.messages) || body.messages.length < 1 || body.messages.length > 12) {
     return json({ error: "Send between 1 and 12 chat messages." }, 400);
