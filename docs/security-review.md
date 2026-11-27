@@ -16,14 +16,17 @@ The current source contains assessment material that must not be public while th
 
 RLS and SECURITY DEFINER functions protect the live Supabase API. They do not protect source files, Git history, forks, archives or cached copies.
 
-## Required release decision
+## Repository visibility decision
 
-Before enabling competitive public use, choose one of these deployment models:
+The project owner has chosen to keep the repository **public during development** and plans to make it private after the complete project has been consolidated into `main`. Development should continue on milestone branches; unfinished work must not be merged into `main`.
 
-1. **Private source repository:** restrict repository access and keep trusted seed material in the private repository. This reduces casual answer exposure, but does not retract any copies already made while the repository was public.
-2. **Public application source with private deployment material:** keep only non-secret schema and public challenge metadata in the public repository. Move answer keys, solution inserts and other trusted seed data into a separately access-controlled deployment repository or secret-managed release process.
+This is an accepted temporary visibility decision, not a security remediation. Making the repository private later will not retract copies, forks, archives or cached history made while it was public. All answer material already committed must therefore be treated as compromised.
 
-After choosing the model, rotate all CTF flags and replace exposed mission/lab answer keys before the first public competition. Treat previously committed answers as compromised even if repository visibility changes.
+## Required before competitive public launch
+
+- Rotate all CTF flags and replace exposed mission/lab answer keys.
+- Move trusted answer material out of the public application source and into a separately access-controlled deployment process.
+- Ensure private deployment material is not included in browser bundles or public build artifacts.
 
 ## Additional production checks
 
