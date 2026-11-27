@@ -11,4 +11,4 @@ Run scripts 008–010 after migrations 001–010 and after loading newly rotated
 Do not run these scripts against production as a substitute for a reviewed release procedure. Validate migrations and verification SQL in a disposable or staging Supabase project first.
 
 
-- `013_cyro_rate_limits.sql` checks the private CYRO rate-limit table, direct table privileges, authenticated-only RPC grants, identity derivation and both request windows.
+- `011_012_cyro_learning_data.sql` checks private learner-preference and activity history RLS, anonymous denial, read/write privileges and authenticated-only activity recording.\n- `013_cyro_rate_limits.sql` checks the private CYRO rate-limit table, direct table privileges, authenticated-only RPC grants, identity derivation and both request windows.
