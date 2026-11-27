@@ -59,3 +59,8 @@ The lesson context is explanatory grounding, not a source of secrets or scoring 
 ## CYRO learning intelligence (Phase 21)
 
 For authenticated requests, the Edge Function reads the caller's own `academy_lesson_progress` rows and active `academy_lesson_catalog` entries through the caller-scoped Supabase client. It passes a bounded list of completed lesson titles and available next lessons to CYRO for recommendations. This is progress-aware guidance, not a mastery score: lesson completion does not prove understanding, and missing completions must not be described as weaknesses. A future diagnostic assessment must record learner responses through a trusted scoring flow before CYRO can make evidence-based skill-gap claims.
+
+
+## CYRO diagnostic self-check (Phase 22)
+
+The widget includes an optional six-question, one-question-at-a-time self-check covering networking, Linux, web security, cryptography, digital forensics and AI security. Scoring runs in the browser and the aggregate category outcome is sent as user-provided conversational context to CYRO for cautious feedback. Results are not persisted, are not server-verified, and must never be presented as certification, a formal skill rating or proof of mastery. The prompt explicitly asks CYRO to explain the limitations of this small sample. Do not use these self-check results for competitive rankings, access control, hiring or other consequential decisions.
