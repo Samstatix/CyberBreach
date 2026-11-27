@@ -5,6 +5,8 @@ import { supabase } from "../../lib/supabase";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type TeachingMode = "explain" | "hint" | "quiz" | "next-step";
+type TeachingLevel = "beginner" | "intermediate" | "advanced";
+type PreferredLanguage = "auto" | "en" | "bn";
 const teachingActions: Array<{ mode: TeachingMode; label: string; prompt: string }> = [
   { mode: "explain", label: "Explain simply", prompt: "Explain the topic on this page in simple beginner-friendly language with one everyday analogy." },
   { mode: "hint", label: "Give me a hint", prompt: "Give one progressive hint for the exercise. Do not reveal the answer, flag, or full solution. Ask me to try the next step." },
@@ -27,12 +29,49 @@ export default function CyroAssistant() {
   const [logoFailed, setLogoFailed] = useState(false);
   const [activeMode, setActiveMode] = useState<TeachingMode>("explain");
   const [hintLevel, setHintLevel] = useState(0);
+  const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>("beginner");
+  const [preferredLanguage, setPreferredLanguage] = useState<PreferredLanguage>("auto");
+  const [preferencesReady, setPreferencesReady] = useState(false);
+  const [preferencesSaving, setPreferencesSaving] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey! I'm CYRO, your CyberBreach learning companion. No question is too basic. Tell me what you're learning, and I'll break it into small, clear steps." },
   ]);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, busy, open]);
+
+  useEffect(() => {
+    let active = true;
+    async function loadPreferences() {
+      if (!supabase) { setPreferencesReady(true); return; }
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) { setPreferencesReady(true); return; }
+      const { data } = await supabase.from("cyro_learning_preferences").select("teaching_level, preferred_language").eq("user_id", auth.user.id).maybeSingle();
+      if (active && data) {
+        if (["beginner", "intermediate", "advanced"].includes(data.teaching_level)) setTeachingLevel(data.teaching_level as TeachingLevel);
+        if (["auto", "en", "bn"].includes(data.preferred_language)) setPreferredLanguage(data.preferred_language as PreferredLanguage);
+      }
+      if (active) setPreferencesReady(true);
+    }
+    void loadPreferences();
+    return () => { active = false; };
+  }, []);
+
+  async function savePreferences(level: TeachingLevel, language: PreferredLanguage) {
+    setTeachingLevel(level);
+    setPreferredLanguage(language);
+    if (!supabase) return;
+    setPreferencesSaving(true);
+    try {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) throw new Error("Sign in to save your learning preferences.");
+      const { error: saveError } = await supabase.from("cyro_learning_preferences").upsert({ user_id: auth.user.id, teaching_level: level, preferred_language: language, updated_at: new Date().toISOString() });
+      if (saveError) throw saveError;
+      setError("");
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : "Your preferences could not be saved.");
+    } finally { setPreferencesSaving(false); }
+  }
 
   async function sendMessage(text = input, mode: TeachingMode = activeMode, requestedHintLevel = hintLevel) {
     const prompt = text.trim();
@@ -65,6 +104,7 @@ export default function CyroAssistant() {
           <button type="button" className="cyro-icon-button" onClick={() => setOpen(false)} aria-label="Close CYRO"><X size={17}/></button>
         </header>
         <div className="cyro-trust"><ShieldCheck size={13}/> Beginner-friendly guidance · Safe learning only</div>
+        <div className="cyro-preferences"><label>Teaching level<select aria-label="CYRO teaching level" value={teachingLevel} disabled={!preferencesReady || preferencesSaving} onChange={(event) => void savePreferences(event.target.value as TeachingLevel, preferredLanguage)}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label><label>Language<select aria-label="CYRO preferred language" value={preferredLanguage} disabled={!preferencesReady || preferencesSaving} onChange={(event) => void savePreferences(teachingLevel, event.target.value as PreferredLanguage)}><option value="auto">Auto detect</option><option value="en">English</option><option value="bn">বাংলা</option></select></label></div>
         {activeMode === "hint" && <div className="cyro-hint-progress" aria-live="polite">HINT PROGRESSION · {hintLevel || 1} / 3 · Each hint reveals a little more</div>}
         <div className="cyro-actions" role="group" aria-label="CYRO teaching tools">{teachingActions.map((action) => <button type="button" key={action.mode} aria-pressed={activeMode === action.mode} className={activeMode === action.mode ? "active" : ""} onClick={() => { const nextHint = action.mode === "hint" ? Math.min(hintLevel + 1, 3) : 0; setHintLevel(nextHint); setActiveMode(action.mode); const prompt = action.mode === "hint" ? `Give me hint level ${nextHint} of 3 for the exercise on this page. Do not reveal the answer.` : action.prompt; void sendMessage(prompt, action.mode, nextHint); }}>{action.label}</button>)}</div>
         <div className="cyro-messages" aria-live="polite">
