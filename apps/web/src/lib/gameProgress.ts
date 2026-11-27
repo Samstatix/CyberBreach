@@ -31,10 +31,7 @@ export async function loadPlayerProgress(userId?: string): Promise<PlayerProgres
     ]);
     if (!ledger.error && ledger.data) xp = ledger.data.reduce((total, row) => total + Number(row.points || 0), 0);
     if (!solves.error) solvedChallenges = solves.count ?? 0;
-    // The local lesson list is merged with the server list by the Academy progress loader.
-    if (!lessons.error && (lessons.count ?? 0) > completedLessons) {
-      // Keep the displayed count conservative until the merged list is refreshed.
-    }
+    if (!lessons.error) completedLessons = Math.max(completedLessons, lessons.count ?? 0);
   }
 
   const level = getLevelForXp(xp);
