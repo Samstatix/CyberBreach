@@ -96,13 +96,15 @@ export async function markLessonComplete(lessonId: string, userId?: string): Pro
     };
   }
 
-  const completedIds = [...new Set([...getCompletedLessonIds(userId), lessonId])];
+  const previousIds = getCompletedLessonIds(userId);
+  const alreadyCompleted = previousIds.includes(lessonId);
+  const completedIds = [...new Set([...previousIds, lessonId])];
   try { window.localStorage.setItem(storageKey(userId), JSON.stringify(completedIds)); } catch { /* Session remains usable. */ }
   notifyProgressUpdated();
   return {
     completedIds,
-    xpAwarded: completedIds.includes(lessonId) ? 25 : 0,
-    alreadyCompleted: getCompletedLessonIds(userId).includes(lessonId),
+    xpAwarded: alreadyCompleted ? 0 : 25,
+    alreadyCompleted,
     synced: false,
   };
 }
