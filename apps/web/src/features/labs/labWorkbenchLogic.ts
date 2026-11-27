@@ -30,7 +30,7 @@ export function decodeCaesarCipher(input: string, shift: number): string {
 export function decodeBase64(input: string): string {
   // Ignore display whitespace so learners can paste wrapped Base64, but reject
   // invalid alphabet characters, impossible lengths and malformed padding.
-  const encoded = input.replace(/\\s/g, "");
+  const encoded = input.replace(/\s/g, "");
   if (!/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) {
     throw new Error("Invalid Base64 characters or padding.");
   }
