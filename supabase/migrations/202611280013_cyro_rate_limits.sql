@@ -27,31 +27,31 @@ begin
     raise exception 'Authentication required' using errcode = '28000';
   end if;
 
-  insert into public.cyro_rate_limits (
+  insert into public.cyro_rate_limits as current_limits (
     user_id, minute_window_started_at, minute_request_count,
     hour_window_started_at, hour_request_count, updated_at
   )
   values (v_user_id, pg_catalog.now(), 1, pg_catalog.now(), 1, pg_catalog.now())
   on conflict (user_id) do update set
     minute_window_started_at = case
-      when public.cyro_rate_limits.minute_window_started_at <= pg_catalog.now() - interval '1 minute'
+      when current_limits.minute_window_started_at <= pg_catalog.now() - interval '1 minute'
       then pg_catalog.now()
-      else public.cyro_rate_limits.minute_window_started_at
+      else current_limits.minute_window_started_at
     end,
     minute_request_count = case
-      when public.cyro_rate_limits.minute_window_started_at <= pg_catalog.now() - interval '1 minute'
+      when current_limits.minute_window_started_at <= pg_catalog.now() - interval '1 minute'
       then 1
-      else public.cyro_rate_limits.minute_request_count + 1
+      else current_limits.minute_request_count + 1
     end,
     hour_window_started_at = case
-      when public.cyro_rate_limits.hour_window_started_at <= pg_catalog.now() - interval '1 hour'
+      when current_limits.hour_window_started_at <= pg_catalog.now() - interval '1 hour'
       then pg_catalog.now()
-      else public.cyro_rate_limits.hour_window_started_at
+      else current_limits.hour_window_started_at
     end,
     hour_request_count = case
-      when public.cyro_rate_limits.hour_window_started_at <= pg_catalog.now() - interval '1 hour'
+      when current_limits.hour_window_started_at <= pg_catalog.now() - interval '1 hour'
       then 1
-      else public.cyro_rate_limits.hour_request_count + 1
+      else current_limits.hour_request_count + 1
     end,
     updated_at = pg_catalog.now()
   returning minute_request_count, hour_request_count
