@@ -6,7 +6,7 @@ CyberBreach is a self-contained React feature module developed in this repositor
 
 ## Current development baseline
 
-The active implementation baseline is `milestone-11-competitions`. Completed development phases include platform hardening, expanded Academy learning paths, community teams, account security and six interactive practice rooms. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
+The current consolidated development baseline is `main`, which contains milestones 1–11. New hardening and product-expansion work proceeds on focused branches created from `main` and is merged back after review and CI. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. Consolidation into `main` is not a production-readiness certification.
 
 ## Product scope
 - **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
@@ -74,12 +74,12 @@ Competition management is restricted to moderator/admin roles. After creating th
 
 ## Scheduled competitions
 
-CyberBreach moderators can create and publish individual or team CTF events from the Community Events page. Each event selects published challenges, has a fixed start/end window and closes registration when it begins. Team registration is performed by the team owner and snapshots the roster at registration time. Event scores are calculated from verified challenge solves for the selected challenges during the event window; no client-submitted scores are accepted. Moderator/admin roles are provisioned through trusted database administration, never through the browser.
+CyberBreach moderators can create and publish individual or team CTF events from the Community Events page. Each event selects published challenges, has a fixed start/end window and closes registration when it begins. Team registration is performed by the team owner and snapshots the roster at registration time. Event scores are calculated from verified correct flag attempts for selected challenges during the event window. A team receives credit once per challenge even if several roster members solve it; no client-submitted scores are accepted. Moderator/admin roles are provisioned through trusted database administration, never through the browser.
 
 ## Database setup
 1. Create a Supabase project.
 2. Apply every SQL migration in `supabase/migrations` in filename order.
-3. Run `supabase/seed.sql` after migrations to add the six categories and 18 original challenges.
+3. Run `supabase/seed.sql` after migrations to add the six categories and 18 original public challenge records. The seed contains no flags or walkthroughs.
 4. Migration `202611270003_progression_system.sql` adds the lesson allow-list, server-awarded Academy XP, achievements and the player progression RPC.
 5. Migration `202611270004_operations_missions.sql` adds answer-verified incident-response missions, mission XP and completion tracking.
 6. Migration `202611270005_lab_practice_tasks.sql` adds private answer verification and XP for browser-lab tasks.
@@ -87,10 +87,27 @@ CyberBreach moderators can create and publish individual or team CTF events from
 8. Migration `202611270007_learning_paths_and_lab_hardening.sql` registers the new Academy lessons, rate-limits browser-lab submissions and keeps non-CTF XP out of competitive rankings.
 9. Migration `202611270008_community_teams.sql` adds private teams, hashed invitation codes and opt-in CTF-only team rankings.
 10. Migration `202611270009_competition_events.sql` adds moderator-managed event scheduling, individual/team registration, roster snapshots and verified event leaderboards.
-11. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
-12. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
+11. Migration `202611270010_security_competition_hardening.sql` invalidates previously exposed answer material, moves mission/lab answers into private bcrypt-hash tables, rate-limits submissions and hardens competition roster/scoring logic.
+12. Configure email confirmation, password recovery redirect URLs and password policy in Supabase Auth.
+13. Deploy the `delete-account` Edge Function and ensure `SUPABASE_SERVICE_ROLE_KEY` is available only in the Edge Function secret environment. Never put it in Vercel public variables.
+14. Load rotated private answers and walkthroughs using the administrator-only loader described below.
 
-The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
+The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table; mission and lab answers use bcrypt hashes in separate private tables. The database verifies submissions, rate-limits attempts and awards points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
+
+### Load private challenge content
+
+Migration 010 disables the old CTF flags and removes walkthroughs because the previous values were committed to public Git history. Scoring and walkthrough access remain disabled until fresh private content is loaded.
+
+1. Copy `supabase/private-content.example.json` to `supabase/private-content.json`. The real file is ignored by Git.
+2. Replace every placeholder with newly rotated challenge flags, walkthroughs, defensive notes, reflection questions, Operations answer IDs and Linux task answers. The file must contain every published challenge and every active mission/task.
+3. Use CTF flags of at least 24 bytes and set each challenge `releaseVersion` to 2 or higher. Operations and lab answers are bcrypt-hashed in the database and must be no longer than 72 UTF-8 bytes.
+4. In a local administrator shell, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, then run:
+
+```bash
+npm run private:load
+```
+
+The loader validates that every active challenge, mission and lab task has exactly one private entry. It never prints answer values. Never set the service-role key in a `VITE_` variable, Vercel browser environment, or committed file.
 
 ## Multi-discipline browser workbench
 
@@ -114,7 +131,7 @@ Follow [the Next.js integration guide](apps/web/src/integration/README.md). The 
 
 ## Final repository handoff
 
-Development proceeds on milestone branches. After all product features, integrations, migrations, documentation and release checks are complete, the finished work will be consolidated into `main`. The owner can then download the complete repository and change its visibility to private. See [the final handoff plan](docs/final-handoff-plan.md).
+Milestones 1–11 have already been consolidated into `main`. Continue new work on focused branches from that baseline and merge reviewed changes through pull requests. The owner can download the current baseline from `main`; final production readiness still depends on the release checklist and live staging verification. The owner may change repository visibility to private when ready. See [the final handoff plan](docs/final-handoff-plan.md).
 
 ## Security boundaries
 - All challenge artifacts and incident scenarios are fictional and self-authored.
