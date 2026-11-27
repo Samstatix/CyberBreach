@@ -12,6 +12,8 @@ CyberBreach is a self-contained React feature module developed in this repositor
 - **Community:** opt-in public CTF leaderboard and safety principles.
 - **AI Security Research:** LLM/agent security topics and official research references.
 
+CyberBreach is organized around five primary areas: Cyber Academy, CTF Arena, Cyber Labs (including Operations missions), Community and AI Security Research. Player progression connects activity across all five areas.
+
 ## Product decisions
 - Audience: everyone, from complete beginners to experienced practitioners.
 - Access: CyberBreach learning and challenges are free; no paid challenge advantages or premium-only learning tiers.
