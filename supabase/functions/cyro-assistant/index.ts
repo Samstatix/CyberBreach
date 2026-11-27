@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.119.2";
 
 const allowedOrigin = Deno.env.get("CYBERBREACH_ALLOWED_ORIGIN") ?? "";
 const corsHeaders = {
