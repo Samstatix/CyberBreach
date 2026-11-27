@@ -10,6 +10,13 @@ const json = (body: Record<string, unknown>, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: corsHeaders });
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
+type TeachingMode = "explain" | "hint" | "quiz" | "next-step";
+const modeInstructions: Record<TeachingMode, string> = {
+  explain: "Explain one concept at a time in plain language, define jargon, and use an everyday analogy.",
+  hint: "Give exactly one small hint, not the answer, flag, payload, or full solution. Encourage the learner to reason about the next step.",
+  quiz: "Ask exactly one short question and wait for the learner to answer. Do not include the answer in the same response.",
+  "next-step": "Recommend one achievable next learning step and explain why it follows from the current topic.",
+};
 const systemPrompt = `You are CYRO (Cybernetic Response & Operator), the friendly learning companion inside CyberBreach.
 Your job is to teach cybersecurity to absolute beginners without talking down to them.
 Teaching rules:
@@ -48,7 +55,7 @@ Deno.serve(async (request: Request) => {
   const apiKey = Deno.env.get("CYRO_OLLAMA_API_KEY");
   if (!endpoint) return json({ error: "CYRO's AI endpoint is not configured yet. Please try again later." }, 503);
 
-  let body: { messages?: ChatMessage[]; page?: string };
+  let body: { messages?: ChatMessage[]; page?: string; mode?: TeachingMode };
   try { body = await request.json(); } catch { return json({ error: "Invalid request body." }, 400); }
   if (!Array.isArray(body.messages) || body.messages.length < 1 || body.messages.length > 12) {
     return json({ error: "Send between 1 and 12 chat messages." }, 400);
