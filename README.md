@@ -17,7 +17,7 @@ The project is developed in this repository as an independent React application 
 - **Progression** — earn personal XP, advance through levels and operator ranks, unlock achievements, and develop skills across eleven skill trees.
 - **Community and Teams** — create or join a team, collaborate in private team spaces, and opt into team rankings.
 - **Competitions** — register for scheduled individual or team CTF events and compete using verified challenge solves.
-- **AI Security Research** — explore security topics involving AI systems, LLMs, and agents through curated learning and research references.
+- **CYRO learning assistant** — ask beginner-friendly questions from any platform page, request simpler explanations, examples and quick knowledge checks. CYRO is served through an authenticated Supabase Edge Function connected to a privately hosted Ollama-compatible model endpoint.\n- **AI Security Research** — explore security topics involving AI systems, LLMs, and agents through curated learning and research references.
 
 CyberBreach is intended for a broad audience, from people with no prior cybersecurity experience to experienced learners. Learning content and challenges are designed to be free, without paid challenge advantages or premium-only learning tiers.
 
@@ -69,7 +69,7 @@ VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ```
 
-The app can render in browse/demo mode without Supabase configuration, but authentication, synchronized progress, server-verified submissions, and competition features require a correctly configured Supabase project.
+The app can render in browse/demo mode without Supabase configuration, but authentication, synchronized progress, server-verified submissions, competitions, and CYRO require a correctly configured Supabase project. CYRO additionally requires the deployed `cyro-assistant` Edge Function and server-side `CYRO_OLLAMA_URL` / `CYRO_OLLAMA_MODEL` secrets; see `supabase/functions/README.md`.
 
 Quality checks:
 
