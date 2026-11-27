@@ -15,6 +15,7 @@ on:
       - milestone-8-community-teams
       - milestone-9-account-management
       - milestone-10-multi-discipline-labs
+      - milestone-11-competitions
   pull_request:
     branches:
       - main
