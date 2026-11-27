@@ -74,3 +74,8 @@ The self-check can map a missed sample question to the first available lesson in
 ## CYRO adaptive teaching (Phase 24)
 
 The Edge Function checks recent user messages for repeated, explicit confusion phrases. When more than one such signal is present, the system prompt asks the model to change teaching strategy rather than repeat the same explanation: use a different analogy, define fewer terms, show one small example, and ask a gentle comprehension question. This is a lightweight conversational heuristic, not a reliable assessment of emotion, ability or comprehension. Learners can always request a different explanation directly.
+
+
+## CYRO specialist curriculum (Phase 27)
+
+CYRO has server-authored teaching notes for Academy, CTF Arena, Cyber Labs, Security Operations, Learning Progression, AI Security Research, Community and the platform overview. Notes reinforce prerequisite sequencing, domain-specific safe methodology and common conceptual distinctions. They are instructional guidance, not a substitute for reviewed course material or challenge-specific server-side access controls.
