@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Binary, Bug, Clock3, Code2, Fingerprint, Globe2, KeyRound, ShieldCheck, TerminalSquare } from "lucide-react";
+import { ArrowLeft, ArrowRight, Binary, Bug, Code2, Fingerprint, Globe2, KeyRound, ShieldCheck, TerminalSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   assessBuffer, decodeBase64, decodeCaesarCipher, forensicEvents,
@@ -51,7 +51,6 @@ function CryptographyLab() {
   const [cipherText, setCipherText] = useState("KHOOR ZRUOG");
   const [shift, setShift] = useState(3);
   const [base64Text, setBase64Text] = useState("Q1lCRVJCUkVBQ0g=");
-  const [base64Error, setBase64Error] = useState("");
   const decoded = useMemo(() => decodeCaesarCipher(cipherText, shift), [cipherText, shift]);
   let base64Result = "";
   try { base64Result = decodeBase64(base64Text); } catch { base64Result = ""; }
@@ -66,7 +65,7 @@ function CryptographyLab() {
           <p className="workbench-hint">A Caesar cipher moves each letter by a fixed number of places. It is useful for learning, not for protecting real data.</p>
         </div>
         <div className="workbench-control-card">
-          <span className="eyebrow">TOOL 02 / BASE64</span><label>Encoded text<input value={base64Text} onChange={(event) => { setBase64Text(event.target.value); setBase64Error(""); }} spellCheck={false}/></label>
+          <span className="eyebrow">TOOL 02 / BASE64</span><label>Encoded text<input value={base64Text} onChange={(event) => setBase64Text(event.target.value) spellCheck={false}/></label>
           <div className="workbench-output"><small>DECODED TEXT</small><strong>{base64Result || "No valid output"}</strong></div>
           {base64Text && !base64Result && <p className="workbench-error">This is not valid Base64 text.</p>}
           <p className="workbench-hint">Base64 is not encryption. Anyone with the encoded text can decode it without a secret key.</p>
