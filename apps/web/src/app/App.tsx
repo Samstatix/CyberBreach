@@ -16,6 +16,7 @@ const LabWorkbenchPage=lazy(()=>import("../features/labs/LabWorkbenchPage"));
 const AccountPage=lazy(()=>import("../features/auth/AccountPage"));
 const OperationsPage=lazy(()=>import("../features/operations/OperationsPage"));
 const CommunityPage=lazy(()=>import("../features/community/CommunityPage"));
+const CommunityEventsPage=lazy(()=>import("../features/community/CommunityEventsPage"));
 const ResearchPage=lazy(()=>import("../features/research/ResearchPage"));
 const ProgressionPage=lazy(()=>import("../features/progression/ProgressionPage"));
 
@@ -38,6 +39,7 @@ export default function App(){
   <Route path="labs/workbench" element={<LabWorkbenchPage/>}/>
   <Route path="progression" element={<ProgressionPage/>}/>
   <Route path="community" element={<CommunityPage/>}/>
+  <Route path="community/events" element={<CommunityEventsPage/>}/>
   <Route path="research" element={<ResearchPage/>}/>
   <Route path="*" element={<Navigate to="/" replace/>}/>
  </Route></Routes></Suspense>;
