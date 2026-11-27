@@ -23,6 +23,7 @@
 - [ ] Public team leaderboard excludes all non-CTF XP.
 - [ ] Public team rankings count verified CTF points only and require owner opt-in.
 - [ ] Only moderator/admin roles can create, publish or cancel competition events.
+- [ ] The initial Cybersecurity Director account is promoted through trusted SQL, never through the browser.
 - [ ] Event registration closes at the scheduled start time.
 - [ ] Individual and team event registrations enforce the event format.
 - [ ] Team event rosters are snapshotted at registration.
