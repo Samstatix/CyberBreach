@@ -79,3 +79,10 @@ The Edge Function checks recent user messages for repeated, explicit confusion p
 ## CYRO specialist curriculum (Phase 27)
 
 CYRO has server-authored teaching notes for Academy, CTF Arena, Cyber Labs, Security Operations, Learning Progression, AI Security Research, Community and the platform overview. Notes reinforce prerequisite sequencing, domain-specific safe methodology and common conceptual distinctions. They are instructional guidance, not a substitute for reviewed course material or challenge-specific server-side access controls.
+
+
+## CYRO Edge Function origin configuration (Phase 28)
+
+Set the Supabase secret `CYRO_ALLOWED_ORIGIN` to the exact browser origin that hosts CyberBreach (scheme and host, no path), for example the production Vercel domain assigned to this project. If a custom domain and preview domain both need access, deploy separate environments or extend the allow-list implementation deliberately; do not restore wildcard CORS. Browser requests with a missing or mismatched configured origin are rejected. Server-to-server calls without an Origin header remain possible and must still authenticate.
+
+The function rejects declared or parsed JSON request bodies larger than 32 KiB, in addition to existing per-message limits. Configure the exact production origin before browser rollout. This origin check is not a substitute for authentication, per-user rate limiting, abuse monitoring or gateway-level request controls.
