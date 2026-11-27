@@ -151,21 +151,39 @@ export const skillTrees: SkillTree[] = [
     title: "Reverse Engineering",
     description: "Read program artifacts and reason about transformations.",
     accent: "LOW LEVEL",
-    nodes: challenges("reverse-engineering"),
+    nodes: [
+      ...lessons([
+        ["reverse-static-inspection", "Read a program without running it"],
+        ["reverse-control-flow", "Follow the program's decisions"],
+      ]),
+      ...challenges("reverse-engineering"),
+    ],
   },
   {
     id: "binary-exploitation",
     title: "Binary Exploitation",
     description: "Understand memory layout, stack frames and object lifetimes.",
     accent: "LOW LEVEL",
-    nodes: challenges("binary-exploitation"),
+    nodes: [
+      ...lessons([
+        ["pwn-memory-layout", "How a program uses memory"],
+        ["pwn-memory-protections", "Why memory protections matter"],
+      ]),
+      ...challenges("binary-exploitation"),
+    ],
   },
   {
     id: "osint",
     title: "OSINT and Intelligence",
     description: "Correlate evidence carefully while respecting privacy and scope.",
     accent: "INTELLIGENCE",
-    nodes: challenges("osint-misc"),
+    nodes: [
+      ...lessons([
+        ["osint-scope-and-ethics", "Start with a safe research scope"],
+        ["osint-source-verification", "Verify before you believe"],
+      ]),
+      ...challenges("osint-misc"),
+    ],
   },
   {
     id: "incident-response",
