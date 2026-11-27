@@ -64,6 +64,10 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 
+## Browser lab task
+
+The Linux Foundations simulator includes a small evidence task. Open Cyber Labs, launch the Linux practice terminal, inspect the sample authentication log with `cat /var/log/auth.log`, then submit the repeated failed-login source IP. A correct finding awards 50 personal XP once. The terminal and its evidence are synthetic; no host shell or network connection is used.
+
 ## Incident-response missions within Cyber Labs
 
 Cyber Labs includes three original fictional incident-response missions:
