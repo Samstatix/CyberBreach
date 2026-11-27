@@ -77,7 +77,7 @@ export default function CyroAssistant() {
     const prompt = text.trim();
     if (!prompt || busy) return;
     if (!supabase) { setError("CYRO needs a connected CyberBreach account service. Please try again later."); return; }
-    const next = [...messages, { role: "user" as const, content: prompt }].slice(-13);
+    const next: ChatMessage[] = [...messages, { role: "user", content: prompt }].slice(-13);
     setMessages(next);
     setInput("");
     setError("");
