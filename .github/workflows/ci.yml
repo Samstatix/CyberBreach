@@ -24,6 +24,7 @@ on:
       - phase-16/cyro-accessibility-and-guardrails
       - phase-17/cyro-adaptive-teaching
       - phase-18/cyro-contextual-hints
+      - phase-19/cyro-learning-preferences
   pull_request:
     branches:
       - main
