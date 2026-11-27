@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Bot, MessageCircle, Minimize2, Send, ShieldCheck, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
-import { findLesson } from "../../features/academy/academyContent";
+import { getCyroLessonContext } from "../../features/academy/academyContent";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type TeachingMode = "explain" | "hint" | "quiz" | "next-step";
@@ -85,17 +85,7 @@ export default function CyroAssistant() {
     setBusy(true);
     try {
       const lessonMatch = location.pathname.match(/^\\/academy\\/lessons\\/([a-z0-9-]+)$/);
-      const foundLesson = lessonMatch ? findLesson(lessonMatch[1]) : undefined;
-      const lessonContext = foundLesson ? {
-        courseTitle: foundLesson.course.title,
-        lessonId: foundLesson.lesson.id,
-        title: foundLesson.lesson.title,
-        summary: foundLesson.lesson.summary,
-        objectives: foundLesson.lesson.objectives,
-        blocks: foundLesson.lesson.blocks.map((block) => ({ heading: block.heading, paragraphs: block.paragraphs ?? [], bullets: block.bullets ?? [], callout: block.callout ?? "" })),
-        keyTerms: foundLesson.lesson.keyTerms,
-        workedExample: foundLesson.lesson.workedExample,
-      } : undefined;
+      const lessonContext = lessonMatch ? getCyroLessonContext(lessonMatch[1]) : undefined;
       const { data, error: invokeError } = await supabase.functions.invoke("cyro-assistant", {
         body: { messages: next.slice(-12), page: location.pathname, mode, hintLevel: requestedHintLevel, lessonContext },
       });
