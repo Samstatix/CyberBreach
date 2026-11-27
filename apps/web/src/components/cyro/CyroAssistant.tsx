@@ -26,6 +26,7 @@ export default function CyroAssistant() {
   const [error, setError] = useState("");
   const [logoFailed, setLogoFailed] = useState(false);
   const [activeMode, setActiveMode] = useState<TeachingMode>("explain");
+  const [hintLevel, setHintLevel] = useState(0);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey! I'm CYRO, your CyberBreach learning companion. No question is too basic. Tell me what you're learning, and I'll break it into small, clear steps." },
   ]);
@@ -33,7 +34,7 @@ export default function CyroAssistant() {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, busy, open]);
 
-  async function sendMessage(text = input, mode: TeachingMode = activeMode) {
+  async function sendMessage(text = input, mode: TeachingMode = activeMode, requestedHintLevel = hintLevel) {
     const prompt = text.trim();
     if (!prompt || busy) return;
     if (!supabase) { setError("CYRO needs a connected CyberBreach account service. Please try again later."); return; }
@@ -44,7 +45,7 @@ export default function CyroAssistant() {
     setBusy(true);
     try {
       const { data, error: invokeError } = await supabase.functions.invoke("cyro-assistant", {
-        body: { messages: next.slice(-12), page: location.pathname, mode },
+        body: { messages: next.slice(-12), page: location.pathname, mode, hintLevel: requestedHintLevel },
       });
       if (invokeError) throw invokeError;
       if (typeof data?.reply !== "string" || !data.reply.trim()) throw new Error("CYRO did not return an answer. Please try again.");
@@ -64,7 +65,8 @@ export default function CyroAssistant() {
           <button type="button" className="cyro-icon-button" onClick={() => setOpen(false)} aria-label="Close CYRO"><X size={17}/></button>
         </header>
         <div className="cyro-trust"><ShieldCheck size={13}/> Beginner-friendly guidance · Safe learning only</div>
-        <div className="cyro-actions" role="group" aria-label="CYRO teaching tools">{teachingActions.map((action) => <button type="button" key={action.mode} aria-pressed={activeMode === action.mode} className={activeMode === action.mode ? "active" : ""} onClick={() => { setActiveMode(action.mode); void sendMessage(action.prompt, action.mode); }}>{action.label}</button>)}</div>
+        {activeMode === "hint" && <div className="cyro-hint-progress" aria-live="polite">HINT PROGRESSION · {hintLevel || 1} / 3 · Each hint reveals a little more</div>}
+        <div className="cyro-actions" role="group" aria-label="CYRO teaching tools">{teachingActions.map((action) => <button type="button" key={action.mode} aria-pressed={activeMode === action.mode} className={activeMode === action.mode ? "active" : ""} onClick={() => { const nextHint = action.mode === "hint" ? Math.min(hintLevel + 1, 3) : 0; setHintLevel(nextHint); setActiveMode(action.mode); const prompt = action.mode === "hint" ? `Give me hint level ${nextHint} of 3 for the exercise on this page. Do not reveal the answer.` : action.prompt; void sendMessage(prompt, action.mode, nextHint); }}>{action.label}</button>)}</div>
         <div className="cyro-messages" aria-live="polite">
           {messages.map((message, index) => <div className={`cyro-message ${message.role}`} key={index}>
             <span>{message.role === "assistant" ? "CYRO" : "YOU"}</span><p>{message.content}</p>
