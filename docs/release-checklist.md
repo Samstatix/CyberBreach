@@ -47,6 +47,8 @@
 - [ ] Follow the temporary public-repository decision documented in `docs/security-review.md`.
 - [ ] Treat all answer material in public Git history as compromised; rotate every CTF flag, Operations answer and lab answer.
 - [ ] Keep public seed files limited to challenge metadata, prompts, evidence and progressive hints.
+- [ ] Confirm Operations frontend options contain no `correct` flags, semantic answer IDs or per-option answer feedback.
+- [ ] Confirm guest Operations and Linux practice do not validate answers or award mission/lab XP locally.
 - [ ] Provision flags and walkthroughs only through the ignored private-content file and trusted administrator loader.
 - [ ] Store Operations and lab answers only as bcrypt hashes in private tables.
 - [ ] Confirm private-content files are ignored by Git and never appear in public source or build artifacts.
