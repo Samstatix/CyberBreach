@@ -184,7 +184,8 @@ function GuidedExercisePanel({ exerciseId }: { exerciseId: LabExerciseId }) {
   const [answer, setAnswer] = useState("");
   const [hintLevel, setHintLevel] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [solved, setSolved] = useState(false);\n  const [savedProgress, setSavedProgress] = useState(false);
+  const [solved, setSolved] = useState(false);
+  const [savedProgress, setSavedProgress] = useState(false);
   const correct = submitted && checkLabAnswer(exercise, answer);
   return (
     <section className="guided-exercise" aria-labelledby="guided-exercise-title">
