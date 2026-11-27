@@ -16,12 +16,13 @@ test("detects private answer material and reports its line", () => {
   const source = [
     "-- public challenge metadata",
     "correct_option_id = 'contain-and-verify';",
+    "preserve-contain-verify",
     "select true;",
   ].join("\n");
 
   assert.deepEqual(findPrivateContentViolations(source), [
     { label: "plaintext operations answer", line: 2 },
-    { label: "legacy semantic Operations answer ID", line: 2 },
+    { label: "legacy semantic Operations answer ID", line: 3 },
   ]);
 });
 
