@@ -25,3 +25,9 @@ revoke all on function public.award_academy_lesson_xp() from public, anon, authe
 
 comment on function public.award_academy_lesson_xp() is
   'Awards 25 XP once when an authenticated learner completes an Academy lesson.';
+
+-- Backfill one-time XP for lessons completed before this migration.
+insert into public.xp_ledger (user_id, event_type, reference_id, points)
+select progress.user_id, 'academy_lesson', md5(progress.lesson_id)::uuid, 25
+from public.academy_lesson_progress as progress
+on conflict (user_id, event_type, reference_id) do nothing;
