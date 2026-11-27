@@ -24,7 +24,7 @@ describe("multi-discipline lab workbench", () => {
   it("decodes Base64 and rejects invalid input", () => {
     expect(decodeBase64("Q1lCRVJCUkVBQ0g=")).toBe("CYBERBREACH");
     expect(decodeBase64("8J+SgA==")).toBe("💀");
-    expect(decodeBase64("Q1lC\\nRVJCUkVBQ0g")).toBe("CYBERBREACH");
+    expect(decodeBase64("Q1lC\nRVJCUkVBQ0g")).toBe("CYBERBREACH");
     expect(() => decodeBase64("%%%")).toThrow("Invalid Base64 characters");
     expect(() => decodeBase64("A")).toThrow("Invalid Base64 length");
     expect(() => decodeBase64("SGVsbG8===")).toThrow("Invalid Base64 characters");
