@@ -24,9 +24,11 @@ export function getCompletedLessonIds(userId?: string): string[] {
 export async function loadCompletedLessonIds(userId?: string): Promise<string[]> {
   const accountLocal = getCompletedLessonIds(userId);
   const local = userId ? [...new Set([...accountLocal, ...getCompletedLessonIds()])] : accountLocal;
-  if (!userId || !supabase) return local;
+  if (!userId) return local;
+  const client = supabase;
+  if (!client) return local;
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("academy_lesson_progress")
     .select("lesson_id")
     .eq("user_id", userId);
@@ -40,12 +42,12 @@ export async function loadCompletedLessonIds(userId?: string): Promise<string[]>
   // or obsolete IDs are rejected by the database and do not receive XP.
   if (missingLocalIds.length > 0) {
     await Promise.all(missingLocalIds.map((lessonId) =>
-      supabase.rpc("complete_academy_lesson", { p_lesson_id: lessonId }),
+      client.rpc("complete_academy_lesson", { p_lesson_id: lessonId }),
     ));
     notifyProgressUpdated();
   }
 
-  const refreshed = await supabase
+  const refreshed = await client
     .from("academy_lesson_progress")
     .select("lesson_id")
     .eq("user_id", userId);
