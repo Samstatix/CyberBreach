@@ -13,7 +13,7 @@ This checklist defines the evidence required before declaring CyberBreach produc
 
 ## 2. Supabase deployment
 
-- [ ] Apply every migration in order, including `202611280011_cyro_learning_preferences.sql` and `202611280012_cyro_learning_activity.sql`.
+- [ ] Apply every migration in order, including `202611280011_cyro_learning_preferences.sql`, `202611280012_cyro_learning_activity.sql` and `202611280013_cyro_rate_limits.sql`.
 - [ ] Run the SQL verification scripts and inspect RLS policies, grants, SECURITY DEFINER search paths and function execute privileges.
 - [ ] Confirm user-owned progress, preferences and learning activity cannot be read or changed by another account.
 - [ ] Confirm challenge secrets, lab task secrets, private content and plaintext flags are not exposed through REST, RPC responses, seed files or frontend bundles.
@@ -29,7 +29,7 @@ This checklist defines the evidence required before declaring CyberBreach produc
 - [ ] Set optional `CYRO_OLLAMA_API_KEY`, `CYRO_TIMEOUT_MS` and `CYRO_MAX_TOKENS` as appropriate.
 - [ ] Verify Ollama is not exposed directly to the browser or an unauthenticated public network.
 - [ ] Test cold starts, model unavailable, malformed responses, timeouts, concurrent users and resource exhaustion.
-- [ ] Add gateway-level per-user rate limits, abuse monitoring and alerting before public scale. The Edge Function's origin and payload checks do not replace rate limiting.
+- [ ] Verify the database-enforced CYRO per-user limits (20 requests/minute and 200 requests/hour) after migration 013. Add gateway-level abuse monitoring and alerting before public scale; the database limits do not replace monitoring.
 - [ ] Test prompt injection, cross-user data isolation, hint leakage, challenge flag extraction attempts and refusal behaviour.
 
 ## 4. Product acceptance
