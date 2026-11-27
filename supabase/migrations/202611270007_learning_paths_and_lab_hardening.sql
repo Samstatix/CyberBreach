@@ -115,9 +115,10 @@ begin
     hashtextextended(v_user_id::text || ':lab:' || p_task_id, 0)
   );
 
-  select task.answer_hash, task.xp_reward
+  select secret.answer_hash, task.xp_reward
     into v_answer_hash, v_reward
   from public.lab_task_catalog as task
+  join public.lab_task_secrets as secret on secret.task_id = task.task_id
   where task.task_id = p_task_id and task.is_active = true;
 
   if not found then
@@ -149,7 +150,7 @@ begin
   end if;
 
   v_is_correct :=
-    encode(extensions.digest(lower(trim(p_answer)), 'sha256'), 'hex') = v_answer_hash;
+    extensions.crypt(lower(trim(p_answer)), v_answer_hash) = v_answer_hash;
 
   insert into public.lab_task_attempts (user_id, task_id, is_correct)
   values (v_user_id, p_task_id, v_is_correct);
