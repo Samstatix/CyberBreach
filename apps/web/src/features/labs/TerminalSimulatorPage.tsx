@@ -120,11 +120,7 @@ export default function TerminalSimulatorPage() {
   }, [lines]);
 
   useEffect(() => {
-    if (user?.id) {
-      void syncGuestLabTasks(user.id).catch((error: unknown) => {
-        console.warn("Guest lab progress could not be synchronized:", error);
-      });
-    }
+    void syncGuestLabTasks(user?.id);
   }, [user?.id]);
 
   function runCommand(rawCommand: string) {
@@ -285,6 +281,7 @@ export default function TerminalSimulatorPage() {
 
       <div className="terminal-task-list">
         <div className="terminal-task-list-heading"><div><CircleHelp size={18}/><strong>Linux mini investigations</strong></div><span>4 TASKS · 50 XP EACH</span></div>
+        {!user && <p className="account-public-note"><Link to="/account">Sign in or create a free account</Link> to submit findings and earn synchronized XP. The terminal remains available for practice.</p>}
         {labTasks.map((task, index) => {
           const completed = progress.completedLabTaskIds.includes(task.id);
           const inspected = history.some((item) => item === task.command);
@@ -302,9 +299,9 @@ export default function TerminalSimulatorPage() {
                 <>
                   <form className="lab-task-answer-form" onSubmit={(event) => void handleLabTaskSubmit(event, task.id)}>
                     <input aria-label={task.title + " answer"} value={findings[task.id] ?? ""} onChange={(event) => setFindings((previous) => ({ ...previous, [task.id]: event.target.value }))} placeholder={task.placeholder}/>
-                    <button type="submit" disabled={!inspected || !(findings[task.id] ?? "").trim() || busy}>{busy ? "CHECKING…" : "SUBMIT"}</button>
+                    <button type="submit" disabled={!user || !inspected || !(findings[task.id] ?? "").trim() || busy}>{busy ? "CHECKING…" : "SUBMIT"}</button>
                   </form>
-                  <p className="lab-task-result">{!inspected ? "Run the evidence command above to unlock this answer field." : "Submit your finding to complete this task and earn 50 XP."}</p>
+                  <p className="lab-task-result">{!user ? "Sign in to submit your finding. Evidence commands remain available in guest mode." : !inspected ? "Run the evidence command above to unlock this answer field." : "Submit your finding to complete this task and earn 50 XP."}</p>
                   {result && <p className={"lab-task-result " + (result.correct ? "correct" : "incorrect")}>{result.message}{result.xp_awarded > 0 ? " +" + result.xp_awarded + " XP." : ""}</p>}
                   {error && <p className="lab-task-result incorrect">{error}</p>}
                 </>
