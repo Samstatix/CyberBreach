@@ -6,7 +6,7 @@ CyberBreach is a self-contained React feature module developed in this repositor
 
 ## Current development baseline
 
-The active implementation baseline is `milestone-5/linux-lab-path`. Ongoing hardening work is tracked on `milestone-6/platform-hardening`; the main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
+The active implementation baseline is `milestone-8-community-teams`. Completed development phases include Linux lab progression, platform hardening, expanded Academy learning paths and community teams. The main CollabCircle website remains untouched. The GitHub repository will remain public during development, as requested by the project owner. The `main` branch is reserved for the complete, tested handoff and will not receive unfinished milestone work.
 
 ## Product scope
 - **Cyber Academy:** beginner-friendly lessons, worked examples, glossaries, knowledge checks and local/account-synced progress with fixed XP rewards.
