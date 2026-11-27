@@ -28,6 +28,10 @@ This is an accepted temporary visibility decision, not a security remediation. M
 - Move trusted answer material out of the public application source and into a separately access-controlled deployment process.
 - Ensure private deployment material is not included in browser bundles or public build artifacts.
 
+## Lab answer submission controls
+
+Migration `202611270007_learning_paths_and_lab_hardening.sql` adds a private attempt log and a per-user/per-task limit of ten submissions per minute for browser-lab tasks. Submitted plaintext answers are not stored. Because this repository remains public during development, previously committed low-entropy lab answer hashes must still be treated as exposed; rate limiting does not repair offline disclosure.
+
 ## Additional production checks
 
 - Apply migrations to a dedicated staging Supabase project and verify them in filename order.
