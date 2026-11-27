@@ -32,6 +32,7 @@ on:
       - phase-24/cyro-adaptive-teaching
       - phase-25/guided-lab-exercises
       - phase-26/learning-activity-profile
+      - phase-27/specialist-cyber-curriculum
   pull_request:
     branches:
       - main
