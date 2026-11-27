@@ -2,8 +2,8 @@
 
 **Status:** Active implementation architecture  
 **Repository:** `Samstatix/CyberBreach`  
-**Current baseline:** `milestone-5/linux-lab-path`  
-**Hardening branch:** `milestone-6/platform-hardening`  
+**Current development baseline:** `milestone-8-community-teams`  
+**Previous milestones:** `milestone-5/linux-lab-path`, `milestone-6/platform-hardening`, `milestone-7-gameplay-integrity`  
 **Integration target:** a future route inside the main CollabCircle Next.js/Vercel website. This repository remains the only development source of truth.
 
 ## Product boundary
@@ -11,7 +11,7 @@ CyberBreach is a cybersecurity learning and practical challenge product, not mer
 1. Cyber Academy — courses, lessons, guided exercises and progress.
 2. CTF Arena — six categories and server-scored medium, hard and expert challenges.
 3. Cyber Labs — browser simulations, fictional incident-response missions and external or separately hosted isolated labs.
-4. Community — opt-in leaderboard and community safety principles.
+4. Community — team creation, invitation-based membership, private-by-default workspaces, opt-in individual and team leaderboards.
 5. AI Security Research — LLM, agent and adversarial AI security learning.
 
 Player progression is a cross-platform system connecting learning, challenges and incident-response missions; it is not a separate product pillar.
@@ -39,7 +39,7 @@ Supabase provides Auth and PostgreSQL. RLS protects user-owned data; SQL functio
 - Expected flag digests live in `challenge_secrets`, which browser roles cannot read.
 - A SECURITY DEFINER database function verifies flags using `auth.uid()`, rate-limits attempts and awards first-solve XP transactionally.
 - Full walkthroughs live in `challenge_solutions`; an RPC returns them only after the authenticated user solves the challenge.
-- The leaderboard is opt-in and returns aggregate public fields only.
+- Individual and team leaderboards are opt-in and return aggregate public fields only. Team membership and invitations are managed through authenticated RPC functions.
 
 
 ### Player progression and achievements
@@ -48,8 +48,8 @@ Supabase provides Auth and PostgreSQL. RLS protects user-owned data; SQL functio
 - First-time verified CTF solves award the challenge's published points as XP through the existing trusted scoring function.
 - `xp_ledger` is the append-only personal XP ledger. The level curve uses cumulative thresholds; ranks progress from Recruit to Elite.
 - `achievement_catalog` defines badges and `user_achievements` stores append-only unlocks computed by trusted database functions.
-- `get_player_progress` returns the signed-in user's XP, level, rank, lesson completions, challenge solves, mission completions and unlocked achievements.
-- The public leaderboard deliberately counts only `challenge_solve` ledger events. Academy and Operations XP do not affect competitive rankings.
+- `get_player_progress` returns the signed-in user's XP, level, rank, lesson completions, challenge solves, mission completions, lab task completions and unlocked achievements.
+- Individual and team public leaderboards deliberately count only `challenge_solve` ledger events. Academy, Operations and browser-lab XP do not affect competitive rankings.
 
 ### Labs boundary
 Browser simulations use synthetic data and allow-listed client-side commands. They are not real shells. Real labs are reached through specialist training providers or a future reviewed hosted-lab portal. The optional portal URL is a launch link only; it does not provision a session. Do not place Docker, privileged containers, a host Docker socket or arbitrary shell execution inside Vercel functions.
@@ -87,6 +87,8 @@ CyberBreach/
 - `challenge_solves`: one row per user/challenge first solve.
 - `xp_ledger`: append-only personal XP ledger with uniqueness constraints; leaderboard queries filter to verified CTF solve events.
 - `challenge_solutions`: private walkthrough and defensive explanation, revealed after solve.
+- `lab_task_catalog`, `lab_task_attempts` and `lab_task_completions`: private answer verification, per-user rate-limiting and verified browser-lab completion.
+- `teams` and `team_members`: private team records and one-team-per-account membership. Invitation codes are stored only as SHA-256 digests.
 
 ## Security requirements
 1. Keep RLS enabled on every browser-accessible table.
@@ -101,6 +103,9 @@ CyberBreach/
 10. Do not run untrusted code in the browser, Vercel function or shared production host.
 11. Keep service credentials in trusted secret storage only.
 12. Review every real lab before public release.
+13. Store team invitation codes only as hashes; expose them once and allow owners to rotate them.
+14. Keep team visibility private by default and show member emails nowhere in community views.
+15. Count verified CTF solve events only in individual and team competitive rankings.
 
 ## External learning references
 TryHackMe, Hack The Box Academy, PortSwigger, OWASP and MITRE are used as learning and methodology references, not sources to copy proprietary course text, flags, walkthroughs or challenge assets.
