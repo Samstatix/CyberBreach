@@ -3,7 +3,7 @@ import { challengeCatalog } from "../ctf/challengeCatalog";
 export type SkillNode = {
   id: string;
   title: string;
-  kind: "lesson" | "challenge";
+  kind: "lesson" | "challenge" | "mission";
   reference: string;
 };
 
@@ -20,6 +20,15 @@ function lessons(items: Array<[string, string]>): SkillNode[] {
     id: "lesson:" + reference,
     title,
     kind: "lesson",
+    reference,
+  }));
+}
+
+function missions(items: Array<[string, string]>): SkillNode[] {
+  return items.map(([reference, title]) => ({
+    id: "mission:" + reference,
+    title,
+    kind: "mission",
     reference,
   }));
 }
@@ -140,5 +149,16 @@ export const skillTrees: SkillTree[] = [
     description: "Correlate evidence carefully while respecting privacy and scope.",
     accent: "INTELLIGENCE",
     nodes: challenges("osint-misc"),
+  },
+  {
+    id: "incident-response",
+    title: "Incident Response",
+    description: "Practice evidence preservation, scoped containment and accountable response decisions.",
+    accent: "OPERATIONS",
+    nodes: missions([
+      ["auth-burst", "Unusual account activity"],
+      ["dns-burst", "Unexpected outbound DNS"],
+      ["priv-change", "Unexpected privileged change"],
+    ]),
   },
 ];

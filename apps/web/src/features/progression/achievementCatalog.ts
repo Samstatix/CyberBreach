@@ -16,4 +16,6 @@ export const achievementCatalog: AchievementDefinition[] = [
   { slug: "all-rounder", title: "All-Round Operator", description: "Complete five Academy lessons and solve three CTF challenges.", requirement: "Complete 5 lessons and solve 3 challenges", icon: "shield-check" },
   { slug: "centurion", title: "Centurion", description: "Earn 1,000 total experience points.", requirement: "Earn 1,000 XP", icon: "award" },
   { slug: "full-clear", title: "Arena Finisher", description: "Solve all eighteen launch CTF challenges.", requirement: "Solve all 18 launch challenges", icon: "trophy" },
+  { slug: "first-operation", title: "First Response", description: "Complete your first incident-response mission.", requirement: "Complete 1 Operations mission", icon: "shield-check" },
+  { slug: "three-operations", title: "Incident Handler", description: "Complete all three launch incident-response missions.", requirement: "Complete all 3 Operations missions", icon: "activity" },
 ];

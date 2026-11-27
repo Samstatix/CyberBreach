@@ -19,7 +19,7 @@
 .progression-level-meta{grid-column:1/-1;display:flex;justify-content:space-between;gap:12px;color:var(--text-2);font:9px var(--font-mono)}
 .progression-level-meta strong{color:var(--accent-bright);font-weight:500}
 .progression-warning{padding:11px 13px;border:1px solid rgba(233,180,92,.25);border-radius:6px;color:var(--warning);background:rgba(233,180,92,.05);font-size:10px;line-height:1.7}
-.progression-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}
+.progression-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:15px}
 .progression-stats article{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:7px 12px;padding:15px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-1);color:var(--accent)}
 .progression-stats article strong{color:var(--text-0);font:21px var(--font-mono)}
 .progression-stats article span{grid-column:1/-1;color:var(--text-2);font:8px var(--font-mono);letter-spacing:1px}
@@ -58,8 +58,20 @@
 .progression-account-cta{margin-top:14px;color:var(--text-1);font-size:10px}
 .progression-account-cta a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .progression-loading{display:block;margin-top:10px;color:var(--text-2);font:8px var(--font-mono)}
-@media(max-width:1050px){.achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar-status{display:none}}
+@media(max-width:1050px){.achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.progression-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar-status{display:none}}
 @media(max-width:760px){.topbar-actions{gap:8px}.player-progress-copy{display:none}.player-progress-link{padding:6px}.progression-hero{padding:20px}.skill-tree-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.progression-stats{grid-template-columns:1fr}.progression-stats article{grid-template-columns:auto auto 1fr}.progression-stats article span{grid-column:auto}.achievement-grid{grid-template-columns:1fr}.progression-level-meta{flex-direction:column}.progression-xp-total strong{font-size:25px}.progression-identity h2{font-size:30px}}
 
 .lesson-xp-note{margin:14px 0 0;color:var(--accent);font:9px var(--font-mono);letter-spacing:.3px}
+
+.operations-mission-progress{display:grid;gap:10px;margin-top:25px;padding:16px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-1)}
+.operations-mission-progress>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.operations-mission-progress>div:first-child strong{color:var(--accent);font:9px var(--font-mono);letter-spacing:.8px}
+.operations-mission-progress>span{color:var(--text-2);font-size:9px}
+.operations-mission-track{height:6px;overflow:hidden;border-radius:99px;background:#080e16}
+.operations-mission-track span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#167aa6,#64d0fa);transition:width .3s ease}
+.operation-xp-result{color:var(--success)!important;font:9px var(--font-mono);line-height:1.7}
+.operations-completion-note{display:flex;gap:12px;margin-top:18px;padding:16px;border:1px solid rgba(57,201,138,.2);border-radius:var(--radius-md);background:rgba(57,201,138,.045);color:var(--success)}
+.operations-completion-note>div{flex:1}
+.operations-completion-note strong{color:var(--text-0);font-size:11px}
+.operations-completion-note p{margin:5px 0 0;color:var(--text-1);font-size:10px;line-height:1.8}

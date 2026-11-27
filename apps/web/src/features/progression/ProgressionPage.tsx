@@ -1,4 +1,4 @@
-import { Award, BookOpen, CheckCircle2, Flag, LockKeyhole, ShieldCheck, Sparkles, Trophy } from "lucide-react";
+import { Activity, Award, BookOpen, CheckCircle2, Flag, LockKeyhole, ShieldCheck, Sparkles, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import { achievementCatalog } from "./achievementCatalog";
@@ -10,13 +10,14 @@ export default function ProgressionPage() {
   const { progress, loading } = usePlayerProgress(user?.id);
   const completedLessons = new Set(progress.completedLessonIds);
   const solvedChallenges = new Set(progress.solvedChallengeSlugs);
+  const completedMissions = new Set(progress.completedMissionIds);
   const unlockedAchievements = new Set(progress.achievements.map((achievement) => achievement.slug));
 
   return (
     <section className="section-page progression-page">
       <div className="eyebrow">PLAYER DEVELOPMENT / PROGRESSION</div>
       <h1>Build your operator profile.</h1>
-      <p className="section-description">Every lesson and verified challenge moves your skills forward. Follow your learning paths, earn achievements and grow through the ranks.</p>
+      <p className="section-description">Every lesson, verified challenge and incident-response mission moves your skills forward. Follow your learning paths, earn achievements and grow through the ranks.</p>
 
       <article className="progression-hero">
         <div className="progression-identity">
@@ -35,16 +36,17 @@ export default function ProgressionPage() {
       <div className="progression-stats">
         <article><BookOpen size={18}/><strong>{progress.lessonsCompleted}</strong><span>LESSONS COMPLETED</span></article>
         <article><Flag size={18}/><strong>{progress.challengesSolved}</strong><span>CHALLENGES SOLVED</span></article>
+        <article><Activity size={18}/><strong>{progress.missionsCompleted}</strong><span>MISSIONS COMPLETED</span></article>
         <article><Award size={18}/><strong>{progress.achievements.length}</strong><span>ACHIEVEMENTS</span></article>
       </div>
 
       <div className="section-heading progression-section-heading">
         <div><span className="eyebrow">SPECIALIZATION PATHS</span><h2>Your skill trees</h2></div>
-        <span className="section-note">10 LEARNING PATHS</span>
+        <span className="section-note">11 LEARNING PATHS</span>
       </div>
       <div className="skill-tree-grid">
         {skillTrees.map((tree) => {
-          const completedNodes = tree.nodes.filter((node) => node.kind === "lesson" ? completedLessons.has(node.reference) : solvedChallenges.has(node.reference)).length;
+          const completedNodes = tree.nodes.filter((node) => node.kind === "lesson" ? completedLessons.has(node.reference) : node.kind === "challenge" ? solvedChallenges.has(node.reference) : completedMissions.has(node.reference)).length;
           const percent = tree.nodes.length ? Math.round((completedNodes / tree.nodes.length) * 100) : 0;
           return (
             <article className="skill-tree-card" key={tree.id}>
@@ -54,11 +56,11 @@ export default function ProgressionPage() {
               <div className="skill-tree-track" role="progressbar" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100}><span style={{ width: percent + "%" }}/></div>
               <div className="skill-tree-nodes">
                 {tree.nodes.map((node) => {
-                  const done = node.kind === "lesson" ? completedLessons.has(node.reference) : solvedChallenges.has(node.reference);
-                  const destination = node.kind === "lesson" ? "/academy/lessons/" + node.reference : "/ctf/challenge/" + node.reference;
+                  const done = node.kind === "lesson" ? completedLessons.has(node.reference) : node.kind === "challenge" ? solvedChallenges.has(node.reference) : completedMissions.has(node.reference);
+                  const destination = node.kind === "lesson" ? "/academy/lessons/" + node.reference : node.kind === "challenge" ? "/ctf/challenge/" + node.reference : "/operations";
                   return (
                     <Link className={"skill-tree-node" + (done ? " completed" : "")} to={destination} key={node.id}>
-                      {done ? <CheckCircle2 size={14}/> : node.kind === "lesson" ? <BookOpen size={14}/> : <Flag size={14}/>}
+                      {done ? <CheckCircle2 size={14}/> : node.kind === "lesson" ? <BookOpen size={14}/> : node.kind === "challenge" ? <Flag size={14}/> : <Activity size={14}/>}
                       <span>{node.title}</span>
                       {done && <small>DONE</small>}
                     </Link>

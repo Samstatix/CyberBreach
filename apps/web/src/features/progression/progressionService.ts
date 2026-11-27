@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { getCompletedLessonIds } from "../../lib/academyProgress";
+import { getGuestCompletedOperationIds } from "../../lib/operationsProgress";
 import { PROGRESSION_UPDATED_EVENT } from "../../lib/progressionEvents";
 import { supabase } from "../../lib/supabase";
 import { achievementCatalog } from "./achievementCatalog";
@@ -23,8 +24,10 @@ export type PlayerProgress = {
   levelProgress: number;
   lessonsCompleted: number;
   challengesSolved: number;
+  missionsCompleted: number;
   completedLessonIds: string[];
   solvedChallengeSlugs: string[];
+  completedMissionIds: string[];
   achievements: PlayerAchievement[];
   synced: boolean;
   syncWarning: string;
@@ -34,11 +37,13 @@ function stringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
-function guestAchievements(lessonCount: number): PlayerAchievement[] {
+function guestAchievements(lessonCount: number, missionCount: number): PlayerAchievement[] {
   const unlocked = new Set<string>();
   if (lessonCount >= 1) unlocked.add("first-lesson");
   if (lessonCount >= 5) unlocked.add("academy-five");
   if (lessonCount >= 15) unlocked.add("academy-fifteen");
+  if (missionCount >= 1) unlocked.add("first-operation");
+  if (missionCount >= 3) unlocked.add("three-operations");
   return achievementCatalog
     .filter((achievement) => unlocked.has(achievement.slug))
     .map((achievement) => ({
@@ -51,7 +56,8 @@ function guestAchievements(lessonCount: number): PlayerAchievement[] {
 
 export function getGuestProgress(userId?: string): PlayerProgress {
   const completedLessonIds = getCompletedLessonIds(userId);
-  const totalXp = completedLessonIds.length * 25;
+  const completedMissionIds = getGuestCompletedOperationIds();
+  const totalXp = completedLessonIds.length * 25 + completedMissionIds.length * 100;
   const level = getLevelProgress(totalXp);
 
   return {
@@ -64,9 +70,11 @@ export function getGuestProgress(userId?: string): PlayerProgress {
     levelProgress: level.progressPercent,
     lessonsCompleted: completedLessonIds.length,
     challengesSolved: 0,
+    missionsCompleted: completedMissionIds.length,
     completedLessonIds,
     solvedChallengeSlugs: [],
-    achievements: guestAchievements(completedLessonIds.length),
+    completedMissionIds,
+    achievements: guestAchievements(completedLessonIds.length, completedMissionIds.length),
     synced: false,
     syncWarning: "",
   };
@@ -97,8 +105,10 @@ function normalizeServerProgress(value: unknown): PlayerProgress | null {
     levelProgress: Number(raw.level_progress ?? level.progressPercent),
     lessonsCompleted: Number(raw.lessons_completed ?? 0),
     challengesSolved: Number(raw.challenges_solved ?? 0),
+    missionsCompleted: Number(raw.missions_completed ?? 0),
     completedLessonIds: stringArray(raw.completed_lesson_ids),
     solvedChallengeSlugs: stringArray(raw.solved_challenge_slugs),
+    completedMissionIds: stringArray(raw.completed_mission_ids),
     achievements,
     synced: true,
     syncWarning: "",

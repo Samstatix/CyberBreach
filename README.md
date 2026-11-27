@@ -24,6 +24,7 @@ CyberBreach is a self-contained React feature module developed in this repositor
 
 - Completing a catalogued Academy lesson awards 25 personal XP.
 - A first-time verified CTF solve awards the challenge's published points as XP.
+- A correctly completed incident-response mission awards 100 personal XP once per mission.
 - Levels use cumulative thresholds: 250 XP for Level 2, 750 total XP for Level 3, and progressively larger thresholds after that.
 - Ranks progress from Recruit through Trainee, Analyst, Specialist, Operator, Senior Operator and Elite.
 - Achievements are unlocked by trusted database functions after the relevant learning or solve milestones.
@@ -54,8 +55,9 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 2. Apply every SQL migration in `supabase/migrations` in filename order.
 3. Run `supabase/seed.sql` after migrations to add the six categories and 18 original challenges.
 4. Migration `202611270003_progression_system.sql` adds the lesson allow-list, server-awarded Academy XP, achievements and the player progression RPC.
-5. Configure email confirmation and password policy in Supabase Auth.
-6. Keep the service-role key out of browser/Vercel public variables.
+5. Migration `202611270004_operations_missions.sql` adds answer-verified incident-response missions, mission XP and completion tracking.
+6. Configure email confirmation and password policy in Supabase Auth.
+7. Keep the service-role key out of browser/Vercel public variables.
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 
