@@ -14,5 +14,9 @@
     "private:load": "node scripts/load-private-content.mjs",
     "security:scan": "node scripts/check-public-secret-leaks.mjs",
     "security:test": "node --test scripts/check-public-secret-leaks.test.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=10.0.0"
   }
 }
