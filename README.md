@@ -199,3 +199,8 @@ No repository-wide open-source license is currently declared. Unless and until a
 ## Guided lab exercises (Phase 25)
 
 Each of the six browser-simulated lab disciplines includes one short, unscored learning exercise with progressive hints and an explanation after a correct response. Exercises use synthetic scenarios and local browser logic only. They do not execute commands, access real systems, award CTF points or persist assessment results. They are teaching aids, not validated assessments.
+
+
+## CYRO learning activity profile (Phase 26)
+
+Signed-in learners can sync completion of the six guided browser-lab exercises. The database records only an allow-listed activity type and module ID, with one completion per learner and module. Reads are restricted by RLS to the owning account; writes go through an authenticated RPC that derives the user from `auth.uid()`. This history is separate from XP, CTF scores and diagnostic self-check answers. Apply migration `202611280012_cyro_learning_activity.sql` before enabling this sync. If the RPC is unavailable or the learner is signed out, the exercise remains usable locally and is not falsely reported as synced.
