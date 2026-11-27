@@ -25,6 +25,7 @@ on:
       - phase-17/cyro-adaptive-teaching
       - phase-18/cyro-contextual-hints
       - phase-19/cyro-learning-preferences
+      - phase-20/cyro-lesson-grounding
   pull_request:
     branches:
       - main
