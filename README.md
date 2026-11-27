@@ -194,3 +194,8 @@ The `main` branch is the consolidated development baseline. Phase 12 adds securi
 ## License
 
 No repository-wide open-source license is currently declared. Unless and until a license is added, the source is provided for project development and review and should not be assumed to be freely reusable or redistributable.
+
+
+## Guided lab exercises (Phase 25)
+
+Each of the six browser-simulated lab disciplines includes one short, unscored learning exercise with progressive hints and an explanation after a correct response. Exercises use synthetic scenarios and local browser logic only. They do not execute commands, access real systems, award CTF points or persist assessment results. They are teaching aids, not validated assessments.
