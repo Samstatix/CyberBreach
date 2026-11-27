@@ -99,7 +99,12 @@ export const skillTrees: SkillTree[] = [
         ["linux-filesystem", "Files, folders and navigation"],
         ["linux-permissions", "Users and file permissions"],
       ]),
-      ...labTasks([["linux-auth-source", "SSH authentication log investigation"]]),
+      ...labTasks([
+        ["linux-auth-source", "SSH authentication log investigation"],
+        ["linux-listening-ports", "Identify listening network services"],
+        ["linux-default-gateway", "Find the default network gateway"],
+        ["linux-current-user", "Identify the current Linux user"],
+      ]),
     ],
   },
   {

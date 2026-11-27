@@ -78,6 +78,13 @@ const fileContents: Record<string, string[]> = {
   ],
 };
 
+const labTasks = [
+  { id: "linux-auth-source", title: "Trace failed SSH logins", command: "cat /var/log/auth.log", prompt: "Which source IP appears repeatedly in the failed SSH attempts?", placeholder: "Enter the repeated source IP" },
+  { id: "linux-listening-ports", title: "Identify listening services", command: "ss -tuln", prompt: "Which TCP ports are listening? Submit the port numbers in ascending order, separated by commas.", placeholder: "Example: 22,80,443" },
+  { id: "linux-default-gateway", title: "Find the default gateway", command: "ip route", prompt: "Which IP address is used by the default route as the gateway?", placeholder: "Enter the gateway IP" },
+  { id: "linux-current-user", title: "Identify the current user", command: "whoami", prompt: "Which username is returned by the simulated whoami command?", placeholder: "Enter the username" },
+];
+
 function normalizePath(currentDirectory: string, requestedPath: string): string {
   const base = requestedPath.startsWith("/") ? [] : currentDirectory.split("/").filter(Boolean);
   for (const segment of requestedPath.split("/")) {
@@ -100,15 +107,13 @@ export default function TerminalSimulatorPage() {
   const [history, setHistory] = useState<string[]>([]);
   const [workingDirectory, setWorkingDirectory] = useState("/home/analyst");
   const [nextId, setNextId] = useState(5);
-  const [finding, setFinding] = useState("");
-  const [taskResult, setTaskResult] = useState<LabTaskResult | null>(null);
-  const [taskError, setTaskError] = useState("");
-  const [taskBusy, setTaskBusy] = useState(false);
+  const [findings, setFindings] = useState<Record<string, string>>({});
+  const [taskResults, setTaskResults] = useState<Record<string, LabTaskResult>>({});
+  const [taskErrors, setTaskErrors] = useState<Record<string, string>>({});
+  const [busyTaskIds, setBusyTaskIds] = useState<string[]>([]);
   const outputRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { progress } = usePlayerProgress(user?.id);
-  const labTaskComplete = progress.completedLabTaskIds.includes("linux-auth-source");
-  const inspectedAuthLog = history.some((item) => item.startsWith("cat ") && item.includes("auth.log"));
 
   useEffect(() => {
     outputRef.current?.scrollTo({ top: outputRef.current.scrollHeight, behavior: "smooth" });
@@ -217,17 +222,20 @@ export default function TerminalSimulatorPage() {
     document.getElementById("simulated-terminal-input")?.focus();
   }
 
-  async function handleLabTaskSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleLabTaskSubmit(event: FormEvent<HTMLFormElement>, taskId: string) {
     event.preventDefault();
-    setTaskBusy(true);
-    setTaskError("");
+    setBusyTaskIds((previous) => [...previous, taskId]);
+    setTaskErrors((previous) => ({ ...previous, [taskId]: "" }));
     try {
-      const result = await completeLabTask("linux-auth-source", finding, user?.id);
-      setTaskResult(result);
+      const result = await completeLabTask(taskId, findings[taskId] ?? "", user?.id);
+      setTaskResults((previous) => ({ ...previous, [taskId]: result }));
     } catch (error) {
-      setTaskError(error instanceof Error ? error.message : "The lab task could not be saved.");
+      setTaskErrors((previous) => ({
+        ...previous,
+        [taskId]: error instanceof Error ? error.message : "The lab task could not be saved.",
+      }));
     } finally {
-      setTaskBusy(false);
+      setBusyTaskIds((previous) => previous.filter((id) => id !== taskId));
     }
   }
 
@@ -236,9 +244,10 @@ export default function TerminalSimulatorPage() {
     setHistory([]);
     setWorkingDirectory("/home/analyst");
     setCommand("");
-    setFinding("");
-    setTaskResult(null);
-    setTaskError("");
+    setFindings({});
+    setTaskResults({});
+    setTaskErrors({});
+    setBusyTaskIds([]);
     setNextId(5);
   }
 
@@ -274,23 +283,35 @@ export default function TerminalSimulatorPage() {
 
       <div className="terminal-suggestions"><strong>Try a command</strong>{["help", "pwd", "ls", "cat README.md", "cat /var/log/auth.log", "ip addr", "ss -tuln"].map((item) => <button key={item} type="button" onClick={() => useSuggestion(item)}>{item}</button>)}</div>
 
-      <div className="terminal-task-card">
-        <div><CircleHelp size={18}/><strong>Mini investigation</strong></div>
-        <p>Can you find the IP address that made repeated failed SSH login attempts? Start by reading the authentication log and identify the repeated source address.</p>
-        <small>HINT: <code>cat /var/log/auth.log</code></small>
-        {labTaskComplete ? (
-          <p className="lab-task-result correct">Investigation complete. Your 50 XP reward has been recorded.</p>
-        ) : (
-          <>
-            <form className="lab-task-answer-form" onSubmit={handleLabTaskSubmit}>
-              <input aria-label="Repeated failed-login source IP" value={finding} onChange={(event) => setFinding(event.target.value)} placeholder="Enter the repeated source IP" />
-              <button type="submit" disabled={!inspectedAuthLog || !finding.trim() || taskBusy}>{taskBusy ? "CHECKING…" : "SUBMIT FINDING"}</button>
-            </form>
-            <p className="lab-task-result">{!inspectedAuthLog ? "First inspect the evidence with cat /var/log/auth.log to unlock the answer field." : "Submit the repeated source IP to complete this lab and earn 50 XP."}</p>
-            {taskResult && <p className={"lab-task-result " + (taskResult.correct ? "correct" : "incorrect")}>{taskResult.message}{taskResult.xp_awarded > 0 ? " +" + taskResult.xp_awarded + " XP." : ""}</p>}
-            {taskError && <p className="lab-task-result incorrect">{taskError}</p>}
-          </>
-        )}
+      <div className="terminal-task-list">
+        <div className="terminal-task-list-heading"><div><CircleHelp size={18}/><strong>Linux mini investigations</strong></div><span>4 TASKS · 50 XP EACH</span></div>
+        {labTasks.map((task, index) => {
+          const completed = progress.completedLabTaskIds.includes(task.id);
+          const inspected = history.some((item) => item === task.command);
+          const result = taskResults[task.id];
+          const error = taskErrors[task.id];
+          const busy = busyTaskIds.includes(task.id);
+          return (
+            <article className="terminal-task-card" key={task.id}>
+              <div><strong>INVESTIGATION {String(index + 1).padStart(2, "0")} · {task.title}</strong><span className="terminal-task-reward">+50 XP</span></div>
+              <p>{task.prompt}</p>
+              <small>INSPECT EVIDENCE: <code>{task.command}</code></small>
+              {completed ? (
+                <p className="lab-task-result correct">Investigation complete. Your 50 XP reward has been recorded.</p>
+              ) : (
+                <>
+                  <form className="lab-task-answer-form" onSubmit={(event) => void handleLabTaskSubmit(event, task.id)}>
+                    <input aria-label={task.title + " answer"} value={findings[task.id] ?? ""} onChange={(event) => setFindings((previous) => ({ ...previous, [task.id]: event.target.value }))} placeholder={task.placeholder}/>
+                    <button type="submit" disabled={!inspected || !(findings[task.id] ?? "").trim() || busy}>{busy ? "CHECKING…" : "SUBMIT"}</button>
+                  </form>
+                  <p className="lab-task-result">{!inspected ? "Run the evidence command above to unlock this answer field." : "Submit your finding to complete this task and earn 50 XP."}</p>
+                  {result && <p className={"lab-task-result " + (result.correct ? "correct" : "incorrect")}>{result.message}{result.xp_awarded > 0 ? " +" + result.xp_awarded + " XP." : ""}</p>}
+                  {error && <p className="lab-task-result incorrect">{error}</p>}
+                </>
+              )}
+            </article>
+          );
+        })}
       </div>
       <p className="practice-only-note">All output is synthetic training data. The address range 192.0.2.0/24 is reserved for documentation examples.</p>
     </section>

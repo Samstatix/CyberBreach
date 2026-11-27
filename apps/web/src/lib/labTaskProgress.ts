@@ -12,6 +12,12 @@ export type LabTaskResult = {
 };
 
 const STORAGE_KEY = "cyberbreach.lab-tasks.completed.v1.guest";
+const GUEST_LAB_ANSWERS: Record<string, string> = {
+  "linux-auth-source": "192.0.2.44",
+  "linux-listening-ports": "22,80,443",
+  "linux-default-gateway": "192.0.2.1",
+  "linux-current-user": "analyst",
+};
 
 function getGuestLabTaskRecords(): GuestLabTaskRecord[] {
   try {
@@ -57,7 +63,7 @@ export async function completeLabTask(
 ): Promise<LabTaskResult> {
   if (!userId || !supabase) {
     const normalized = answer.trim().toLowerCase();
-    if (taskId !== "linux-auth-source" || normalized !== "192.0.2.44") {
+    if (!GUEST_LAB_ANSWERS[taskId] || normalized !== GUEST_LAB_ANSWERS[taskId]) {
       return {
         correct: false,
         completed: false,

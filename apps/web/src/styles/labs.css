@@ -44,3 +44,12 @@
   .practice-feature-card { align-items: flex-start; }
   .practice-feature-card > svg { display: none; }
 }
+
+.terminal-task-list{display:grid;gap:11px;margin-top:20px}
+.terminal-task-list-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--accent)}
+.terminal-task-list-heading>div{display:flex;align-items:center;gap:9px}
+.terminal-task-list-heading strong{color:var(--text-0);font-size:13px}
+.terminal-task-list-heading>span{color:var(--text-2);font:8px var(--font-mono);letter-spacing:.8px}
+.terminal-task-card{margin-top:0}
+.terminal-task-card>div:first-child{justify-content:space-between}
+.terminal-task-reward{color:var(--success);font:9px var(--font-mono)}

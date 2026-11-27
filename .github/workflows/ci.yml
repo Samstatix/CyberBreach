@@ -9,6 +9,7 @@ on:
       - milestone-2/progression-system
       - milestone-3/operations-missions
       - milestone-4/lab-progression
+      - milestone-5/linux-lab-path
   pull_request:
     branches:
       - main

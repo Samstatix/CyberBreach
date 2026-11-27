@@ -48,6 +48,7 @@ function guestAchievements(lessonCount: number, missionCount: number, labTaskCou
   if (missionCount >= 1) unlocked.add("first-operation");
   if (missionCount >= 3) unlocked.add("three-operations");
   if (labTaskCount >= 1) unlocked.add("first-lab");
+  if (labTaskCount >= 4) unlocked.add("linux-investigator");
   return achievementCatalog
     .filter((achievement) => unlocked.has(achievement.slug))
     .map((achievement) => ({

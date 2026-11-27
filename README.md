@@ -59,14 +59,15 @@ The build also emits `apps/web/dist/cyberbreach.integration.css` for a later nam
 4. Migration `202611270003_progression_system.sql` adds the lesson allow-list, server-awarded Academy XP, achievements and the player progression RPC.
 5. Migration `202611270004_operations_missions.sql` adds answer-verified incident-response missions, mission XP and completion tracking.
 6. Migration `202611270005_lab_practice_tasks.sql` adds private answer verification and XP for browser-lab tasks.
-7. Configure email confirmation and password policy in Supabase Auth.
-8. Keep the service-role key out of browser/Vercel public variables.
+7. Migration `202611270006_linux_lab_path.sql` expands the Linux task set and unlocks the Linux Investigator achievement.
+8. Configure email confirmation and password policy in Supabase Auth.
+9. Keep the service-role key out of browser/Vercel public variables.
 
 The browser uses only the Supabase publishable/anon key. Challenge flags are stored as SHA-256 digests in a private table. The database verifies submissions, rate-limits attempts and awards first-solve points atomically. Full walkthroughs are returned only after the authenticated learner solves that challenge.
 
 ## Browser lab task
 
-The Linux Foundations simulator includes a small evidence task. Open Cyber Labs, launch the Linux practice terminal, inspect the sample authentication log with `cat /var/log/auth.log`, then submit the repeated failed-login source IP. A correct finding awards 50 personal XP once. The terminal and its evidence are synthetic; no host shell or network connection is used.
+The Linux Foundations simulator includes four evidence tasks. Open Cyber Labs and launch the Linux practice terminal. Inspect each evidence source using the cat, ss, ip route and whoami commands, then submit the corresponding finding. Each correct finding awards 50 personal XP once. The terminal and its evidence are synthetic; no host shell or network connection is used.
 
 ## Incident-response missions within Cyber Labs
 

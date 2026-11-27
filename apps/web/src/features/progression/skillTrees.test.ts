@@ -21,7 +21,12 @@ describe("CyberBreach operator skill trees", () => {
 
   it("connects the Linux path to the simulated authentication-log lab", () => {
     const linux = skillTrees.find((tree) => tree.id === "linux-systems");
-    expect(linux?.nodes.some((node) => node.kind === "lab" && node.reference === "linux-auth-source")).toBe(true);
+    expect(linux?.nodes.filter((node) => node.kind === "lab").map((node) => node.reference)).toEqual([
+      "linux-auth-source",
+      "linux-listening-ports",
+      "linux-default-gateway",
+      "linux-current-user",
+    ]);
   });
 
   it("keeps every skill node identifier unique", () => {
