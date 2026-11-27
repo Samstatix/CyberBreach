@@ -37,6 +37,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Scan public source for private answer material
+        run: npm run security:scan
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
