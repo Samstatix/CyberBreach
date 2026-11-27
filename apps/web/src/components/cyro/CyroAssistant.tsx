@@ -34,7 +34,8 @@ export default function CyroAssistant() {
   const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>("beginner");
   const [preferredLanguage, setPreferredLanguage] = useState<PreferredLanguage>("auto");
   const [preferencesReady, setPreferencesReady] = useState(false);
-  const [preferencesSaving, setPreferencesSaving] = useState(false);\n  const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});\n  const [diagnosticIndex, setDiagnosticIndex] = useState(0);\n  const [diagnosticComplete, setDiagnosticComplete] = useState(false);\n  const [diagnosticActive, setDiagnosticActive] = useState(false);
+  const [preferencesSaving, setPreferencesSaving] = useState(false);
+  const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});\n  const [diagnosticIndex, setDiagnosticIndex] = useState(0);\n  const [diagnosticComplete, setDiagnosticComplete] = useState(false);\n  const [diagnosticActive, setDiagnosticActive] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey! I'm CYRO, your CyberBreach learning companion. No question is too basic. Tell me what you're learning, and I'll break it into small, clear steps." },
   ]);
