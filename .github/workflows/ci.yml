@@ -29,6 +29,7 @@ on:
       - phase-21/cyro-learning-intelligence
       - phase-22/cyro-diagnostic-assessment
       - phase-23/cyro-remediation-paths
+      - phase-24/cyro-adaptive-teaching
   pull_request:
     branches:
       - main
