@@ -14,6 +14,7 @@ type CompetitionEvent = {
 };
 type TeamSummary = { team_id: string; name: string; role: "owner" | "member" };
 type EventRank = { position: number; participant_type: "individual" | "team"; participant_name: string; points: number; solves: number };
+type AdminEvent = { event_id: string; slug: string; title: string; event_type: "individual" | "team"; starts_at: string; ends_at: string; status: "draft" | "published" | "cancelled"; registered_count: number };
 
 function dateLabel(value: string) {
   return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
@@ -27,6 +28,8 @@ export default function CommunityEventsPage() {
   const [events, setEvents] = useState<CompetitionEvent[]>([]);
   const [team, setTeam] = useState<TeamSummary | null>(null);
   const [isModerator, setIsModerator] = useState(false);
+  const [adminEvents, setAdminEvents] = useState<AdminEvent[]>([]);
+  const [adminError, setAdminError] = useState("");
   const [loading, setLoading] = useState(true);
   const [busyEvent, setBusyEvent] = useState("");
   const [error, setError] = useState("");
@@ -69,6 +72,16 @@ export default function CommunityEventsPage() {
   }, [user?.id]);
 
   useEffect(() => { void loadEvents(); }, [loadEvents]);
+
+  const loadAdminEvents = useCallback(async () => {
+    if (!user || !isModerator || !supabase) { setAdminEvents([]); return; }
+    const { data, error: adminLoadError } = await supabase.rpc("get_moderator_competition_events", { p_limit: 50 });
+    if (adminLoadError) setAdminError(adminLoadError.message);
+    else { setAdminEvents((data ?? []) as AdminEvent[]); setAdminError(""); }
+  }, [user?.id, isModerator]);
+
+  useEffect(() => { void loadAdminEvents(); }, [loadAdminEvents]);
+
 
   const selectedChallengeCount = selectedChallenges.length;
   const sortedEvents = useMemo(() => [...events].sort((a, b) => a.starts_at.localeCompare(b.starts_at)), [events]);
@@ -137,7 +150,25 @@ export default function CommunityEventsPage() {
       setTitle(""); setSlug(""); setDescription(""); setSelectedChallenges([]);
       setStartsAt(""); setEndsAt("");
       await loadEvents();
+      await loadAdminEvents();
       setDraftEventId("");
+    }
+    setBusyEvent("");
+  }
+
+
+  async function manageAdminEvent(eventId: string, action: "publish" | "cancel") {
+    if (!supabase) return;
+    setBusyEvent(eventId); setAdminError(""); setError(""); setNotice("");
+    const { error: actionError } = await supabase.rpc(
+      action === "publish" ? "publish_competition_event" : "cancel_competition_event",
+      { p_event_id: eventId },
+    );
+    if (actionError) setAdminError(actionError.message);
+    else {
+      setNotice(action === "publish" ? "Draft event published." : "Competition event cancelled.");
+      await loadEvents();
+      await loadAdminEvents();
     }
     setBusyEvent("");
   }
@@ -147,7 +178,7 @@ export default function CommunityEventsPage() {
     setBusyEvent("publish"); setError("");
     const { error: publishError } = await supabase.rpc("publish_competition_event", { p_event_id: draftEventId });
     if (publishError) setError(publishError.message);
-    else { setNotice("Competition published."); setDraftEventId(""); await loadEvents(); }
+    else { setNotice("Competition published."); setDraftEventId(""); await loadEvents(); await loadAdminEvents(); }
     setBusyEvent("");
   }
 
@@ -178,6 +209,16 @@ export default function CommunityEventsPage() {
             <button className="primary-button" type="submit" disabled={busyEvent === "create"}>{busyEvent === "create" ? "PUBLISHING…" : "CREATE & PUBLISH EVENT"} <ArrowRight size={14}/></button>
           </form>
           {draftEventId && <div className="competition-draft-warning"><span>Draft saved: {draftEventId}</span><button className="secondary-button" type="button" onClick={() => void publishDraft()} disabled={busyEvent === "publish"}>RETRY PUBLISH</button></div>}
+          <div className="competition-admin-list">
+            <div><strong>Manage scheduled events</strong><span>{adminEvents.length} total</span></div>
+            {adminError && <p className="account-status error" role="alert">{adminError}</p>}
+            {adminEvents.length === 0 ? <p>No moderator-created events yet.</p> : adminEvents.map((event) => <div className="competition-admin-event" key={event.event_id}>
+              <div><strong>{event.title}</strong><small>{event.slug} · {event.event_type} · {event.registered_count} registered</small><small>{dateLabel(event.starts_at)} – {dateLabel(event.ends_at)}</small></div>
+              <span className={"admin-event-status " + event.status}>{event.status.toUpperCase()}</span>
+              {event.status === "draft" && <button className="secondary-button" type="button" onClick={() => void manageAdminEvent(event.event_id, "publish")} disabled={busyEvent === event.event_id}>PUBLISH</button>}
+              {event.status === "published" && new Date(event.ends_at).getTime() > Date.now() && <button className="danger-button" type="button" onClick={() => void manageAdminEvent(event.event_id, "cancel")} disabled={busyEvent === event.event_id}>CANCEL</button>}
+            </div>)}
+          </div>
         </article>
       )}
 
